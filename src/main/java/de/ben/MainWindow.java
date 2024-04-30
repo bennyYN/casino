@@ -23,7 +23,6 @@ public class MainWindow extends JFrame {
             e.printStackTrace();
         }
 
-        // Hintergrundbild setzen
         try {
             URL imageUrl = new URL("https://bennyyn.xyz/upload/images/background.png");
             BufferedImage backgroundImage = ImageIO.read(imageUrl);
@@ -33,57 +32,59 @@ public class MainWindow extends JFrame {
             getContentPane().setBackground(Color.BLACK);
         }
 
-        // Layout des Hauptfensters setzen
         setLayout(new BorderLayout());
 
-        // Panel für den Hauptinhalt erstellen
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setOpaque(false); // Hintergrund des Panels transparent machen
+        contentPanel.setOpaque(false);
 
-        // Großer Text in der Mitte des Menüs
         JLabel bigTextLabel = new JLabel("Willkommen im Casino");
         bigTextLabel.setFont(new Font("Arial", Font.BOLD, 30));
         bigTextLabel.setForeground(Color.WHITE);
         bigTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPanel.add(bigTextLabel, BorderLayout.CENTER);
 
-        // Buttons am unteren Rand
         JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.setOpaque(false); // Hintergrund des Panels transparent machen
+        buttonPanel.setOpaque(false);
 
         JButton slotsButton = new JButton("Slots");
         slotsButton.setFont(new Font("Arial", Font.BOLD, 14));
         slotsButton.setForeground(Color.YELLOW);
         slotsButton.setBackground(Color.DARK_GRAY);
         slotsButton.setFocusable(false);
+        slotsButton.setFocusPainted(false);
+        slotsButton.setBorderPainted(false);
+
 
         JButton blackjackButton = new JButton("Blackjack");
         blackjackButton.setFont(new Font("Arial", Font.BOLD, 14));
         blackjackButton.setForeground(Color.YELLOW);
         blackjackButton.setBackground(Color.DARK_GRAY);
         blackjackButton.setFocusable(false);
+        blackjackButton.setFocusPainted(false);
+        blackjackButton.setBorderPainted(false);
+
 
         JButton settingsButton = new JButton("Einstellungen");
         settingsButton.setFont(new Font("Arial", Font.BOLD, 14));
         settingsButton.setForeground(Color.YELLOW);
         settingsButton.setBackground(Color.DARK_GRAY);
         settingsButton.setFocusable(false);
+        settingsButton.setFocusPainted(false);
+        settingsButton.setBorderPainted(false);
 
         buttonPanel.add(slotsButton);
         buttonPanel.add(blackjackButton);
         buttonPanel.add(settingsButton);
 
-        // Text "by Alex & Ben" am unteren linken Rand
         JLabel bottomLeftTextLabel = new JLabel("by Alex & Ben");
         bottomLeftTextLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         bottomLeftTextLabel.setForeground(Color.WHITE);
-        bottomLeftTextLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        JPanel bottomLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bottomLeftTextLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        JPanel bottomLeftPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomLeftPanel.setOpaque(false);
         bottomLeftPanel.add(bottomLeftTextLabel);
         contentPanel.add(bottomLeftPanel, BorderLayout.NORTH);
 
-        // Hauptinhalt und Buttons zum Hauptfenster hinzufügen
         add(contentPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
