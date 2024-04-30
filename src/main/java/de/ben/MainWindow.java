@@ -3,6 +3,8 @@ package de.ben;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -10,7 +12,7 @@ import java.net.URL;
 public class MainWindow extends JFrame {
     public MainWindow() {
         setTitle("Casino - Hauptmenü");
-        setSize(600, 600);
+        setSize(800, 600);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,7 +55,13 @@ public class MainWindow extends JFrame {
         slotsButton.setFocusable(false);
         slotsButton.setFocusPainted(false);
         slotsButton.setBorderPainted(false);
-
+        slotsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Slots(); // Öffnet die Slots Klasse
+                dispose(); // Schließt das MainWindow
+            }
+        });
 
         JButton blackjackButton = new JButton("Blackjack");
         blackjackButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -62,7 +70,6 @@ public class MainWindow extends JFrame {
         blackjackButton.setFocusable(false);
         blackjackButton.setFocusPainted(false);
         blackjackButton.setBorderPainted(false);
-
 
         JButton settingsButton = new JButton("Einstellungen");
         settingsButton.setFont(new Font("Arial", Font.BOLD, 14));
