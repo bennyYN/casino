@@ -9,8 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-public class MainWindowTEST extends JFrame {
-	public MainWindowTEST() {
+public class MainWindowDEBUG extends JFrame {
+	public MainWindowDEBUG() {
 		setTitle("Casino - Hauptmenü");
 		setSize(600, 300);
 		setResizable(false);
@@ -48,7 +48,7 @@ public class MainWindowTEST extends JFrame {
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 0, 1));
 		buttonPanel.setOpaque(false);
 
-		JButton slotsButton = new JButton("SlotsTEST");
+		JButton slotsButton = new JButton("SlotsDEBUG");
 		slotsButton.setFont(new Font("Arial", Font.BOLD, 14));
 		slotsButton.setForeground(Color.YELLOW);
 		slotsButton.setBackground(Color.DARK_GRAY);
@@ -59,7 +59,7 @@ public class MainWindowTEST extends JFrame {
 		slotsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new SlotsTEST();
+				new SlotsDEBUG();
 				dispose();
 			}
 		});
@@ -120,6 +120,6 @@ public class MainWindowTEST extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new MainWindowTEST();
+		new MainWindowDEBUG();
 	}
 }

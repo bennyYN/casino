@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SlotsTEST extends JFrame {
+public class SlotsDEBUG extends JFrame {
     private JLabel[][] slotLabels = new JLabel[3][5];
     private JPanel slotsPanel;
 
-    public SlotsTEST() {
-        setTitle("Casino - SlotsTEST");
+    public SlotsDEBUG() {
+        setTitle("Casino - SlotsDEBUG");
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -107,7 +107,7 @@ public class SlotsTEST extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new MainWindowTEST();
+                new MainWindowDEBUG();
             }
         });
         backButton.addMouseListener(new MouseAdapter() {
@@ -174,6 +174,6 @@ public class SlotsTEST extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(SlotsTEST::new);
+        SwingUtilities.invokeLater(SlotsDEBUG::new);
     }
 }
