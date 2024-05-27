@@ -1,24 +1,46 @@
 package de.ben;
 
 public class Card {
-    private String suit;
-    private String value;
+    public enum Suit {
+        HEARTS, DIAMONDS, CLUBS, SPADES
+    }
 
-    public Card(String suit, String value) {
-        this.suit = suit;
+    private final int value;
+    private final Suit suit;
+
+    public Card(int value, Suit suit) {
         this.value = value;
+        this.suit = suit;
     }
 
-    public String getSuit() {
-        return suit;
-    }
-
-    public String getValue() {
+    public int getValue() {
         return value;
+    }
+
+    public Suit getSuit() {
+        return suit;
     }
 
     @Override
     public String toString() {
-        return suit + value;
+        String valueStr;
+        switch (value) {
+            case 11:
+                valueStr = "J";
+                break;
+            case 12:
+                valueStr = "Q";
+                break;
+            case 13:
+                valueStr = "K";
+                break;
+            case 14:
+                valueStr = "A";
+                break;
+            default:
+                valueStr = String.valueOf(value);
+                break;
+        }
+        return suit + " " + valueStr;
     }
 }

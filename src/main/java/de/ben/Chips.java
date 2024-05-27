@@ -25,4 +25,7 @@ public class Chips {
     public int getAmount() {
         return amount;
     }
+    public void subtractChips(int amount) {
+        this.amount -= amount;
+    }
 }
