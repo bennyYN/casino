@@ -219,30 +219,32 @@ public class Poker {
 
     public static void main(String[] args) {
         Poker poker = new Poker(5000, 50);
+        poker.startGame();
+    }
 
+    public void startGame() {
         do {
-            System.out.println("Player 1 initial chips: " + poker.player.getChips().getAmount());
-            System.out.println("Player 2 initial chips: " + poker.player2.getChips().getAmount());
-            poker.KartenAusteilen();
-            poker.Blinds();
-            poker.Wetten();
-            if (poker.checkAllIn()) break;
-            poker.AusgabeDealerKarten();
-            poker.Wetten();
-            if (poker.checkAllIn()) break;
-            if (poker.dealer.getHand().size() < 5) {
-                poker.dealerneuekarte();
+            System.out.println("Player 1 initial chips: " + player.getChips().getAmount());
+            System.out.println("Player 2 initial chips: " + player2.getChips().getAmount());
+            KartenAusteilen();
+            Blinds();
+            Wetten();
+            if (checkAllIn()) break;
+            AusgabeDealerKarten();
+            Wetten();
+            if (checkAllIn()) break;
+            if (dealer.getHand().size() < 5) {
+                dealerneuekarte();
             }
-            poker.Wetten();
-            if (poker.checkAllIn()) break;
-            if (poker.dealer.getHand().size() < 5) {
-                poker.dealerneuekarte();
+            Wetten();
+            if (checkAllIn()) break;
+            if (dealer.getHand().size() < 5) {
+                dealerneuekarte();
             }
-            poker.Wetten();
-            if (poker.checkAllIn()) break;
-            // ...
-        } while (poker.player.getChips().getAmount() != 0 && poker.player2.getChips().getAmount() != 0);
-        Player winner = poker.Gewinner();
+            Wetten();
+            if (checkAllIn()) break;
+        } while (player.getChips().getAmount() != 0 && player2.getChips().getAmount() != 0);
+        Player winner = Gewinner();
         System.out.println(winner.getName() + " is the winner!");
     }
 
