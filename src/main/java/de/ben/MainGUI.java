@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-import de.ben.Poker;
-import de.ben.PokerGUI; // Importiere die PokerGUI Klasse
 
 public class MainGUI extends JFrame {
     private JButton b1, b2, b3;
@@ -32,7 +30,7 @@ public class MainGUI extends JFrame {
             b1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    openPokerGUI();  // Methode, um die PokerGUI zu öffnen
+
                 }
             });
 
@@ -68,11 +66,11 @@ public class MainGUI extends JFrame {
     }
 
     private void openPokerGUI() {
-        EventQueue.invokeLater(() -> {
-            PokerGUI pokerGUI = new PokerGUI(); // Erstelle eine neue Instanz der PokerGUI
-            pokerGUI.setVisible(true);// Mache die PokerGUI sichtbar
-            this.setVisible(false); // Mache die MainGUI unsichtbar
-        });
+    //    EventQueue.invokeLater(() -> {
+    //        PokerGUI pokerGUI = new PokerGUI(); // Erstelle eine neue Instanz der PokerGUI
+     //       pokerGUI.setVisible(true);// Mache die PokerGUI sichtbar
+      //      this.setVisible(false); // Mache die MainGUI unsichtbar
+        //});
     }
 
     public static void main(String[] args) {

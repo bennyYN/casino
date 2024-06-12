@@ -11,25 +11,23 @@ public class Poker {
     private Player player2;
     private Dealer dealer;
     private Deck deck;
-    HandRanker HandRanker = new HandRanker();
-    private GewinnPot GewinnPot = new GewinnPot();
+    HandRanker handRanker = new HandRanker();
+    private GewinnPot gewinnPot = new GewinnPot();
     private List<SidePot> sidePots = new ArrayList<>();
     private int bigBlind;
     private int smallBlind;
-    private boolean SpielerEinsSmallBlind = true;
+    private boolean spielerEinsSmallBlind = true;
 
-    public Poker(int AnfangsChips, int bigBlind) {
-        this.player = new Player(AnfangsChips, "player");
-        this.player2 = new Player(AnfangsChips, "player2");
+    public Poker(int anfangsChips, int bigBlind) {
+        this.player = new Player(anfangsChips, "player");
+        this.player2 = new Player(anfangsChips, "player2");
         this.dealer = new Dealer();
         this.deck = new Deck();
         this.bigBlind = bigBlind;
         this.smallBlind = bigBlind / 2;
-
-
     }
 
-    public void KartenAusteilen() {
+    public void kartenAusteilen() {
         for (int i = 0; i < 2; i++) {
             player.receiveCard(dealer.drawCards());
             player2.receiveCard(dealer.drawCards());
@@ -37,10 +35,10 @@ public class Poker {
         for (int i = 0; i < 3; i++) {
             dealer.receiveCard(dealer.drawCards());
         }
-        SpielerKartenAusgabe();
+        spielerKartenAusgabe();
     }
 
-    public void Wetten() {
+    public void wetten() {
         int highestBet = 0;
         boolean roundComplete = false;
         int checkCounter = 0;
@@ -59,63 +57,28 @@ public class Poker {
 
                     switch (action.toLowerCase()) {
                         case "fold":
-                            currentPlayer.setFolded(true);
-                            System.out.println("Spieler " + (i + 1) + " hat gefoldet.");
+                            handleFold(currentPlayer, i + 1);
                             roundComplete = true;
                             break;
                         case "call":
-                            if (highestBet != 0) {
-                                betAmount = highestBet;
-                                currentPlayer.bet(betAmount);
-                                GewinnPot.addChips(betAmount);
-                                System.out.println("Spieler " + (i + 1) + " hat gecalled mit " + betAmount);
-                                roundComplete = true;
-                            } else {
-                                System.out.println("Unerlaubte Aktion. Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist.");
-                                i--; // repeat the turn for the same player
-                            }
+                            handleCall(currentPlayer, highestBet, i + 1);
+                            roundComplete = true;
                             break;
                         case "raise":
-                            System.out.println("Gib den Betrag ein, um den du erhöhen möchtest:");
-                            betAmount = sc.nextInt();
-                            if (betAmount > highestBet) {
-                                highestBet = betAmount;
-                                currentPlayer.bet(betAmount);
-                                GewinnPot.addChips(betAmount);
-                                System.out.println("Spieler " + (i + 1) + " hat erhöht. Der höchste Einsatz beträgt jetzt " + highestBet);
-                            } else {
-                                System.out.println("Der Erhöhungsbetrag muss höher sein als der aktuelle höchste Einsatz.");
-                            }
+                            handleRaise(currentPlayer, highestBet, i + 1);
                             break;
                         case "allin":
-                            System.out.println("Spieler " + (i + 1) + " ist all in.");
-                            betAmount = currentPlayer.getChips().getAmount();
-                            currentPlayer.bet(betAmount);
-                            GewinnPot.addChips(betAmount);
+                            handleAllIn(currentPlayer, highestBet, allInCounter, i + 1);
                             allInCounter++;
                             if (allInCounter == 2) {
                                 roundComplete = true;
                             }
-                            if (betAmount < highestBet) {
-                                int difference = highestBet - betAmount;
-                                SidePot sidePot = new SidePot(difference, Arrays.asList(player, player2));
-                                sidePot.removePlayer(currentPlayer);
-                                sidePots.add(sidePot);
-                            } else {
-                                highestBet = betAmount;
-                            }
-                            currentPlayer.setAllIn(true);
                             break;
                         case "check":
-                            if (highestBet == 0) {
-                                System.out.println("Spieler " + (i + 1) + " hat gecheckt.");
-                                checkCounter++; // Increment the check counter
-                                if (checkCounter == 2) { // If both players have checked
-                                    roundComplete = true;
-                                }
-                            } else {
-                                System.out.println("Unerlaubte Aktion. Du kannst nicht checken, weil der aktuelle höchste Einsatz " + highestBet + " ist.");
-                                i--; // repeat the turn for the same player
+                            handleCheck(currentPlayer, highestBet, checkCounter, i + 1);
+                            checkCounter++;
+                            if (checkCounter == 2) {
+                                roundComplete = true;
                             }
                             break;
                         default:
@@ -130,22 +93,82 @@ public class Poker {
             }
         }
 
-        System.out.println("Der Pot beträgt: " + GewinnPot.getAmount());
-        System.out.println("Der Pot beträgt: " + GewinnPot.getAmount());
+        System.out.println("Der Pot beträgt: " + gewinnPot.getAmount());
         for (SidePot sidePot : sidePots) {
             sidePot.printAmount();
-        }    }
+        }
+    }
 
-    public void SpielerKartenAusgabe() {
+    public void handleFold(Player currentPlayer, int playerNumber) {
+        currentPlayer.setFolded(true);
+        System.out.println("Spieler " + playerNumber + " hat gefoldet.");
+    }
+
+    public void handleCall(Player currentPlayer, int highestBet, int playerNumber) {
+        if (highestBet != 0) {
+            currentPlayer.bet(highestBet);
+            gewinnPot.addChips(highestBet);
+            System.out.println("Spieler " + playerNumber + " hat gecalled mit " + highestBet);
+        } else {
+            System.out.println("Unerlaubte Aktion. Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist.");
+        }
+    }
+
+    public void handleRaise(Player currentPlayer, int highestBet, int playerNumber) {
+        System.out.println("Gib den Betrag ein, um den du erhöhen möchtest:");
+        int betAmount = sc.nextInt();
+        if (betAmount > highestBet) {
+            highestBet = betAmount;
+            currentPlayer.bet(betAmount);
+            gewinnPot.addChips(betAmount);
+            System.out.println("Spieler " + playerNumber + " hat erhöht. Der höchste Einsatz beträgt jetzt " + highestBet);
+        } else {
+            System.out.println("Der Erhöhungsbetrag muss höher sein als der aktuelle höchste Einsatz.");
+        }
+    }
+
+    public void handleAllIn(Player currentPlayer, int highestBet, int allInCounter, int playerNumber) {
+        System.out.println("Spieler " + playerNumber + " ist all in.");
+        int betAmount = currentPlayer.getChips().getAmount();
+        currentPlayer.bet(betAmount);
+        gewinnPot.addChips(betAmount);
+        if (betAmount < highestBet) {
+            int difference = highestBet - betAmount;
+            SidePot sidePot = new SidePot(difference, Arrays.asList(player, player2));
+            sidePot.removePlayer(currentPlayer);
+            sidePots.add(sidePot);
+        } else {
+            highestBet = betAmount;
+        }
+        currentPlayer.setAllIn(true);
+    }
+
+    public void handleCheck(Player currentPlayer, int highestBet, int checkCounter, int playerNumber) {
+        if (highestBet == 0) {
+            System.out.println("Spieler " + playerNumber + " hat gecheckt.");
+        } else {
+            System.out.println("Unerlaubte Aktion. Du kannst nicht checken, weil der aktuelle höchste Einsatz " + highestBet + " ist.");
+        }
+    }
+
+    public Player getCurrentPlayer(int playerIndex) {
+        if (playerIndex == 1) {
+            return player;
+        } else {
+            return player2;
+        }
+    }
+
+    public void spielerKartenAusgabe() {
         System.out.println("Karten des Spielers 1: " + player.getHand());
         System.out.println("Karten des Spielers 2: " + player2.getHand());
     }
 
-    public void AusgabeDealerKarten() {
+    public void ausgabeDealerKarten() {
         System.out.println("Karten des Dealers: " + dealer.getHand());
     }
 
-    public void dealerneuekarte() {
+    public void dealerNeueKarte() {
         if (dealer.getHand().size() < 5) {
             dealer.receiveCard(dealer.drawCards());
         }
@@ -155,19 +178,19 @@ public class Poker {
     public void neueRunde() {
         this.deck = new Deck();
         dealer.setDeck(this.deck);
-        GewinnPot.clear();
+        gewinnPot.clear();
         player.getHand().clear();
         player2.getHand().clear();
     }
 
-    public Player Gewinner() {
-        if (HandRanker.rankHand(player.getHand(), dealer.getHand()).getRank() > HandRanker.rankHand(player2.getHand(), dealer.getHand()).getRank()) {
-            player.getChips().addChips(GewinnPot.getAmount());
-            GewinnPot.clear();
+    public Player gewinner() {
+        if (handRanker.rankHand(player.getHand(), dealer.getHand()).getRank() > handRanker.rankHand(player2.getHand(), dealer.getHand()).getRank()) {
+            player.getChips().addChips(gewinnPot.getAmount());
+            gewinnPot.clear();
             return player;
         } else {
-            player2.getChips().addChips(GewinnPot.getAmount());
-            GewinnPot.clear();
+            player2.getChips().addChips(gewinnPot.getAmount());
+            gewinnPot.clear();
             return player2;
         }
     }
@@ -177,7 +200,7 @@ public class Poker {
         int highestRank = -1;
 
         for (Player player : sidePots.get(0).getEligiblePlayers()) {
-            int playerRank = HandRanker.rankHand(player.getHand(), dealer.getHand()).getRank();
+            int playerRank = handRanker.rankHand(player.getHand(), dealer.getHand()).getRank();
             if (playerRank > highestRank) {
                 highestRank = playerRank;
                 sidePotWinner = player;
@@ -189,28 +212,28 @@ public class Poker {
         }
     }
 
-    public void Blinds() {
-        if (SpielerEinsSmallBlind) {
+    public void blinds() {
+        if (spielerEinsSmallBlind) {
             player.bet(smallBlind);
             player2.bet(bigBlind);
             System.out.println("Player 1 hat den small Blind von " + smallBlind + " bezahlt");
             System.out.println("Player 2 hat den big Blind von " + bigBlind + " bezahlt");
-            GewinnPot.addChips(smallBlind + bigBlind);
+            gewinnPot.addChips(smallBlind + bigBlind);
         } else {
             player.bet(bigBlind);
             player2.bet(smallBlind);
             System.out.println("Player 1 hat den big Blind von " + bigBlind + " bezahlt");
             System.out.println("Player 2 hat den small Blind von " + smallBlind + " bezahlt");
-            GewinnPot.addChips(smallBlind + bigBlind);
+            gewinnPot.addChips(smallBlind + bigBlind);
         }
-        SpielerEinsSmallBlind = !SpielerEinsSmallBlind;
+        spielerEinsSmallBlind = !spielerEinsSmallBlind;
     }
 
     public boolean checkAllIn() {
         if (player.isAllIn() && player2.isAllIn()) {
             // All players are all in, skip to the hand ranking
             while (dealer.getHand().size() < 5) {
-                dealerneuekarte();
+                dealerNeueKarte();
             }
             return true;
         }
@@ -226,26 +249,25 @@ public class Poker {
         do {
             System.out.println("Player 1 initial chips: " + player.getChips().getAmount());
             System.out.println("Player 2 initial chips: " + player2.getChips().getAmount());
-            KartenAusteilen();
-            Blinds();
-            Wetten();
+            kartenAusteilen();
+            blinds();
+            wetten();
             if (checkAllIn()) break;
-            AusgabeDealerKarten();
-            Wetten();
-            if (checkAllIn()) break;
-            if (dealer.getHand().size() < 5) {
-                dealerneuekarte();
-            }
-            Wetten();
+            ausgabeDealerKarten();
+            wetten();
             if (checkAllIn()) break;
             if (dealer.getHand().size() < 5) {
-                dealerneuekarte();
+                dealerNeueKarte();
             }
-            Wetten();
+            wetten();
+            if (checkAllIn()) break;
+            if (dealer.getHand().size() < 5) {
+                dealerNeueKarte();
+            }
+            wetten();
             if (checkAllIn()) break;
         } while (player.getChips().getAmount() != 0 && player2.getChips().getAmount() != 0);
-        Player winner = Gewinner();
+        Player winner = gewinner();
         System.out.println(winner.getName() + " is the winner!");
     }
-
 }
