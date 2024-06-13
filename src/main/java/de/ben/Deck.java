@@ -35,6 +35,7 @@ public class Deck {
                 if (!cards.contains(card)) {
                     cards.add(card);
                 }
+
             }
         }
         Collections.shuffle(cards);
@@ -42,5 +43,10 @@ public class Deck {
 
     public Card kartenehmen(){
         return cards.remove(cards.size()-1);
+    }
+
+    public List<Card> shuffleDeck() {
+        Collections.shuffle(cards);
+        return cards;
     }
 }
