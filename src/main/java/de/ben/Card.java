@@ -7,10 +7,17 @@ public class Card {
 
     private final int value;
     private final Suit suit;
+    private final String link;
 
     public Card(int value, Suit suit) {
         this.value = value;
         this.suit = suit;
+        this.link = generateImageLink();
+    }
+
+    private String generateImageLink() {
+        String suitString = suit.name().toUpperCase();
+        return "https://bennyyn.xyz/upload/img/cards/" + value + "-" + suitString + ".png";
     }
 
     public int getValue() {
@@ -19,6 +26,10 @@ public class Card {
 
     public Suit getSuit() {
         return suit;
+    }
+
+    public String getLink() {
+        return link;
     }
 
     @Override
@@ -42,5 +53,14 @@ public class Card {
                 break;
         }
         return suit + " " + valueStr;
+    }
+
+    public static void main(String[] args) {
+        for (Suit suit : Suit.values()) {
+            for (int value = 2; value <= 14; value++) {
+                Card card = new Card(value, suit);
+                System.out.println(card + " - " + card.getLink());
+            }
+        }
     }
 }

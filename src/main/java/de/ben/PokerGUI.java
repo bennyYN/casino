@@ -1,12 +1,10 @@
 package de.ben;
 
-import de.ben.Poker;
-
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.List;
 
 public class PokerGUI extends JFrame {
     private Poker pokerGame;
@@ -16,10 +14,24 @@ public class PokerGUI extends JFrame {
     private JButton raiseButton;
     private JButton allInButton;
     private JTextField raiseAmountField;
+    private Player player1;
+    private Player player2;
+    private JLabel player1Label;
+    private JLabel player2Label;
+    private JLabel dealerCardsLabel;
+    private JLabel player1CardsLabel;
+    private JLabel player2CardsLabel;
+    private final int chips = 5000;
+    private int currentPlayerIndex;
 
     public PokerGUI() {
-        pokerGame = new Poker(5000, 50);
+        pokerGame = new Poker(chips, 50, 2);
+        currentPlayerIndex = 0; // Start with player 1
         initComponents();
+        pokerGame.kartenAusteilen();
+        pokerGame.blinds();
+        pokerGame.playRunde();
+        updateLabels();
     }
 
     private void initComponents() {
@@ -29,25 +41,87 @@ public class PokerGUI extends JFrame {
         setLocationRelativeTo(null);
 
         setContentPane(new BackgroundPanel("https://bennyyn.xyz/upload/img/backgrounding.png"));
-
         setLayout(new BorderLayout());
 
+        player1 = pokerGame.getPlayers().get(0);
+        player2 = pokerGame.getPlayers().get(1);
+
+        // Dealer Label Panel
+        JPanel dealerLabelPanel = new JPanel();
+        dealerLabelPanel.setOpaque(false);
+        JLabel dealerLabel = new JLabel("Dealer");
+        dealerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        dealerLabel.setHorizontalAlignment(JLabel.CENTER);
+        dealerLabel.setForeground(Color.WHITE);
+        dealerLabelPanel.add(dealerLabel);
+
+        // Dealer Cards Panel
+        dealerCardsLabel = new JLabel();
+        dealerCardsLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        dealerCardsLabel.setForeground(Color.WHITE);
+        dealerCardsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        dealerCardsLabel.setBorder(new EmptyBorder(10, 0, 30, 0));
+
+        JPanel dealerPanel = new JPanel(new BorderLayout());
+        dealerPanel.setOpaque(false);
+        dealerPanel.add(dealerLabelPanel, BorderLayout.NORTH);
+        dealerPanel.add(dealerCardsLabel, BorderLayout.SOUTH);
+
+        // Spieler Information Panel
+        JPanel playerInfoPanel = new JPanel();
+        playerInfoPanel.setOpaque(false);
+        player1Label = new JLabel("Spieler 1 - Chips: " + player1.getChips().getAmount());
+        player1Label.setFont(new Font("Arial", Font.BOLD, 18));
+        player1Label.setForeground(Color.WHITE);
+        player1Label.setHorizontalAlignment(SwingConstants.CENTER);
+        player1Label.setBorder(new EmptyBorder(0, 0, 30, 0));
+
+        player2Label = new JLabel("Spieler 2 - Chips: " + player2.getChips().getAmount());
+        player2Label.setFont(new Font("Arial", Font.BOLD, 18));
+        player2Label.setForeground(Color.WHITE);
+        player2Label.setHorizontalAlignment(SwingConstants.CENTER);
+        player2Label.setBorder(new EmptyBorder(0, 0, 30, 0));
+
+        player1CardsLabel = new JLabel();
+        player1CardsLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        player1CardsLabel.setForeground(Color.WHITE);
+        player1CardsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        player1CardsLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
+
+        player2CardsLabel = new JLabel();
+        player2CardsLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        player2CardsLabel.setForeground(Color.WHITE);
+        player2CardsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        player2CardsLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
+
+        JPanel player1Panel = new JPanel(new BorderLayout());
+        player1Panel.setOpaque(false);
+        player1Panel.add(player1Label, BorderLayout.NORTH);
+        player1Panel.add(player1CardsLabel, BorderLayout.SOUTH);
+
+        JPanel player2Panel = new JPanel(new BorderLayout());
+        player2Panel.setOpaque(false);
+        player2Panel.add(player2Label, BorderLayout.NORTH);
+        player2Panel.add(player2CardsLabel, BorderLayout.SOUTH);
+
+        playerInfoPanel.setLayout(new GridLayout(1, 2));
+        playerInfoPanel.add(player1Panel);
+        playerInfoPanel.add(player2Panel);
+
+        // Control Panel
         JPanel controlPanel = new JPanel();
         controlPanel.setOpaque(false);
-        controlPanel.setLayout(new FlowLayout());
-
+        controlPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         foldButton = createPokerButton("Fold");
         checkButton = createPokerButton("Check");
         callButton = createPokerButton("Call");
         raiseButton = createPokerButton("Raise");
         allInButton = createPokerButton("All In");
-
         raiseAmountField = new JTextField(5);
         raiseAmountField.setFont(new Font("Arial", Font.PLAIN, 14));
         raiseAmountField.setForeground(Color.white);
         raiseAmountField.setOpaque(false);
         raiseAmountField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-
         controlPanel.add(foldButton);
         controlPanel.add(checkButton);
         controlPanel.add(callButton);
@@ -56,74 +130,102 @@ public class PokerGUI extends JFrame {
         controlPanel.add(raiseButton);
         controlPanel.add(allInButton);
 
-        add(controlPanel, BorderLayout.SOUTH);
+        // South Panel containing Player Info and Control Panel
+        JPanel southPanel = new JPanel(new BorderLayout());
+        southPanel.setOpaque(false);
+        southPanel.add(playerInfoPanel, BorderLayout.NORTH);
+        southPanel.add(controlPanel, BorderLayout.SOUTH);
 
-        foldButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleFold();
-            }
-        });
+        add(dealerPanel, BorderLayout.NORTH);
+        add(southPanel, BorderLayout.SOUTH);
 
-        checkButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleCheck();
-            }
-        });
-
-        callButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleCall();
-            }
-        });
-
-        raiseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleRaise();
-            }
-        });
-
-        allInButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleAllIn();
-            }
-        });
+        // Adding Action Listeners to Buttons
+        addListeners();
     }
 
-    private void handleFold() {
-        // Implement the fold action
-        System.out.println("Player folded.");
+    private void addListeners() {
+        foldButton.addActionListener(e -> foldAction());
+        checkButton.addActionListener(e -> checkAction());
+        callButton.addActionListener(e -> callAction());
+        raiseButton.addActionListener(e -> raiseAction());
+        allInButton.addActionListener(e -> allInAction());
     }
 
-    private void handleCheck() {
-        // Implement the check action
-        System.out.println("Player checked.");
+    private void foldAction() {
+        pokerGame.fold(currentPlayerIndex);
+        switchTurn();
+        updateLabels();
     }
 
-    private void handleCall() {
-        // Implement the call action
-        System.out.println("Player called.");
-    }
-
-    private void handleRaise() {
-        // Implement the raise action
-        try {
-            int raiseAmount = Integer.parseInt(raiseAmountField.getText());
-            System.out.println("Player raised by " + raiseAmount + ".");
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid raise amount.");
+    private void checkAction() {
+        if (pokerGame.check(currentPlayerIndex)) {
+            switchTurn();
+            updateLabels();
         }
     }
 
-    private void handleAllIn() {
-        // Implement the all-in action
-        System.out.println("Player went all in.");
+    private void callAction() {
+        pokerGame.call(currentPlayerIndex, pokerGame.getHighestBet());
+        switchTurn();
+        updateLabels();
     }
 
+    private void raiseAction() {
+        try {
+            int raiseAmount = Integer.parseInt(raiseAmountField.getText());
+            pokerGame.raise(currentPlayerIndex, raiseAmount);
+            switchTurn();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid raise amount", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        updateLabels();
+    }
+
+    private void allInAction() {
+        pokerGame.allIn(currentPlayerIndex);
+        switchTurn();
+        updateLabels();
+    }
+
+    private void switchTurn() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % 2; // Switch between 0 and 1
+    }
+
+    private void updateLabels() {
+        System.out.println("Updating labels...");
+
+        System.out.println("Player 1 Hand: " + player1.getHand());
+
+        System.out.println("Player 2 Hand: " + player2.getHand());
+
+        // Aktualisiere die Labels auf dem GUI-Thread, um sicherzustellen, dass die Änderungen sichtbar werden
+        SwingUtilities.invokeLater(() -> {
+            player1Label.setText("Spieler 1 - Chips: " + player1.getChips().getAmount());
+            player2Label.setText("Spieler 2 - Chips: " + player2.getChips().getAmount());
+
+            // Setze den Text für die Kartenlabels
+            player1CardsLabel.setText("Karten: " + getCardsText(player1.getHand()));
+            player2CardsLabel.setText("Karten: " + getCardsText(player2.getHand()));
+            dealerCardsLabel.setText("Karten des Dealers: " + getCardsText(pokerGame.getDealer().getHand()));
+
+            // Erzwinge die Neuberechnung der Größe und das Neuzeichnen der betroffenen Komponenten
+            player1CardsLabel.revalidate();
+            player1CardsLabel.repaint();
+            player2CardsLabel.revalidate();
+            player2CardsLabel.repaint();
+            dealerCardsLabel.revalidate();
+            dealerCardsLabel.repaint();
+        });
+    }
+
+    private String getCardsText(List<Card> cards) {
+        StringBuilder cardsText = new StringBuilder();
+        for (Card card : cards) {
+            // Füge jede Karte als String zum StringBuilder hinzu
+            cardsText.append(card.toString()).append(" ");
+        }
+        return cardsText.toString().trim();
+    }
 
     private JButton createPokerButton(String text) {
         JButton button = new JButton(text);
@@ -135,7 +237,6 @@ public class PokerGUI extends JFrame {
         button.setFocusPainted(false);
         return button;
     }
-
 
     private static class BackgroundPanel extends JPanel {
         private Image backgroundImage;
@@ -158,11 +259,6 @@ public class PokerGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new PokerGUI().setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() -> new PokerGUI().setVisible(true));
     }
 }

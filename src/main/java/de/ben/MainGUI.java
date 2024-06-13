@@ -1,3 +1,5 @@
+package de.ben;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -66,10 +68,10 @@ public class MainGUI extends JFrame {
     }
 
     private void openPokerGUI() {
-    //    EventQueue.invokeLater(() -> {
-    //        PokerGUI pokerGUI = new PokerGUI(); // Erstelle eine neue Instanz der PokerGUI
-     //       pokerGUI.setVisible(true);// Mache die PokerGUI sichtbar
-      //      this.setVisible(false); // Mache die MainGUI unsichtbar
+        //    EventQueue.invokeLater(() -> {
+        //        PokerGUI pokerGUI = new PokerGUI(); // Erstelle eine neue Instanz der PokerGUI
+        //       pokerGUI.setVisible(true);// Mache die PokerGUI sichtbar
+        //      this.setVisible(false); // Mache die MainGUI unsichtbar
         //});
     }
 
