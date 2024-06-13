@@ -1,10 +1,6 @@
 package de.ben;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HandRanker {
@@ -28,6 +24,11 @@ public class HandRanker {
 
         public int getRank() {
             return this.rank;
+        }
+
+        @Override
+        public String toString() {
+            return this.name().charAt(0) + this.name().substring(1).toLowerCase().replace("_", " ");
         }
     }
 
@@ -96,22 +97,26 @@ public class HandRanker {
     return suitCounts.values().stream().anyMatch(count -> count == 5);
     }
 
-    private boolean isStraight(List<Card> cards) {
-        List<Integer> sortedValues = cards.stream()
-                .map(Card::getValue)
-                .sorted()
-                .collect(Collectors.toList());
-        for (int i = 0; i < sortedValues.size() - 4; i++) {
-            if (sortedValues.get(i + 4) - sortedValues.get(i) == 4) {
+        private boolean isStraight(List<Card> cards) {
+            List<Integer> sortedValues = cards.stream()
+                    .map(Card::getValue)
+                    .sorted()
+                    .toList();
+
+            // Check for straight with Ace as 1
+            if (new HashSet<>(sortedValues).containsAll(Arrays.asList(14, 2, 3, 4, 5))) {
                 return true;
             }
+
+            // Check for straight with Ace as 14
+            for (int i = 0; i < sortedValues.size() - 4; i++) {
+                if (sortedValues.get(i + 4) - sortedValues.get(i) == 4) {
+                    return true;
+                }
+            }
+
+            return false;
         }
-        // Check for straight with Ace as 1
-        if (sortedValues.containsAll(Arrays.asList(14, 2, 3, 4, 5))) {
-            return true;
-        }
-        return false;
-    }
 
     private boolean isThreeOfAKind(List<Card> cards) {
         Map<Integer, Long> cardCounts = cards.stream()
@@ -129,5 +134,23 @@ public class HandRanker {
         Map<Integer, Long> cardCounts = cards.stream()
                 .collect(Collectors.groupingBy(Card::getValue, Collectors.counting()));
         return cardCounts.values().stream().anyMatch(count -> count == 2);
+    }
+    public int compareHighestCards(List<Card> playerCards1, List<Card> playerCards2) {
+        List<Integer> player1Values = playerCards1.stream()
+                .map(Card::getValue)
+                .sorted(Comparator.reverseOrder())
+                .toList();
+        List<Integer> player2Values = playerCards2.stream()
+                .map(Card::getValue)
+                .sorted(Comparator.reverseOrder())
+                .toList();
+        for (int i = 0; i < player1Values.size(); i++) {
+            if (player1Values.get(i) > player2Values.get(i)) {
+                return 1;
+            } else if (player1Values.get(i) < player2Values.get(i)) {
+                return -1;
+            }
+        }
+        return 0;
     }
 }

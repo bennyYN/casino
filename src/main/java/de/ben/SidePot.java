@@ -2,35 +2,60 @@ package de.ben;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class SidePot {
     private int amount;
     private List<Player> eligiblePlayers;
+    private HandRanker handRanker;
+    private Dealer dealer; // Add a Dealer reference
 
     public SidePot(int amount, List<Player> eligiblePlayers) {
         this.amount = amount;
-        this.eligiblePlayers = new ArrayList<>(eligiblePlayers);
+        this.eligiblePlayers = new ArrayList<>();
+        this.handRanker = new HandRanker();
+        this.dealer = dealer;
+    }
+
+    public void addChips(int chips) {
+        this.amount += chips;
+    }
+
+    public void addPlayer(Player player) {
+        this.eligiblePlayers.add(player);
     }
 
     public int getAmount() {
-        return amount;
-    }
-    public void addAmount(int amount) {
-        this.amount += amount;
+        return this.amount;
     }
 
-    public void subtractAmount(int amount) {
-        this.amount -= amount;
+    public Player entscheidungGewinner() {
+        Player winner = null;
+        HandRanker.HandRanking highestRank = null;
+        for (Player player : eligiblePlayers) {
+            HandRanker.HandRanking currentRank = handRanker.rankHand(player.getHand(), dealer.getHand());
+            if (highestRank == null || currentRank.getRank() > highestRank.getRank()) {
+                highestRank = currentRank;
+                winner = player;
+            }
+        }
+
+        return winner;
     }
 
-    public List<Player> getEligiblePlayers() {
-        return eligiblePlayers;
+    public void preisAnGewinner() {
+        Player winner = entscheidungGewinner();
+        if (winner != null) {
+            winner.getChips().addChips(this.amount);
+            this.amount = 0;
+        }
     }
-
     public void removePlayer(Player player) {
-        eligiblePlayers.remove(player);
+        this.eligiblePlayers.remove(player);
+    }
+    public List<Player> getEligiblePlayers() {
+        return this.eligiblePlayers;
     }
     public void printAmount() {
-        System.out.println("Side pot amount: " + this.amount);
+        System.out.println("Sidepot amount: " + this.amount);
     }
-
 }

@@ -5,7 +5,6 @@ public class Chips {
     private int intialAmount;
 
     public Chips(int initialAmount) {
-        initialAmount = 5000;
         this.amount = initialAmount;
 
     }

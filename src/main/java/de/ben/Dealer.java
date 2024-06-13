@@ -21,7 +21,7 @@ public class Dealer {
     }
 
     public Card drawCards() {
-        return deck.Kartenehmen(); // Call Kartenehmen on the Deck instance
+        return deck.kartenehmen(); // Call Kartenehmen on the Deck instance
     }
 
     public void setDeck(Deck deck) {
