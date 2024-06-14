@@ -175,48 +175,43 @@ public class PokerGUI extends JFrame {
 
     private void foldAction() {
         pokerGame.fold(currentPlayerIndex);
+        switchTurn();
         updateLabels();
-        if (!checkForEndGame()) {
-            nextPlayer();
-        }
+        pokerGame.playRunde();
     }
 
     private void checkAction() {
         if (pokerGame.check(currentPlayerIndex)) {
+            switchTurn();
             updateLabels();
-            if (!checkForEndGame()) {
-                nextPlayer();
-            }
+            pokerGame.playRunde();
         }
     }
 
     private void callAction() {
         pokerGame.call(currentPlayerIndex, pokerGame.getHighestBet());
+        switchTurn();
         updateLabels();
-        if (!checkForEndGame()) {
-            nextPlayer();
-        }
+        pokerGame.playRunde();
     }
 
     private void raiseAction() {
         try {
             int raiseAmount = Integer.parseInt(raiseAmountField.getText());
             pokerGame.raise(currentPlayerIndex, raiseAmount);
+            switchTurn();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid raise amount", "Error", JOptionPane.ERROR_MESSAGE);
         }
         updateLabels();
-        if (!checkForEndGame()) {
-            nextPlayer();
-        }
+        pokerGame.playRunde();
     }
 
     private void allInAction() {
         pokerGame.allIn(currentPlayerIndex);
+        switchTurn();
         updateLabels();
-        if (!checkForEndGame()) {
-            nextPlayer();
-        }
+        pokerGame.playRunde();
     }
 
     // Neue Methode für die Eingabeaktion
@@ -256,22 +251,8 @@ public class PokerGUI extends JFrame {
         }
     }
 
-    private void nextPlayer() {
+    private void switchTurn() {
         currentPlayerIndex = (currentPlayerIndex + 1) % pokerGame.getPlayers().size(); // Switch between players
-        // Ensure the next player is not folded
-        while (pokerGame.getPlayers().get(currentPlayerIndex).isFolded()) {
-            currentPlayerIndex = (currentPlayerIndex + 1) % pokerGame.getPlayers().size();
-        }
-    }
-
-    private boolean checkForEndGame() {
-        long activePlayers = pokerGame.getPlayers().stream().filter(player -> !player.isFolded()).count();
-        if (activePlayers == 1) {
-            Player winner = pokerGame.getPlayers().stream().filter(player -> !player.isFolded()).findFirst().get();
-            JOptionPane.showMessageDialog(this, winner.getName() + " hat gewonnen!");
-            return true; // Indicate the game has ended
-        }
-        return false; // Indicate the game continues
     }
 
     private void updateLabels() {
