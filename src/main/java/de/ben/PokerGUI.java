@@ -1,10 +1,12 @@
 package de.ben;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
+import java.util.Scanner;
 
 public class PokerGUI extends JFrame {
     private Poker pokerGame;
@@ -14,6 +16,8 @@ public class PokerGUI extends JFrame {
     private JButton raiseButton;
     private JButton allInButton;
     private JTextField raiseAmountField;
+    private JTextField inputField;
+    private JButton inputButton;
     private Player player1;
     private Player player2;
     private JLabel player1Label;
@@ -25,12 +29,11 @@ public class PokerGUI extends JFrame {
     private int currentPlayerIndex;
 
     public PokerGUI() {
-        pokerGame = new Poker(chips, 50, 2);
+        pokerGame = new Poker(chips, 50, 2, this); // Hard-coded for 2 players
         currentPlayerIndex = 0; // Start with player 1
         initComponents();
         pokerGame.kartenAusteilen();
         pokerGame.blinds();
-        pokerGame.playRunde();
         updateLabels();
     }
 
@@ -41,6 +44,15 @@ public class PokerGUI extends JFrame {
         setLocationRelativeTo(null);
 
         setContentPane(new BackgroundPanel("https://bennyyn.xyz/upload/img/backgrounding.png"));
+
+        try {
+            URL iconUrl = new URL("https://bennyyn.xyz/upload/img/icon.png");
+            ImageIcon icon = new ImageIcon(iconUrl);
+            setIconImage(icon.getImage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         setLayout(new BorderLayout());
 
         player1 = pokerGame.getPlayers().get(0);
@@ -60,7 +72,7 @@ public class PokerGUI extends JFrame {
         dealerCardsLabel.setFont(new Font("Arial", Font.BOLD, 18));
         dealerCardsLabel.setForeground(Color.WHITE);
         dealerCardsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        dealerCardsLabel.setBorder(new EmptyBorder(10, 0, 30, 0));
+        dealerCardsLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0));
 
         JPanel dealerPanel = new JPanel(new BorderLayout());
         dealerPanel.setOpaque(false);
@@ -74,25 +86,25 @@ public class PokerGUI extends JFrame {
         player1Label.setFont(new Font("Arial", Font.BOLD, 18));
         player1Label.setForeground(Color.WHITE);
         player1Label.setHorizontalAlignment(SwingConstants.CENTER);
-        player1Label.setBorder(new EmptyBorder(0, 0, 30, 0));
+        player1Label.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 
         player2Label = new JLabel("Spieler 2 - Chips: " + player2.getChips().getAmount());
         player2Label.setFont(new Font("Arial", Font.BOLD, 18));
         player2Label.setForeground(Color.WHITE);
         player2Label.setHorizontalAlignment(SwingConstants.CENTER);
-        player2Label.setBorder(new EmptyBorder(0, 0, 30, 0));
+        player2Label.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 
         player1CardsLabel = new JLabel();
         player1CardsLabel.setFont(new Font("Arial", Font.BOLD, 18));
         player1CardsLabel.setForeground(Color.WHITE);
         player1CardsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        player1CardsLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
+        player1CardsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
         player2CardsLabel = new JLabel();
         player2CardsLabel.setFont(new Font("Arial", Font.BOLD, 18));
         player2CardsLabel.setForeground(Color.WHITE);
         player2CardsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        player2CardsLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
+        player2CardsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
         JPanel player1Panel = new JPanel(new BorderLayout());
         player1Panel.setOpaque(false);
@@ -117,11 +129,17 @@ public class PokerGUI extends JFrame {
         callButton = createPokerButton("Call");
         raiseButton = createPokerButton("Raise");
         allInButton = createPokerButton("All In");
+        inputButton = createPokerButton("Submit"); // Button für die Eingabe
         raiseAmountField = new JTextField(5);
+        inputField = new JTextField(10); // Textfeld für die Eingabe
         raiseAmountField.setFont(new Font("Arial", Font.PLAIN, 14));
         raiseAmountField.setForeground(Color.white);
         raiseAmountField.setOpaque(false);
         raiseAmountField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        inputField.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputField.setForeground(Color.white);
+        inputField.setOpaque(false);
+        inputField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         controlPanel.add(foldButton);
         controlPanel.add(checkButton);
         controlPanel.add(callButton);
@@ -129,6 +147,9 @@ public class PokerGUI extends JFrame {
         controlPanel.add(raiseAmountField);
         controlPanel.add(raiseButton);
         controlPanel.add(allInButton);
+        controlPanel.add(new JLabel("Input Action:")); // Label für die Eingabe
+        controlPanel.add(inputField); // Textfeld für die Eingabe
+        controlPanel.add(inputButton); // Button für die Eingabe
 
         // South Panel containing Player Info and Control Panel
         JPanel southPanel = new JPanel(new BorderLayout());
@@ -149,46 +170,108 @@ public class PokerGUI extends JFrame {
         callButton.addActionListener(e -> callAction());
         raiseButton.addActionListener(e -> raiseAction());
         allInButton.addActionListener(e -> allInAction());
+        inputButton.addActionListener(e -> inputAction()); // ActionListener für den Input-Button
     }
 
     private void foldAction() {
         pokerGame.fold(currentPlayerIndex);
-        switchTurn();
         updateLabels();
+        if (!checkForEndGame()) {
+            nextPlayer();
+        }
     }
 
     private void checkAction() {
         if (pokerGame.check(currentPlayerIndex)) {
-            switchTurn();
             updateLabels();
+            if (!checkForEndGame()) {
+                nextPlayer();
+            }
         }
     }
 
     private void callAction() {
         pokerGame.call(currentPlayerIndex, pokerGame.getHighestBet());
-        switchTurn();
         updateLabels();
+        if (!checkForEndGame()) {
+            nextPlayer();
+        }
     }
 
     private void raiseAction() {
         try {
             int raiseAmount = Integer.parseInt(raiseAmountField.getText());
             pokerGame.raise(currentPlayerIndex, raiseAmount);
-            switchTurn();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid raise amount", "Error", JOptionPane.ERROR_MESSAGE);
         }
         updateLabels();
+        if (!checkForEndGame()) {
+            nextPlayer();
+        }
     }
 
     private void allInAction() {
         pokerGame.allIn(currentPlayerIndex);
-        switchTurn();
         updateLabels();
+        if (!checkForEndGame()) {
+            nextPlayer();
+        }
     }
 
-    private void switchTurn() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % 2; // Switch between 0 and 1
+    // Neue Methode für die Eingabeaktion
+    private void inputAction() {
+        String input = inputField.getText(); // Holen des Strings aus dem Textfeld
+        Scanner scanner = new Scanner(input); // Übergabe des Strings an einen Scanner
+
+        // Beispiel: Verarbeitung des gescannten Textes
+        if (scanner.hasNext()) {
+            String action = scanner.next();
+            switch (action.toLowerCase()) {
+                case "fold":
+                    foldAction();
+                    break;
+                case "check":
+                    checkAction();
+                    break;
+                case "call":
+                    callAction();
+                    break;
+                case "raise":
+                    if (scanner.hasNextInt()) {
+                        int raiseAmount = scanner.nextInt();
+                        raiseAmountField.setText(String.valueOf(raiseAmount));
+                        raiseAction();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Invalid raise amount", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                case "allin":
+                    allInAction();
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Invalid action", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
+    }
+
+    private void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % pokerGame.getPlayers().size(); // Switch between players
+        // Ensure the next player is not folded
+        while (pokerGame.getPlayers().get(currentPlayerIndex).isFolded()) {
+            currentPlayerIndex = (currentPlayerIndex + 1) % pokerGame.getPlayers().size();
+        }
+    }
+
+    private boolean checkForEndGame() {
+        long activePlayers = pokerGame.getPlayers().stream().filter(player -> !player.isFolded()).count();
+        if (activePlayers == 1) {
+            Player winner = pokerGame.getPlayers().stream().filter(player -> !player.isFolded()).findFirst().get();
+            JOptionPane.showMessageDialog(this, winner.getName() + " hat gewonnen!");
+            return true; // Indicate the game has ended
+        }
+        return false; // Indicate the game continues
     }
 
     private void updateLabels() {
@@ -255,6 +338,18 @@ public class PokerGUI extends JFrame {
             if (backgroundImage != null) {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
+        }
+    }
+
+    public String getInput() {
+        return inputField.getText();
+    }
+
+    public int getRaiseAmount() {
+        try {
+            return Integer.parseInt(raiseAmountField.getText());
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 

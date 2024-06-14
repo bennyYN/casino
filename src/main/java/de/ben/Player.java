@@ -75,4 +75,11 @@ public class Player {
     public void resetCurrentBet() {
         currentBet = 0;
     }
+
+    public void call(int highestBet) {
+    }
+
+    public boolean check() {
+        return false;
+    }
 }
