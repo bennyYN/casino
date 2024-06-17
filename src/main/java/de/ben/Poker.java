@@ -6,7 +6,7 @@ public class Poker {
     private final List<Player> players;
     private final List<Player> blindsOrder;
     private final Dealer dealer;
-    private final Deck deck;
+    private Deck deck;
     HandRanker handRanker = new HandRanker();
     private final GewinnPot GewinnPot = new GewinnPot();
     private int highestBet;
@@ -219,5 +219,17 @@ public class Poker {
 
     public int setAnzahlSpieler() {
         return players.size();
+    }
+
+    public Deck getdeck() {
+        return deck;
+    }
+
+    public void resetPot() {
+        this.GewinnPot.clear();
+    }
+
+    public void setdeck(Deck deck) {
+        this.deck = deck;
     }
 }

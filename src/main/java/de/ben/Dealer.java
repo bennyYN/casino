@@ -27,4 +27,9 @@ public class Dealer {
     public void setDeck(Deck deck) {
         this.deck = deck;
     }
+
+    public void clearHand() {
+        this.hand.clear();
+    }
+
 }

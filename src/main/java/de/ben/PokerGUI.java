@@ -165,12 +165,14 @@ public class PokerGUI extends JFrame {
     }
 
     private void addListeners() {
-        foldButton.addActionListener(e -> foldAction());
-        checkButton.addActionListener(e -> checkAction());
-        callButton.addActionListener(e -> callAction());
-        raiseButton.addActionListener(e -> raiseAction());
-        allInButton.addActionListener(e -> allInAction());
-        inputButton.addActionListener(e -> inputAction()); // ActionListener für den Input-Button
+        if(!allPlayersFolded()){
+            foldButton.addActionListener(e -> foldAction());
+            checkButton.addActionListener(e -> checkAction());
+            callButton.addActionListener(e -> callAction());
+            raiseButton.addActionListener(e -> raiseAction());
+            allInButton.addActionListener(e -> allInAction());
+            inputButton.addActionListener(e -> inputAction());
+        }// ActionListener für den Input-Button
     }
 
     private void foldAction() {
@@ -258,7 +260,16 @@ public class PokerGUI extends JFrame {
     }
 
     private void switchTurn() {
+        countertemp++;
+        if(countertemp%2==0){
+            for(Player player : pokerGame.getPlayers()){
+                player.resetCurrentBet();
+
+            }
+        }
+
         currentPlayerIndex = (currentPlayerIndex + 1) % pokerGame.getPlayers().size(); // Switch between players
+
     }
 
     private void updateLabels() {

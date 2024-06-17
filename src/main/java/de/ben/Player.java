@@ -79,7 +79,15 @@ public class Player {
     public void call(int highestBet) {
     }
 
+    public void clearHand() {
+        this.hand.clear();
+    }
+
+
     public boolean check() {
         return false;
+    }
+
+    public void reset() {
     }
 }
