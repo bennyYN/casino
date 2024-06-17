@@ -30,7 +30,7 @@ public class Poker {
     }
 
     public void kartenAusteilen() {
-        System.out.println("Karten werden ausgeteilt...");
+        System.out.println("Cards are dealt...");
         for (Player player : players) {
             for (int i = 0; i < 2; i++) {
                 player.receiveCard(deck.kartenehmen());
@@ -44,7 +44,7 @@ public class Poker {
 
     public void fold(int i) {
         players.get(i).setFolded(true);
-        System.out.println("Spieler " + (i + 1) + " hat gefoldet.");
+        System.out.println("Player " + (i + 1) + " folded.");
     }
 
     public void call(int i, int highestBet) {
@@ -69,9 +69,9 @@ public class Poker {
             player.bet(betAmount);
             GewinnPot.addChips(betAmount); // Add the bet amount to the pot
             lastPlayerToRaise = players.get(i);
-            System.out.println("Spieler " + (i + 1) + " hat erhöht. Der höchste Einsatz beträgt jetzt " + highestBet);
+            System.out.println("Player " + (i + 1) + " has increased. The highest bet is now " + highestBet);
         } else {
-            System.out.println("Der Erhöhungsbetrag muss höher sein als der aktuelle höchste Einsatz.");
+            System.out.println("The raise amount must be higher than the current highest bet.");
         }
     }
 
@@ -90,16 +90,15 @@ public class Poker {
     public boolean check(int i) {
         Player player = players.get(i);
         if (highestBet == 0 || player == lastPlayerToRaise) {
-            System.out.println("Spieler " + (i + 1) + " hat gecheckt.");
+            System.out.println("Player " + (i + 1) + " checked.");
             return true;
         } else {
-            System.out.println("Unerlaubte Aktion. Du kannst nicht checken, weil der aktuelle höchste Einsatz " + highestBet + " ist.");
+            System.out.println("Unauthorized action. You can't check because the current highest bet " + highestBet + " ist.");
             return false;
         }
     }
 
     public void wetten() {
-        // In der GUI wird diese Methode nicht mehr direkt verwendet
     }
 
     public void spielerKartenAusgabe() {
@@ -124,14 +123,14 @@ public class Poker {
 
     public void ausgabeDealerKarten() {
         highestBet = 0;
-        System.out.println("Karten des Dealers: " + dealer.getHand());
+        System.out.println("Dealer's cards: " + dealer.getHand());
     }
 
     public void dealerneueKarte() {
         if (dealer.getHand().size() < 5) {
             Card drawnCard = dealer.drawCards();
             dealer.receiveCard(drawnCard);
-            System.out.println("Dealer hat eine neue Karte gezogen: " + drawnCard);
+            System.out.println("The dealer drew a new card: " + drawnCard);
             ausgabeDealerKarten();
         }
     }

@@ -82,13 +82,13 @@ public class PokerGUI extends JFrame {
         // Spieler Information Panel
         JPanel playerInfoPanel = new JPanel();
         playerInfoPanel.setOpaque(false);
-        player1Label = new JLabel("Spieler 1 - Chips: " + player1.getChips().getAmount());
+        player1Label = new JLabel("Player 1 - Chips: " + player1.getChips().getAmount());
         player1Label.setFont(new Font("Arial", Font.BOLD, 18));
         player1Label.setForeground(Color.WHITE);
         player1Label.setHorizontalAlignment(SwingConstants.CENTER);
         player1Label.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 
-        player2Label = new JLabel("Spieler 2 - Chips: " + player2.getChips().getAmount());
+        player2Label = new JLabel("Player 2 - Chips: " + player2.getChips().getAmount());
         player2Label.setFont(new Font("Arial", Font.BOLD, 18));
         player2Label.setForeground(Color.WHITE);
         player2Label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -174,10 +174,16 @@ public class PokerGUI extends JFrame {
     }
 
     private void foldAction() {
-        pokerGame.fold(currentPlayerIndex);
-        switchTurn();
-        updateLabels();
-        pokerGame.playRunde();
+        if(!player1.isFolded() | !player2.isFolded()){
+            pokerGame.fold(currentPlayerIndex);
+            switchTurn();
+            updateLabels();
+            pokerGame.playRunde();
+        }else {
+            switchTurn();
+            updateLabels();
+            pokerGame.playRunde();
+        }
     }
 
     private void checkAction() {
@@ -264,13 +270,13 @@ public class PokerGUI extends JFrame {
 
         // Aktualisiere die Labels auf dem GUI-Thread, um sicherzustellen, dass die Änderungen sichtbar werden
         SwingUtilities.invokeLater(() -> {
-            player1Label.setText("Spieler 1 - Chips: " + player1.getChips().getAmount());
-            player2Label.setText("Spieler 2 - Chips: " + player2.getChips().getAmount());
+            player1Label.setText("Player 1 - Chips: " + player1.getChips().getAmount());
+            player2Label.setText("Player  2 - Chips: " + player2.getChips().getAmount());
 
             // Setze den Text für die Kartenlabels
-            player1CardsLabel.setText("Karten: " + getCardsText(player1.getHand()));
-            player2CardsLabel.setText("Karten: " + getCardsText(player2.getHand()));
-            dealerCardsLabel.setText("Karten des Dealers: " + getCardsText(pokerGame.getDealer().getHand()));
+            player1CardsLabel.setText("Cards: " + getCardsText(player1.getHand()));
+            player2CardsLabel.setText("Cards: " + getCardsText(player2.getHand()));
+            dealerCardsLabel.setText("Dealer's cards: " + getCardsText(pokerGame.getDealer().getHand()));
 
             // Erzwinge die Neuberechnung der Größe und das Neuzeichnen der betroffenen Komponenten
             player1CardsLabel.revalidate();

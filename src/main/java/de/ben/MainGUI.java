@@ -63,7 +63,7 @@ public class MainGUI extends JFrame {
 
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Fehler beim Laden der Bilder.", "Bildladefehler", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error loading images.", "Image loading error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
