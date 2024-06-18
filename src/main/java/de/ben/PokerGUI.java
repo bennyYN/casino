@@ -27,6 +27,7 @@ public class PokerGUI extends JFrame {
     private JLabel player2CardsLabel;
     private final int chips = 5000;
     private int currentPlayerIndex;
+    int countertemp = 0;
 
     public PokerGUI() {
         pokerGame = new Poker(chips, 50, 2, this); // Hard-coded for 2 players
@@ -176,15 +177,13 @@ public class PokerGUI extends JFrame {
     }
 
     private void foldAction() {
-        if(!player1.isFolded() | !player2.isFolded()){
+        if (!pokerGame.getPlayers().get(currentPlayerIndex).isFolded()) {
             pokerGame.fold(currentPlayerIndex);
             switchTurn();
             updateLabels();
-            pokerGame.playRunde();
-        }else {
-            switchTurn();
-            updateLabels();
-            pokerGame.playRunde();
+            if (allPlayersFolded()) {
+                pokerGame.playRunde();
+            }
         }
     }
 
@@ -341,6 +340,28 @@ public class PokerGUI extends JFrame {
 
     public String getInput() {
         return inputField.getText();
+    }
+
+    public void endRound() {
+        for (Player player : this.pokerGame.getPlayers()) {
+            player.reset();
+            player.clearHand();
+        }
+        Deck deck = new Deck();
+        pokerGame.setdeck(deck);
+        pokerGame.resetPot();
+        pokerGame.getDealer().clearHand();
+    }
+
+    private boolean allPlayersFolded() {
+        for (Player player : pokerGame.getPlayers()) {
+            if (!player.isFolded()) {
+                return false;
+            }
+        }
+        endRound();
+        pokerGame.playRunde();
+        return true;
     }
 
     public int getRaiseAmount() {
