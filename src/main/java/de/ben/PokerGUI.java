@@ -1,4 +1,4 @@
-package de.ben;
+/*package de.ben;
 
 import javax.swing.*;
 import java.awt.*;
@@ -223,7 +223,7 @@ public class PokerGUI extends JFrame {
 
     // Neue Methode für die Eingabeaktion
     private void inputAction() {
-        String input = inputField.getText(); // Holen des Strings aus dem Textfeld
+        String input = inputField.getText();
         Scanner scanner = new Scanner(input); // Übergabe des Strings an einen Scanner
 
         // Beispiel: Verarbeitung des gescannten Textes
@@ -263,11 +263,11 @@ public class PokerGUI extends JFrame {
         if(countertemp%2==0){
             for(Player player : pokerGame.getPlayers()){
                 player.resetCurrentBet();
-
+                pokerGame.setHighestBet(0);
             }
         }
 
-        currentPlayerIndex = (currentPlayerIndex + 1) % pokerGame.getPlayers().size(); // Switch between players
+        currentPlayerIndex = (currentPlayerIndex + 1) % pokerGame.getPlayers().size();
 
     }
 
@@ -375,4 +375,4 @@ public class PokerGUI extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new PokerGUI().setVisible(true));
     }
-}
+}*/

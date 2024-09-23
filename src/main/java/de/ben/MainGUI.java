@@ -1,4 +1,4 @@
-package de.ben;
+/*package de.ben;
 
 import javax.swing.*;
 import java.awt.*;
@@ -93,4 +93,4 @@ public class MainGUI extends JFrame {
             frame.setVisible(true);
         });
     }
-}
+}*/
