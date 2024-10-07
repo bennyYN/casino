@@ -1,96 +1,74 @@
-/*package de.ben;
+package de.ben;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
-public class MainGUI extends JFrame {
-    private JButton b1, b2;
-    private JLabel backgroundLabel;
+public class MainGUI extends JFrame implements ActionListener {
 
-    public MainGUI() {
-        setTitle("Poker Casino Game");
-        setSize(768, 768);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+    //ATTRIBUTE
+    Poker pokerGame;
+    JButton startButton;
+    JButton settingsButton;
+    JButton exitButton;
+    JPanel panel;
 
-        try {
-            URL backgroundURL = new URL("https://bennyyn.xyz/upload/img/background.png");
-            ImageIcon backgroundIcon = new ImageIcon(backgroundURL);
-            backgroundLabel = new JLabel(backgroundIcon);
-            setContentPane(backgroundLabel);
-            backgroundLabel.setLayout(new GridBagLayout());
+    //KONTRUKTOR
+    public MainGUI(){
 
-            try {
-                URL iconUrl = new URL("https://bennyyn.xyz/upload/img/icon.png");
-                ImageIcon icon = new ImageIcon(iconUrl);
-                setIconImage(icon.getImage());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        this.setTitle("Casino");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(800, 600);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        panel = new JPanel();
+        this.add(panel);
 
 
-            // Button-Initialisierung
-            b1 = createPokerButton("Start");
-            b2 = createPokerButton("Quit");
+        //BUTTONS
+        startButton = new JButton("Start");
+        startButton.setVisible(true);
+        startButton.addActionListener(this);
+        startButton.setSize(300, 40);
+        this.panel.add(startButton);
 
-            // Aktionen für Buttons
-            b1.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    openPokerGUI();
-                }
-            });
+        settingsButton = new JButton("Settings");
+        settingsButton.setVisible(true);
+        settingsButton.addActionListener(this);
+        settingsButton.setSize(300, 40);
+        this.panel.add(settingsButton);
 
-            b2.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.exit(0);  // Beendet das Programm
-                }
-            });
+        exitButton = new JButton("Exit");
+        exitButton.setVisible(true);
+        exitButton.addActionListener(this);
+        exitButton.setSize(300, 40);
+        this.panel.add(exitButton);
 
-            JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 10, 10));
-            buttonPanel.setOpaque(false);
-            buttonPanel.add(b1);
-            buttonPanel.add(b2);
+        this.setVisible(true);
 
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            backgroundLabel.add(buttonPanel, gbc);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading images.", "Image loading error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void openPokerGUI() {
-        EventQueue.invokeLater(() -> {
-            PokerGUI pokerGUI = new PokerGUI();
-            pokerGUI.setVisible(true);
-            this.setVisible(false);
-        });
-    }
-
-
-    private JButton createPokerButton(String text) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(100, 40));
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setForeground(Color.WHITE);
-        button.setBackground(new Color(0, 128, 0));
-        button.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        button.setFocusPainted(false);
-        return button;
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            MainGUI frame = new MainGUI();
-            frame.setVisible(true);
-        });
+        new MainGUI();
     }
-}*/
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        //BUTTON-EVENTS
+        //START BUTTON
+        if(e.getSource() == startButton){
+            //openPokerGame
+            System.out.println("Start");
+        }
+        //SETTINGS BUTTON
+        if(e.getSource() == settingsButton){
+            //openSettings
+        }
+        //EXIT BUTTON
+        if(e.getSource() == exitButton){
+            System.exit(0);
+        }
+    }
+
+}
