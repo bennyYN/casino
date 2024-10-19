@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+// MainGUI Klasse
 public class MainGUI extends JFrame implements ActionListener {
 
     // ATTRIBUTE
@@ -86,7 +87,8 @@ public class MainGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JButton sourceButton = (JButton) e.getSource();
         if (sourceButton == startButton) {
-            System.out.println("Start");
+            this.dispose(); // Close the current window
+            LoadingScreen.showLoadingScreen(this, () -> new PokerGUI()); // Show loading screen and then open PokerGUI
         } else if (sourceButton == settingsButton) {
             this.dispose(); // Close the current window
             new SettingsGUI(); // Open SettingsGUI
