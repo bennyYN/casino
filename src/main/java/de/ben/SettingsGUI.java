@@ -2,10 +2,14 @@ package de.ben;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 
 public class SettingsGUI extends JFrame {
 
     private MainGUI mainGUI;
+    private BufferedImage backgroundImage; // Hintergrundbild
 
     public SettingsGUI(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
@@ -15,22 +19,43 @@ public class SettingsGUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
-        // Panel with GridBagLayout for centering the components
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(0, 51, 0)); // Dark green background
+        // Versuche, das Hintergrundbild zu laden, das auch in MainGUI verwendet wird
+        try {
+            backgroundImage = ImageIO.read(SettingsGUI.class.getResource("/background.png"));
+        } catch (IOException e) {
+            System.out.println("Hintergrundbild für Settings konnte nicht geladen werden.");
+        }
+
+        // Panel mit GridBagLayout für die Zentrierung der Komponenten
+        JPanel panel = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    // Zeichne das Hintergrundbild auf das Panel
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                } else {
+                    // Setze einen dunkelgrünen Fallback-Hintergrund, wenn das Bild nicht geladen werden kann
+                    g.setColor(new Color(0, 51, 0));
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+            }
+        };
+        panel.setOpaque(false); // Panel transparent lassen, damit das Hintergrundbild sichtbar bleibt
         this.add(panel);
 
         JLabel volumeLabel = new JLabel("Volume");
         volumeLabel.setForeground(Color.YELLOW);
 
-        // Create music slider
+        // Musik-Slider erstellen
         JSlider musicSlider = new JSlider(0, 100, (int) mainGUI.getCurrentVolume()); // Verwende die aktuelle Lautstärke
         musicSlider.setMajorTickSpacing(10);
         musicSlider.setMinorTickSpacing(5);
         musicSlider.setPaintTicks(true);
         musicSlider.setPaintLabels(true);
         musicSlider.setForeground(Color.YELLOW);
-        musicSlider.setBackground(new Color(0, 51, 0));
+        musicSlider.setBackground(new Color(0, 0, 0, 0)); // Transparenter Hintergrund
+        musicSlider.setOpaque(false); // Slider transparent machen
         musicSlider.setPreferredSize(new Dimension(300, 50));
 
         // Aktualisiere die Lautstärke, wenn der Slider bewegt wird
@@ -39,6 +64,7 @@ public class SettingsGUI extends JFrame {
             mainGUI.setVolume(volume); // Setze die Lautstärke in der MainGUI und speichere sie
         });
 
+        // Rückkehrbutton
         JButton backButton = new JButton("Back");
         styleButton(backButton);
         backButton.addActionListener(e -> {
@@ -66,7 +92,7 @@ public class SettingsGUI extends JFrame {
     private void styleButton(JButton button) {
         Color normalColor = new Color(0, 100, 0);
         Color pressedColor = new Color(0, 200, 0);
-        button.setOpaque(true);
+        button.setOpaque(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setBackground(normalColor);

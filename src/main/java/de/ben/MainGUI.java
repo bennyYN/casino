@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URL;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 public class MainGUI extends JFrame implements ActionListener {
 
@@ -30,9 +32,23 @@ public class MainGUI extends JFrame implements ActionListener {
         // Musik initialisieren und Lautstärke laden
         initMusicPlayer();
 
-        // Panel mit GridBagLayout und Hintergrundfarbe festlegen
-        panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(0, 51, 0)); // Dunkelgrün
+        // Versuche, den Hintergrund als Bild zu setzen
+        try {
+            BufferedImage backgroundImage = ImageIO.read(getClass().getResource("/background.png"));
+            panel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // Bild als Hintergrund
+                }
+            };
+        } catch (IOException e) {
+            System.out.println("Hintergrundbild konnte nicht geladen werden, benutze stattdessen dunkelgrün.");
+            panel = new JPanel(); // Standard-Panel, falls das Bild nicht geladen werden konnte
+            panel.setBackground(new Color(0, 51, 0)); // Dunkelgrüner Hintergrund
+        }
+
+        panel.setLayout(new GridBagLayout()); // Setze Layout nach dem Laden des Bildes oder dem Default
         this.add(panel);
 
         // GridBagConstraints für die Zentrierung der Buttons
@@ -62,14 +78,14 @@ public class MainGUI extends JFrame implements ActionListener {
 
     // Methode, um den Button zu stylen
     private void styleButton(JButton button) {
-        Color normalColor = new Color(0, 100, 0); // Dark green
-        Color pressedColor = new Color(0, 200, 0); // Lighter green
-        button.setOpaque(true);
+        Color normalColor = new Color(35, 35, 35); // Dunkelgrün
+        Color pressedColor = new Color(0, 100, 0); // Helleres Grün
+        button.setOpaque(false);
         button.setBorderPainted(false);
-        button.setFocusPainted(false); // Disable the focus border
+        button.setFocusPainted(false); // Fokusrand deaktivieren
         button.setBackground(normalColor);
-        button.setForeground(Color.YELLOW); // Yellow text
-        button.setPreferredSize(new Dimension(150, 40)); // Set size
+        button.setForeground(Color.YELLOW); // Gelber Text
+        button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
         button.addActionListener(this);
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -133,6 +149,7 @@ public class MainGUI extends JFrame implements ActionListener {
     private void saveVolume(float volume) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(VOLUME_FILE))) {
             writer.write(String.valueOf(volume));
+            System.out.println("Lautstärke gespeichert: " + volume);
         } catch (IOException e) {
             e.printStackTrace();
         }
