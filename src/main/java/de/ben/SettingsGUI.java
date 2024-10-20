@@ -2,12 +2,13 @@ package de.ben;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SettingsGUI extends JFrame {
 
-    public SettingsGUI() {
+    private MainGUI mainGUI;
+
+    public SettingsGUI(MainGUI mainGUI) {
+        this.mainGUI = mainGUI;
         this.setTitle("Settings");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(400, 300);
@@ -19,46 +20,43 @@ public class SettingsGUI extends JFrame {
         panel.setBackground(new Color(0, 51, 0)); // Dark green background
         this.add(panel);
 
-        // Create Volume label
         JLabel volumeLabel = new JLabel("Volume");
-        volumeLabel.setForeground(Color.YELLOW); // Yellow text
+        volumeLabel.setForeground(Color.YELLOW);
 
         // Create music slider
-        JSlider musicSlider = new JSlider(0, 100, 50); // Default value set to 50
+        JSlider musicSlider = new JSlider(0, 100, (int) mainGUI.getCurrentVolume()); // Verwende die aktuelle Lautstärke
         musicSlider.setMajorTickSpacing(10);
         musicSlider.setMinorTickSpacing(5);
         musicSlider.setPaintTicks(true);
         musicSlider.setPaintLabels(true);
-        musicSlider.setForeground(Color.YELLOW); // Yellow text for labels
-        musicSlider.setBackground(new Color(0, 51, 0)); // Dark green background
-        musicSlider.setPreferredSize(new Dimension(300, 50)); // Set larger size
+        musicSlider.setForeground(Color.YELLOW);
+        musicSlider.setBackground(new Color(0, 51, 0));
+        musicSlider.setPreferredSize(new Dimension(300, 50));
 
-        // Create Back button
-        JButton backButton = new JButton("Back");
-        styleButton(backButton);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Close SettingsGUI
-                new MainGUI(); // Open MainGUI
-            }
+        // Aktualisiere die Lautstärke, wenn der Slider bewegt wird
+        musicSlider.addChangeListener(e -> {
+            int volume = musicSlider.getValue();
+            mainGUI.setVolume(volume); // Setze die Lautstärke in der MainGUI und speichere sie
         });
 
-        // GridBagConstraints for centering the components
+        JButton backButton = new JButton("Back");
+        styleButton(backButton);
+        backButton.addActionListener(e -> {
+            this.dispose(); // Schließe SettingsGUI
+            mainGUI.setVisible(true); // Zeige MainGUI wieder an
+        });
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.insets = new Insets(10, 0, 10, 0); // Padding
+        gbc.insets = new Insets(10, 0, 10, 0);
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // Add Volume label to the panel
         gbc.gridy = 0;
         panel.add(volumeLabel, gbc);
 
-        // Add music slider to the panel
         gbc.gridy = 1;
         panel.add(musicSlider, gbc);
 
-        // Add Back button to the panel
         gbc.gridy = 2;
         panel.add(backButton, gbc);
 
@@ -66,14 +64,14 @@ public class SettingsGUI extends JFrame {
     }
 
     private void styleButton(JButton button) {
-        Color normalColor = new Color(0, 100, 0); // Dark green
-        Color pressedColor = new Color(0, 200, 0); // Lighter green
+        Color normalColor = new Color(0, 100, 0);
+        Color pressedColor = new Color(0, 200, 0);
         button.setOpaque(true);
         button.setBorderPainted(false);
-        button.setFocusPainted(false); // Disable the focus border
+        button.setFocusPainted(false);
         button.setBackground(normalColor);
-        button.setForeground(Color.YELLOW); // Yellow text
-        button.setPreferredSize(new Dimension(150, 40)); // Set size
+        button.setForeground(Color.YELLOW);
+        button.setPreferredSize(new Dimension(150, 40));
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
