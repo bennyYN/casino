@@ -44,8 +44,9 @@ public class SettingsGUI extends JFrame {
         panel.setOpaque(false); // Panel transparent lassen, damit das Hintergrundbild sichtbar bleibt
         this.add(panel);
 
-        JLabel volumeLabel = new JLabel("Volume");
-        volumeLabel.setForeground(Color.YELLOW);
+        JLabel volumeLabel = new JLabel("Music-Volume");
+        volumeLabel.setForeground(Color.yellow);
+        volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         // Musik-Slider erstellen
         JSlider musicSlider = new JSlider(0, 100, (int) mainGUI.getCurrentVolume()); // Verwende die aktuelle Lautstärke
@@ -53,7 +54,7 @@ public class SettingsGUI extends JFrame {
         musicSlider.setMinorTickSpacing(5);
         musicSlider.setPaintTicks(true);
         musicSlider.setPaintLabels(true);
-        musicSlider.setForeground(Color.YELLOW);
+        musicSlider.setForeground(Color.yellow);
         musicSlider.setBackground(new Color(0, 0, 0, 0)); // Transparenter Hintergrund
         musicSlider.setOpaque(false); // Slider transparent machen
         musicSlider.setPreferredSize(new Dimension(300, 50));
@@ -92,6 +93,7 @@ public class SettingsGUI extends JFrame {
     private void styleButton(JButton button) {
         Color normalColor = new Color(0, 100, 0);
         Color pressedColor = new Color(0, 200, 0);
+        button.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftart und Größe
         button.setOpaque(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false);

@@ -78,13 +78,14 @@ public class MainGUI extends JFrame implements ActionListener {
 
     // Methode, um den Button zu stylen
     private void styleButton(JButton button) {
-        Color normalColor = new Color(35, 35, 35); // Dunkelgrün
+        Color normalColor = new Color(35, 35, 35); // Grau
         Color pressedColor = new Color(0, 100, 0); // Helleres Grün
+        button.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftart und Größe
         button.setOpaque(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false); // Fokusrand deaktivieren
         button.setBackground(normalColor);
-        button.setForeground(Color.YELLOW); // Gelber Text
+        button.setForeground(Color.yellow); // Gelber Text
         button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
         button.addActionListener(this);
         button.addMouseListener(new java.awt.event.MouseAdapter() {

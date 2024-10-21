@@ -2,71 +2,73 @@ package de.ben;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class LoadingScreen {
 
-    // Deklariere backgroundImage als Instanzvariable
-    private static BufferedImage backgroundImage;
+    // Hauptmethode, um die Klasse direkt ausführbar zu machen
+    public static void main(String[] args) {
+        // Erstelle ein neues JFrame als Hauptfenster
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);  // Größe des Hauptfensters
+
+        // Führe den Ladebildschirm aus
+        showLoadingScreen(frame, () -> {
+            System.out.println("Laden abgeschlossen. Weiter geht's!");
+            // Hier kann man den nächsten Schritt nach dem Laden ausführen,
+            // z.B. ein neues Fenster öffnen oder die Hauptanwendung starten.
+        });
+    }
 
     public static void showLoadingScreen(JFrame parentFrame, Runnable onLoadingComplete) {
         // Erstelle den Lade-Dialog
         JDialog loadingDialog = new JDialog(parentFrame, "Laden...", true);
-        loadingDialog.setSize(300, 150);  // Kleinere Fenstergröße für den Ladebildschirm
+        loadingDialog.setSize(400, 200);  // Vergrößere das Fenster
         loadingDialog.setLocationRelativeTo(parentFrame);
         loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         loadingDialog.setUndecorated(true);  // Entfernt den Fensterrahmen für ein sauberes Aussehen
 
-        // Versuche, das Hintergrundbild zu laden
-        try (InputStream inputStream = LoadingScreen.class.getClassLoader().getResourceAsStream("background.png")) {
-            if (inputStream == null) {
-                throw new IOException("Hintergrundbild konnte nicht gefunden werden.");
-            }
-            backgroundImage = ImageIO.read(inputStream);
-        } catch (IOException e) {
-            System.out.println("Hintergrundbild für den Ladebildschirm konnte nicht geladen werden.");
-        }
-
-        // Panel für den Inhalt des Ladebildschirms mit dem gleichen Hintergrundbild
+        // Panel für den Inhalt des Ladebildschirms mit schwarzem Hintergrund
         JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if (backgroundImage != null) {
-                    // Zeichne das Hintergrundbild auf die gesamte Fläche des Lade-Dialogs
-                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-                } else {
-                    // Setze einen Fallback-Hintergrund, wenn das Bild nicht geladen werden kann
-                    g.setColor(new Color(0, 51, 0));  // Dunkelgrüner Fallback-Hintergrund
-                    g.fillRect(0, 0, getWidth(), getHeight());
-                }
+                // Schwarzer Hintergrund
+                g.setColor(Color.BLACK);
+                g.fillRect(0, 0, getWidth(), getHeight());
             }
         };
-        panel.setOpaque(false); // Panel transparent lassen, damit das Hintergrundbild sichtbar bleibt
+        panel.setOpaque(false); // Panel transparent lassen, damit der schwarze Hintergrund sichtbar bleibt
 
-        // Lade-Text
+        // Lade-Text ("Laden, bitte warten...")
         JLabel loadingLabel = new JLabel("Laden, bitte warten...", JLabel.CENTER);
-        loadingLabel.setForeground(Color.YELLOW); // Gelber Text, wie im MainGUI
-        loadingLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Schriftgröße und Stil anpassen
+        loadingLabel.setForeground(Color.WHITE); // Weißer Text
+        loadingLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftgröße und Stil
+        loadingLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0)); // Fügt oben 20 Pixel Abstand hinzu
 
-        // Fortschrittsanzeige
-        JProgressBar progressBar = new JProgressBar(0, 100);  // Fortschrittsanzeige von 0 bis 100
-        progressBar.setPreferredSize(new Dimension(250, 20)); // Größe der Fortschrittsanzeige
-        progressBar.setForeground(new Color(255, 215, 0));  // Goldene Farbe, passend zum Stil des MainGUI
-        progressBar.setStringPainted(true);  // Fortschrittswert anzeigen
-
-        // Prozent-Label
+        // Prozent-Label (über der Fortschrittsanzeige)
         JLabel percentLabel = new JLabel("0%", JLabel.CENTER);
-        percentLabel.setForeground(Color.YELLOW);  // Gelber Text, wie im MainGUI
-        percentLabel.setFont(new Font("Arial", Font.BOLD, 14));  // Schriftgröße und Stil
+        percentLabel.setForeground(Color.WHITE);  // Weißer Text für die Prozentanzeige
+        percentLabel.setFont(new Font("Arial", Font.BOLD, 16));  // Schriftgröße und Stil
+        percentLabel.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));  // Fügt X Pixel Abstand nach oben hinzu
 
-        // Füge die Komponenten dem Panel hinzu
-        panel.add(loadingLabel, BorderLayout.NORTH);
-        panel.add(progressBar, BorderLayout.CENTER);
-        panel.add(percentLabel, BorderLayout.SOUTH);
+        // Fortschrittsanzeige (graue Ladeleiste)
+        JProgressBar progressBar = new JProgressBar(0, 100);  // Fortschrittsanzeige von 0 bis 100
+        progressBar.setPreferredSize(new Dimension(250, 30)); // Setze die Breite auf 250 Pixel, damit Platz auf beiden Seiten bleibt
+        progressBar.setForeground(Color.LIGHT_GRAY);  // Graue Farbe für die Ladeleiste
+        progressBar.setBackground(Color.DARK_GRAY);  // Dunkleres Grau für den Hintergrund der Ladeleiste
+        progressBar.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));  // Füge einen Rand hinzu, um Platz rechts und links zu lassen
+        progressBar.setStringPainted(false);  // Deaktiviere die eingebaute Textanzeige in der Fortschrittsleiste
+
+        // Erstelle ein zentriertes Panel für die Fortschrittsleiste und das Prozent-Label
+        JPanel progressPanel = new JPanel(new BorderLayout());
+        progressPanel.setOpaque(false); // Transparent lassen
+        progressPanel.add(percentLabel, BorderLayout.NORTH);
+        progressPanel.add(progressBar, BorderLayout.CENTER);
+
+        // Füge die Komponenten dem Hauptpanel hinzu
+        panel.add(loadingLabel, BorderLayout.NORTH);  // Lade-Text oben im Fenster mit Abstand
+        panel.add(progressPanel, BorderLayout.CENTER); // Fortschrittsleiste und Prozent-Label mittig
 
         loadingDialog.add(panel);
 
@@ -75,8 +77,8 @@ public class LoadingScreen {
             @Override
             protected Void doInBackground() throws Exception {
                 // Simuliere eine Aufgabe, indem der Fortschritt aktualisiert wird
-                for (int i = 0; i <= 100; i += 10) {
-                    Thread.sleep(200);  // Simuliere Wartezeit
+                for (int i = 0; i <= 100; i += 5) {
+                    Thread.sleep(100);  // Simuliere Wartezeit
                     publish(i);  // Berichte den Fortschritt
                 }
                 return null;

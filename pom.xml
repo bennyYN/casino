@@ -16,18 +16,36 @@
     <maven.compiler.target>22</maven.compiler.target>
   </properties>
 
-
   <dependencies>
+    <!-- JUnit dependency for testing -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- JavaFX dependencies -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>22.0.0.1</version> <!-- Ensure this version matches your JDK version -->
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>22.0.0.1</version> <!-- For audio playback support -->
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>22.0.0.1</version>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <!-- Maven compiler plugin to specify Java version -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -35,6 +53,23 @@
         <configuration>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+
+      <!-- JavaFX Maven Plugin for running JavaFX applications -->
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>de.ben.MainGUI</mainClass> <!-- Replace with your main class -->
         </configuration>
       </plugin>
     </plugins>
