@@ -39,7 +39,7 @@ public class PlayerSelectionIDEE extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel playerLabel = new JLabel("Wie viele Gegner? (2-10)");
+        JLabel playerLabel = new JLabel("Anzahl der Spieler (2-10):");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -65,7 +65,7 @@ public class PlayerSelectionIDEE extends JFrame {
             }
         });
 
-        startChipsLabel = new JLabel("Anzahl der Anfangschips (200-10000): " + startChips);
+        startChipsLabel = new JLabel("Anzahl der Anfangschips (200-10000):  " + startChips);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
@@ -82,7 +82,7 @@ public class PlayerSelectionIDEE extends JFrame {
 
         startChipsSlider.addChangeListener(e -> {
             startChips = startChipsSlider.getValue();
-            startChipsLabel.setText("Anzahl der Anfangschips (200-10000): " + startChips);
+            startChipsLabel.setText("Anzahl der Anfangschips (200-10000):  " + startChips);
         });
 
         startChipsSlider.addMouseWheelListener(new MouseAdapter() {
@@ -94,7 +94,7 @@ public class PlayerSelectionIDEE extends JFrame {
             }
         });
 
-        bigBlindLabel = new JLabel("Big Blind (20-2000, nur gerade Zahlen): " + bigBlind);
+        bigBlindLabel = new JLabel("Big Blind (20-2000):  " + bigBlind);
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
@@ -115,7 +115,7 @@ public class PlayerSelectionIDEE extends JFrame {
             if (bigBlind % 2 != 0) {
                 bigBlind -= 1;
             }
-            bigBlindLabel.setText("Big Blind (20-2000, nur gerade Zahlen): " + bigBlind);
+            bigBlindLabel.setText("Big Blind (20-2000):  " + bigBlind);
             bigBlindSlider.setValue(bigBlind);
         });
 
@@ -148,7 +148,7 @@ public class PlayerSelectionIDEE extends JFrame {
 
         exitButton.addActionListener(e -> {
             this.dispose();
-            new PokerGUI(numPlayers, playerNames).setVisible(true);
+            new PokerGUI(numPlayers, playerNames, startChips, bigBlind).setVisible(true);
         });
 
         add(panel);

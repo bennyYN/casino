@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PokerGUI extends JFrame {
     // Attribute & Objekte
-    protected Poker game;
+    //protected Poker game;
     private JPanel panel;
     private JTextPane dialogPane; // Dialogbox oben rechts
     private JTextField raiseField; // Textfeld zur Eingabe vom Wert zum Erhöhen
@@ -29,8 +29,9 @@ public class PokerGUI extends JFrame {
     private int totalPlayers;
 
     // Konstruktor
-    public PokerGUI(int numPlayers, ArrayList<String> playerNames) {
+    public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind) {
         totalPlayers = numPlayers; // Set total players
+        //game = new Poker(startChips, bigBlind, numPlayers, this);
         playerChips = new ArrayList<>();
         for (int i = 0; i < totalPlayers; i++) {
             playerChips.add(1000); // Beispiel: Jeder Spieler startet mit 1000 Chips
@@ -49,7 +50,7 @@ public class PokerGUI extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
-                g.drawImage(new ImageIcon("img/table.png").getImage(), -13, 0, null);
+                g.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
             }
         };
         panel.setLayout(null);
@@ -134,7 +135,7 @@ public class PokerGUI extends JFrame {
         // Initialize the action listeners for the buttons
         foldButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessage("Player " + (currentPlayerIndex + 1) + " folds.");
+                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " folds.");
                 updateChips(-10); // Beispielwert für folden
                 hideRaiseField();
                 nextPlayer();
@@ -142,14 +143,14 @@ public class PokerGUI extends JFrame {
         });
         checkButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessage("Player " + (currentPlayerIndex + 1) + " checks.");
+                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " checks.");
                 hideRaiseField();
                 nextPlayer();
             }
         });
         callButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessage("Player " + (currentPlayerIndex + 1) + " calls.");
+                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " calls.");
                 updateChips(-20); // Beispielwert für callen
                 hideRaiseField();
                 nextPlayer();
@@ -161,7 +162,7 @@ public class PokerGUI extends JFrame {
                 raiseLabel.setVisible(true);
                 if (!raiseField.getText().isEmpty()) {
                     int raiseAmount = Integer.parseInt(raiseField.getText());
-                    addMessage("Player " + (currentPlayerIndex + 1) + " raises " + raiseAmount);
+                    addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " raises " + raiseAmount);
                     updateChips(-raiseAmount); // Beispielwert für raisen
                     raiseField.setText(""); // Clear the field after submission
                     hideRaiseField();
@@ -171,7 +172,7 @@ public class PokerGUI extends JFrame {
         });
         allInButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessage("Player " + (currentPlayerIndex + 1) + " goes all in!");
+                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " goes all in!");
                 updateChips(-playerChips.get(currentPlayerIndex)); // Setzt die Chips auf 0
                 hideRaiseField();
                 nextPlayer();
@@ -192,7 +193,7 @@ public class PokerGUI extends JFrame {
         return button;
     }
 
-    private void addMessage(String message) {
+    private void addMessageToDialogBox(String message) {
         messages.add(message);
         dialogPane.setText(String.join("\n", messages));
     }
@@ -223,7 +224,7 @@ public class PokerGUI extends JFrame {
                 playerNames.add("Player 2");
                 playerNames.add("Player 3");
 
-                new PokerGUI(3, playerNames).setVisible(true);
+                new PokerGUI(3, playerNames, 5000, 50).setVisible(true);
             }
         });
     }
