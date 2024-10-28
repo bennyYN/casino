@@ -44,6 +44,9 @@ public class PokerGUI extends JFrame {
         setLocationRelativeTo(null);
         setIconImage(new ImageIcon("img/icon.png").getImage()); // Titlebar Icon hinzufügen
 
+        //Spieler-Slots
+
+
         // Hintergrundbild auf JPanel zeichnen
         panel = new JPanel() {
             @Override
@@ -51,6 +54,15 @@ public class PokerGUI extends JFrame {
                 super.paintComponent(g);
                 g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
                 g.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
+
+                //Einzeichnen der Playerslots
+                int abstand = 100;
+                for (int i = 0; i <= 3; i++) {
+                    //LINKS
+                    g.drawImage(new ImageIcon("img/playerslot.png").getImage(), 20, 225 + (i * abstand), null);
+                    //RECHTS
+                    g.drawImage(new ImageIcon("img/playerslot.png").getImage(), 1008, 225 + (i * abstand), null);
+                }
             }
         };
         panel.setLayout(null);
@@ -62,7 +74,7 @@ public class PokerGUI extends JFrame {
         dialogPane.setForeground(Color.WHITE); // Set the text color to white
         dialogPane.setFont(new Font("Arial", Font.PLAIN, 16)); // Slightly bigger text
         JScrollPane scrollPane = new JScrollPane(dialogPane);
-        scrollPane.setBounds(10, 10, 350, 200); // Adjusted bounds for the larger window
+        scrollPane.setBounds(10, 10, 350, 170); // Adjusted bounds for the larger window
         scrollPane.setOpaque(false); // Make the scroll pane transparent
         scrollPane.getViewport().setOpaque(false); // Make the viewport transparent
         scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove the border

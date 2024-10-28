@@ -45,7 +45,7 @@ public class PlayerSelectionIDEE extends JFrame {
         gbc.gridwidth = 2;
         panel.add(playerLabel, gbc);
 
-        Integer[] playerOptions = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+        Integer[] playerOptions = {2, 3, 4, 5, 6, 7, 8, 9};
         JComboBox<Integer> playerDropdown = new JComboBox<>(playerOptions);
         playerDropdown.setSelectedItem(numPlayers);
         gbc.gridx = 0;
