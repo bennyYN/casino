@@ -185,7 +185,7 @@ public class MainGUI extends JFrame implements ActionListener {
             // Ladebildschirm anzeigen und PokerGUI nach dem Laden öffnen
             LoadingScreen.showLoadingScreen(this, () -> {
                 // PokerGUI öffnen, wenn der Ladevorgang abgeschlossen ist
-                new PokerGUI();
+                new PlayerSelectionIDEE();
                 this.dispose(); // Schließe MainGUI, wenn der Ladevorgang abgeschlossen ist
             });
         } else if (sourceButton == settingsButton) {
