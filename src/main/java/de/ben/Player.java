@@ -1,5 +1,7 @@
 package de.ben;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,6 +13,7 @@ public class Player {
     private String name;
     private boolean allIn = false;
     private int currentBet;
+    public boolean handVisible = false;
 
     public Player(int initialChips, String name) {
         this.hand = new ArrayList<>();
@@ -29,6 +32,13 @@ public class Player {
 
     public Chips getChips() {
         return chips;
+    }
+
+    public void renderCards(Graphics g){
+        if(!handVisible){
+            g.drawImage(new ImageIcon("img/cards/BACKSIDE.png").getImage(), 480, 520, 104, 145, null);
+            g.drawImage(new ImageIcon("img/cards/BACKSIDE.png").getImage(), 600, 520, 104, 145, null);
+        }
     }
 
     public int bet(int amount) {

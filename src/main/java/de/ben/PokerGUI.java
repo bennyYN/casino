@@ -23,6 +23,8 @@ public class PokerGUI extends JFrame {
     public JButton callButton;
     public JButton raiseButton;
     public JButton allInButton;
+    public JButton toggleButton; // Neuer Button zum Toggeln der Test-Boolean-Variable
+    private boolean testVariable = false; // Test-Boolean-Variable
     public List<String> messages; // String Liste (speichert Nachrichten für Dialogbox)
     public List<Integer> playerChips; // Liste für die Chips jedes Spielers
     public int currentPlayerIndex = 0;
@@ -63,8 +65,10 @@ public class PokerGUI extends JFrame {
                 g.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
                 g.drawImage(new ImageIcon("img/pot.png").getImage(), 495, 70, null);
                 slots.renderAll(g);
+                if (slots.players.get(currentPlayerIndex) != null) {
+                    slots.players.get(currentPlayerIndex).renderCards(g);
+                }
                 repaint();
-
             }
         };
         panel.setLayout(null);
@@ -103,29 +107,50 @@ public class PokerGUI extends JFrame {
         chipsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         panel.add(chipsLabel);
 
+        // Create the Help button
+        JButton helpButton = new JButton("?");
+        helpButton.setBounds(1150, 10, 30, 30); // Position oben rechts
+        helpButton.setBackground(new Color(170, 0, 0)); // Wine red color
+        helpButton.setForeground(Color.WHITE);
+        helpButton.setFont(new Font("Arial", Font.BOLD, 20));
+        helpButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        helpButton.setFocusPainted(false);
+        panel.add(helpButton);
+
+        // Button ActionListener to open ImageWindow
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ImageWindow().setVisible(true);
+            }
+        });
+
         // Buttons
         foldButton = createButton("Fold");
         checkButton = createButton("Check");
         callButton = createButton("Call");
         raiseButton = createButton("Raise");
         allInButton = createButton("All In");
+        toggleButton = createButton("Show/Hide Hand");
 
         // Hardcoded but centered positions
         int buttonWidth = 140;
         int buttonHeight = 70;
         int yPosition = 700;
         int spacing = 30;
-        int startX = (getWidth() - (buttonWidth * 5 + spacing * 4)) / 2;
-        foldButton.setBounds(startX, yPosition, buttonWidth, buttonHeight);
+        int startX = ((getWidth() - (buttonWidth * 6 + spacing * 5)) / 2) - 6;
+        raiseButton.setBounds(startX, yPosition, buttonWidth, buttonHeight);
         checkButton.setBounds(startX + (buttonWidth + spacing) * 1, yPosition, buttonWidth, buttonHeight);
         callButton.setBounds(startX + (buttonWidth + spacing) * 2, yPosition, buttonWidth, buttonHeight);
-        raiseButton.setBounds(startX + (buttonWidth + spacing) * 3, yPosition, buttonWidth, buttonHeight);
+        foldButton.setBounds(startX + (buttonWidth + spacing) * 3, yPosition, buttonWidth, buttonHeight);
         allInButton.setBounds(startX + (buttonWidth + spacing) * 4, yPosition, buttonWidth, buttonHeight);
+        toggleButton.setBounds(startX + (buttonWidth + spacing) * 5, yPosition, buttonWidth, buttonHeight);
         panel.add(foldButton);
         panel.add(checkButton);
         panel.add(callButton);
         panel.add(raiseButton);
         panel.add(allInButton);
+        panel.add(toggleButton);
 
         raiseField = new JTextField();
         raiseField.setBounds(raiseButton.getX(), raiseButton.getY() - 40, buttonWidth, 30); // Position above the raise button
@@ -133,7 +158,7 @@ public class PokerGUI extends JFrame {
         panel.add(raiseField);
 
         raiseLabel = new JLabel("Raise Amount:");
-        raiseLabel.setBounds(raiseField.getX(), raiseField.getY() - 20, buttonWidth, 20); // Position directly above the input field
+        raiseLabel.setBounds(raiseField.getX(), raiseField.getY() - 20, buttonWidth, 20); // Position direkt über dem Eingabefeld
         raiseLabel.setForeground(Color.WHITE);
         raiseLabel.setFont(new Font("Arial", Font.BOLD, 12));
         raiseLabel.setVisible(false);
@@ -187,6 +212,11 @@ public class PokerGUI extends JFrame {
                 nextPlayer();
             }
         });
+        toggleButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                slots.players.get(currentPlayerIndex).handVisible = !slots.players.get(currentPlayerIndex).handVisible;
+            }
+        });
 
         add(panel);
     }
@@ -222,7 +252,9 @@ public class PokerGUI extends JFrame {
         do {
             currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
         } while (slots.players.get(currentPlayerIndex).isFolded() || slots.players.get(currentPlayerIndex).isAllIn());
-        chipsLabel.setText("Chips: " + playerChips.get(currentPlayerIndex));
+        if (slots.players.get(currentPlayerIndex) != null) {
+            slots.players.get(currentPlayerIndex).handVisible = false;
+        }
     }
 
     public static void main(String[] args) {
