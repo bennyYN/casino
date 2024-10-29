@@ -9,29 +9,33 @@ import java.util.List;
 
 public class PokerGUI extends JFrame {
     // Attribute & Objekte
-    //protected Poker game;
-    private JPanel panel;
-    private JTextPane dialogPane; // Dialogbox oben rechts
-    private JTextField raiseField; // Textfeld zur Eingabe vom Wert zum Erhöhen
-    private JLabel raiseLabel; // Informationstext über dem Eingabefeld zum Erhöhen
-    private JLabel bigBlindLabel; // Infotext oben rechts für Big Blind
-    private JLabel smallBlindLabel; // Infotext oben rechts für Small Blind
-    private JLabel chipsLabel; // Infotext für die Anzahl der Chips
-    private JLabel currentPlayerLabel; // Infotext für den aktuellen Spieler
-    private JButton foldButton;
-    private JButton checkButton;
-    private JButton callButton;
-    private JButton raiseButton;
-    private JButton allInButton;
-    private List<String> messages; // String Liste (speichert Nachrichten für Dialogbox)
-    private List<Integer> playerChips; // Liste für die Chips jedes Spielers
-    private int currentPlayerIndex = 0;
-    private int totalPlayers;
+    protected Poker game;
+    public JPanel panel;
+    public JTextPane dialogPane; // Dialogbox oben rechts
+    public JTextField raiseField; // Textfeld zur Eingabe vom Wert zum Erhöhen
+    public JLabel raiseLabel; // Informationstext über dem Eingabefeld zum Erhöhen
+    public JLabel bigBlindLabel; // Infotext oben rechts für Big Blind
+    public JLabel smallBlindLabel; // Infotext oben rechts für Small Blind
+    public JLabel chipsLabel; // Infotext für die Anzahl der Chips
+    public JLabel currentPlayerLabel; // Infotext für den aktuellen Spieler
+    public JButton foldButton;
+    public JButton checkButton;
+    public JButton callButton;
+    public JButton raiseButton;
+    public JButton allInButton;
+    public List<String> messages; // String Liste (speichert Nachrichten für Dialogbox)
+    public List<Integer> playerChips; // Liste für die Chips jedes Spielers
+    public int currentPlayerIndex = 0;
+    public int totalPlayers;
+    public int startChips;
+    public int bigBlind;
 
     // Konstruktor
     public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind) {
         totalPlayers = numPlayers; // Set total players
-        //game = new Poker(startChips, bigBlind, numPlayers, this);
+        this.startChips = startChips;
+        this.bigBlind = bigBlind;
+       // game = new Poker(startChips, bigBlind, numPlayers, this);
         playerChips = new ArrayList<>();
         for (int i = 0; i < totalPlayers; i++) {
             playerChips.add(1000); // Beispiel: Jeder Spieler startet mit 1000 Chips
