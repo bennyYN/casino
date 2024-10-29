@@ -29,6 +29,8 @@ public class PokerGUI extends JFrame {
     public int totalPlayers;
     public int startChips;
     public int bigBlind;
+    ArrayList<String> playerNames;
+    Playerslot slots;
 
     // Konstruktor
     public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind) {
@@ -37,6 +39,7 @@ public class PokerGUI extends JFrame {
         this.bigBlind = bigBlind;
         // game = new Poker(startChips, bigBlind, numPlayers, this);
         playerChips = new ArrayList<>();
+        this.playerNames = playerNames;
         for (int i = 0; i < totalPlayers; i++) {
             playerChips.add(1000); // Beispiel: Jeder Spieler startet mit 1000 Chips
         }
@@ -49,7 +52,7 @@ public class PokerGUI extends JFrame {
         setIconImage(new ImageIcon("img/icon.png").getImage()); // Titlebar Icon hinzufügen
 
         //Spieler-Slots
-
+        slots = new Playerslot(startChips, playerNames, this);
 
         // Hintergrundbild auf JPanel zeichnen
         panel = new JPanel() {
@@ -58,16 +61,9 @@ public class PokerGUI extends JFrame {
                 super.paintComponent(g);
                 g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
                 g.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
-
-                //Einzeichnen der Playerslots
-                int abstand = 100;
-                for (int i = 0; i <= 3; i++) {
-                    //TODO -> HARDCODE IT!
-                    //LINKS
-                    g.drawImage(new ImageIcon("img/playerslot.png").getImage(), 20, 225 + (i * abstand), null);
-                    //RECHTS
-                    g.drawImage(new ImageIcon("img/empty_playerslot.png").getImage(), 1008, 225 + (i * abstand), null);
-                }
+                g.drawImage(new ImageIcon("img/pot.png").getImage(), 495, 70, null);
+                slots.renderAll(g);
+                repaint();
 
             }
         };
@@ -106,13 +102,6 @@ public class PokerGUI extends JFrame {
         chipsLabel.setForeground(Color.WHITE);
         chipsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         panel.add(chipsLabel);
-
-        currentPlayerLabel = new JLabel("Player 1");
-        currentPlayerLabel.setBounds((getWidth() - 150) / 2, 10, 150, 30);
-        currentPlayerLabel.setForeground(Color.WHITE);
-        currentPlayerLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        currentPlayerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(currentPlayerLabel);
 
         // Buttons
         foldButton = createButton("Fold");
@@ -153,22 +142,23 @@ public class PokerGUI extends JFrame {
         // Initialize the action listeners for the buttons
         foldButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " folds.");
+                addMessageToDialogBox(playerNames.get(currentPlayerIndex) + " folds.");
                 updateChips(-10); // Beispielwert für folden
                 hideRaiseField();
+                slots.players.get(currentPlayerIndex).setFolded(true);
                 nextPlayer();
             }
         });
         checkButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " checks.");
+                addMessageToDialogBox(playerNames.get(currentPlayerIndex) + " checks.");
                 hideRaiseField();
                 nextPlayer();
             }
         });
         callButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " calls.");
+                addMessageToDialogBox(playerNames.get(currentPlayerIndex) + " calls.");
                 updateChips(-20); // Beispielwert für callen
                 hideRaiseField();
                 nextPlayer();
@@ -180,7 +170,7 @@ public class PokerGUI extends JFrame {
                 raiseLabel.setVisible(true);
                 if (!raiseField.getText().isEmpty()) {
                     int raiseAmount = Integer.parseInt(raiseField.getText());
-                    addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " raises " + raiseAmount);
+                    addMessageToDialogBox(playerNames.get(currentPlayerIndex) + " raises " + raiseAmount);
                     updateChips(-raiseAmount); // Beispielwert für raisen
                     raiseField.setText(""); // Clear the field after submission
                     hideRaiseField();
@@ -190,8 +180,9 @@ public class PokerGUI extends JFrame {
         });
         allInButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addMessageToDialogBox("Player " + (currentPlayerIndex + 1) + " goes all in!");
+                addMessageToDialogBox(playerNames.get(currentPlayerIndex) + " goes all in!");
                 updateChips(-playerChips.get(currentPlayerIndex)); // Setzt die Chips auf 0
+                slots.players.get(currentPlayerIndex).setAllIn(true);
                 hideRaiseField();
                 nextPlayer();
             }
@@ -228,8 +219,9 @@ public class PokerGUI extends JFrame {
     }
 
     private void nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
-        currentPlayerLabel.setText("Player " + (currentPlayerIndex + 1));
+        do {
+            currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+        } while (slots.players.get(currentPlayerIndex).isFolded() || slots.players.get(currentPlayerIndex).isAllIn());
         chipsLabel.setText("Chips: " + playerChips.get(currentPlayerIndex));
     }
 

@@ -28,9 +28,9 @@ public class PlayerSelectionIDEE extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        playerNames = new ArrayList<>(10);
-        for (int i = 0; i < 10; i++) {
-            playerNames.add("---");
+        playerNames = new ArrayList<>(8);
+        for (int i = 0; i < 8; i++) {
+            playerNames.add("‒");
         }
 
         JPanel panel = new JPanel();
@@ -39,13 +39,13 @@ public class PlayerSelectionIDEE extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel playerLabel = new JLabel("Anzahl der Spieler (2-10):");
+        JLabel playerLabel = new JLabel("Anzahl der Spieler (2-8):");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         panel.add(playerLabel, gbc);
 
-        Integer[] playerOptions = {2, 3, 4, 5, 6, 7, 8, 9};
+        Integer[] playerOptions = {2, 3, 4, 5, 6, 7, 8};
         JComboBox<Integer> playerDropdown = new JComboBox<>(playerOptions);
         playerDropdown.setSelectedItem(numPlayers);
         gbc.gridx = 0;

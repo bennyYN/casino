@@ -11,9 +11,6 @@ public class Player {
     private String name;
     private boolean allIn = false;
     private int currentBet;
-    protected String username;
-
-
 
     public Player(int initialChips, String name) {
         this.hand = new ArrayList<>();
@@ -33,6 +30,7 @@ public class Player {
     public Chips getChips() {
         return chips;
     }
+
     public int bet(int amount) {
         if (amount == chips.getAmount()+getCurrentBet()) {
             return goAllIn();
