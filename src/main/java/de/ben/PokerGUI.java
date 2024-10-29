@@ -35,7 +35,7 @@ public class PokerGUI extends JFrame {
         totalPlayers = numPlayers; // Set total players
         this.startChips = startChips;
         this.bigBlind = bigBlind;
-       // game = new Poker(startChips, bigBlind, numPlayers, this);
+        // game = new Poker(startChips, bigBlind, numPlayers, this);
         playerChips = new ArrayList<>();
         for (int i = 0; i < totalPlayers; i++) {
             playerChips.add(1000); // Beispiel: Jeder Spieler startet mit 1000 Chips
@@ -62,11 +62,13 @@ public class PokerGUI extends JFrame {
                 //Einzeichnen der Playerslots
                 int abstand = 100;
                 for (int i = 0; i <= 3; i++) {
+                    //TODO -> HARDCODE IT!
                     //LINKS
                     g.drawImage(new ImageIcon("img/playerslot.png").getImage(), 20, 225 + (i * abstand), null);
                     //RECHTS
-                    g.drawImage(new ImageIcon("img/playerslot.png").getImage(), 1008, 225 + (i * abstand), null);
+                    g.drawImage(new ImageIcon("img/empty_playerslot.png").getImage(), 1008, 225 + (i * abstand), null);
                 }
+
             }
         };
         panel.setLayout(null);
