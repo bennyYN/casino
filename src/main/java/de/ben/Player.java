@@ -11,6 +11,7 @@ public class Player {
     private String name;
     private boolean allIn = false;
     private int currentBet;
+    protected String username;
 
 
 
