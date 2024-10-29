@@ -1,5 +1,8 @@
 package de.ben;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Card {
     public enum Suit {
         HEARTS, DIAMONDS, CLUBS, SPADES
@@ -13,6 +16,11 @@ public class Card {
         this.value = value;
         this.suit = suit;
         this.link = generateImageLink();
+    }
+
+    public Image getImage(){
+        System.out.println(toString());
+        return new ImageIcon("img/cards/" + toString() + ".png").getImage();
     }
 
     private String generateImageLink() {
@@ -61,6 +69,7 @@ public class Card {
                 Card card = new Card(value, suit);
                 System.out.println(card + " - " + card.getLink());
             }
+
         }
     }
 }
