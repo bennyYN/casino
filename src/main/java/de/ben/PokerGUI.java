@@ -59,7 +59,11 @@ public class PokerGUI extends JFrame {
         setResizable(false); // Größe des Fensters festsetzen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setIconImage(new ImageIcon("img/icon.png").getImage()); // Titlebar Icon hinzufügen
+
+        // Icon setzen mit Skalierung
+        ImageIcon icon = new ImageIcon("img/icon.png");
+        Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
+        setIconImage(scaledIcon);
 
         //Spieler-Slots
         slots = new Playerslot(startChips, playerNames, this);
