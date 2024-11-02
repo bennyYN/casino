@@ -66,10 +66,12 @@ public class Playerslot {
                         g.drawImage(new ImageIcon("img/chips.png").getImage(), 35, 254 + (i * 100), 16, 16, null);
                         g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 55, 267 + (i * 100));
                         //Karten
-                        g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
-                        g.drawString(gui.game.players.get(i).getHand().get(0).toString() + ", " + gui.game.players.get(i).getHand().get(1).toString(), 30, 287 + (i * 100));
-                    }
+                        if(gui.game.isGameOver){
+                            g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
+                            g.drawString(gui.game.players.get(i).getHand().get(0).toString() + ", " + gui.game.players.get(i).getHand().get(1).toString(), 30, 287 + (i * 100));
+                        }
 
+                    }
 
                 }
             }else{
