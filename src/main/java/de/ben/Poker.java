@@ -2,34 +2,51 @@ package de.ben;
 
 import java.util.*;
 
-public class Poker {
+public class Poker extends Thread {
+    private final ArrayList<Boolean> actualPlayers;
     Scanner sc = new Scanner(System.in);
-    private final List<Player> players;
+    List<Player> players;
     private final List<Player> blindsOrder;
-    private final Dealer dealer;
+    public final Dealer dealer;
     private final Deck deck;
     HandRanker handRanker = new HandRanker();
-    private final GewinnPot GewinnPot = new GewinnPot();
-    private int highestBet;
+    public final GewinnPot GewinnPot = new GewinnPot();
+    public int highestBet;
     private Player lastPlayerToRaise;
+    int anzahlSpieler;
+    int bigBlind, smallBlind;
+    public volatile boolean isGameOver = false;
+    PokerGUI gui;
+    Player currentPlayer;
 
 
-    public Poker(int AnfangsChips, int bigBlind, int numPlayers) {
+    public Poker(int AnfangsChips, int bigBlind, int numPlayers, ArrayList<Boolean> actualPlayers, PokerGUI gui) {
+        this.actualPlayers = actualPlayers;
+        this.gui = gui;
+
         this.players = new ArrayList<>();
         for (int i = 0; i < numPlayers; i++) {
-            this.players.add(new Player(AnfangsChips, "Spieler " + (i + 1)));
+            this.players.add(gui.slots.players.get(i));
         }
         this.blindsOrder = new ArrayList<>(players);
         this.dealer = new Dealer();
         this.deck = new Deck();
-        int smallBlind = bigBlind / 2;
+        this.bigBlind = bigBlind;
+        smallBlind = bigBlind / 2;
+        anzahlSpieler = numPlayers;
+
+        // Start the game in a new thread
+        //new Thread(this::startGame).start();
     }
 
     public void kartenAusteilen() {
         for (Player player : players) {
-            for (int i = 0; i < 2; i++) {
-                player.receiveCard(deck.kartenehmen());
+            if(player != null) {
+                for (int i = 0; i < 2; i++) {
+                    player.receiveCard(deck.kartenehmen());
+                }
             }
+
         }
         for (int i = 0; i <= 2; i++) {
             dealer.receiveCard(deck.kartenehmen());
@@ -40,6 +57,7 @@ public class Poker {
     public void fold(int i) {
         players.get(i).setFolded(true);
         System.out.println("Spieler " + (i + 1) + " hat gefoldet.");
+        gui.addMessageToDialogBox(currentPlayer.getName() + " folds.");
     }
 
     public void call(int i, int highestBet) {
@@ -47,35 +65,45 @@ public class Poker {
         int additionalBetNeeded = highestBet - currentPlayer.getCurrentBet();
         if (additionalBetNeeded <= 0) {
             System.out.println(currentPlayer.getName() + " der Spieler brauch keine weiteren Chips callen. Er hat den momentanen Einsatz schon gesetzt.");
+            gui.fadingLabel.setText("Du brauchst keine weiteren Chips callen, da du den momentanen Einsatz schon gesetzt hast.");
+            gui.addMessageToDialogBox(currentPlayer.getName() + " calls.");
         } else if (currentPlayer.getChips().getAmount() >= additionalBetNeeded) {
             currentPlayer.bet(additionalBetNeeded);
             GewinnPot.addChips(additionalBetNeeded); // Add the bet amount to the pot
             System.out.println(currentPlayer.getName() + " hat gecalled. Übrige Chips: " + currentPlayer.getChips().getAmount());
+            gui.addMessageToDialogBox(currentPlayer.getName() + " calls.");
         } else {
             System.out.println(currentPlayer.getName() + " hat nicht genügend Chips zum callen. Der Spieler geht stattdessen all in.");
+            gui.fadingLabel.setText("Nicht genug Chips zum callen. Du gehst stattdessen all in!");
+            gui.addMessageToDialogBox(currentPlayer.getName() + " goes all in!");
             allIn(i);
         }
     }
+
     public void raise(int i) {
         Player player = players.get(i);
         boolean validInput = false;
         while (!validInput) {
-            System.out.println("Gib den Betrag ein, um den du erhöhen möchtest:");
+            //System.out.println("Gib den Betrag ein, um den du erhöhen möchtest:");
             try {
-                int betAmount = sc.nextInt();
+                int betAmount = gui.raiseAmount;
                 if (betAmount > highestBet) {
                     highestBet = betAmount;
                     player.bet(betAmount);
                     GewinnPot.addChips(betAmount); // Add the bet amount to the pot
                     lastPlayerToRaise = players.get(i);
                     System.out.println("Spieler " + (i + 1) + " hat erhöht. Der höchste Einsatz beträgt jetzt " + highestBet);
+                    gui.addMessageToDialogBox(currentPlayer.getName() + " raises to " + highestBet + ".");
                     validInput = true;
+                    gui.hideRaiseField();
                 } else {
                     System.out.println("Der Erhöhungsbetrag muss höher sein als der aktuelle höchste Einsatz.");
+                    gui.fadingLabel.setText("Der Erhöhungsbetrag muss höher sein als der aktuelle höchste Einsatz.");
                 }
-            } catch (InputMismatchException e) {
+            } catch (Exception e) {
                 System.out.println("Unerlaubte Eingabe. Bitte gib eine ganze Zahl ein.");
-                sc.next();
+                gui.fadingLabel.setText("Unerlaubte Eingabe! Bitte gib eine ganze Zahl ein.");
+
             }
         }
     }
@@ -89,19 +117,22 @@ public class Poker {
             highestBet = betAmount;
         }
         player.setAllIn(true);
-        System.out.println(player.getName() + " is all in with " + betAmount + " chips.");
+        gui.addMessageToDialogBox(currentPlayer.getName() + " goes all in!");
     }
 
     public boolean check(int i) {
         Player player = players.get(i);
         if (highestBet == 0 || player == lastPlayerToRaise) {
             System.out.println("Spieler " + (i + 1) + " hat gecheckt.");
+            gui.addMessageToDialogBox(currentPlayer.getName() + " checks.");
             return true;
         } else {
             System.out.println("Unerlaubte Aktion. Du kannst nicht checken, weil der aktuelle höchste Einsatz " + highestBet + " ist.");
+            gui.fadingLabel.setText("Unerlaubte Aktion! Du kannst nicht checken, weil der aktuelle höchste Einsatz " + highestBet + " ist.");
             return false;
         }
     }
+
     public void wetten() {
         boolean gamecomplete = false;
         boolean roundComplete = false;
@@ -109,15 +140,32 @@ public class Poker {
         while (!roundComplete && !gamecomplete) {
             int i = 0;
             while (i < players.size()) {
-                Player currentPlayer = players.get(i);
+                currentPlayer = players.get(i);
                 if (!currentPlayer.isFolded() && !currentPlayer.isAllIn()) {
                     if (highestBet == 0) {
                         System.out.println("Spieler " + (i + 1) + ": Höchster Einsatz ist " + highestBet + ". Du kannst folden, checken oder erhöhen.");
                     } else {
                         System.out.println("Spieler " + (i + 1) + ": Höchster Einsatz ist " + highestBet + ". Du kannst folden, callen oder erhöhen.");
                     }
-                    String action = sc.next();
+
                     boolean validAction = false;
+
+                    String action;
+
+                    // Warte bis eine Aktion kommt, die nicht "idle" ist
+                    while (true) {
+                        action = gui.getAction();
+                        if (!"idle".equals(action)) {
+                            break;
+                        }
+                        try {
+                            // Kurze Pause bevor erneut geprüft wird
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            break;
+                        }
+                    }
 
                     switch (action.toLowerCase()) {
                         case "fold":
@@ -130,6 +178,7 @@ public class Poker {
                                 validAction = true;
                             } else {
                                 System.out.println("Unerlaubte Aktion. Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist oder du nicht genug Chips hast.");
+                                gui.fadingLabel.setText("Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist oder du nicht genug Chips hast.");
                             }
                             break;
                         case "raise":
@@ -138,6 +187,7 @@ public class Poker {
                                 validAction = true;
                             } else {
                                 System.out.println("Unerlaubte Aktion. Du kannst nicht erhöhen, weil du nicht genug Chips hast.");
+                                gui.fadingLabel.setText("Unerlaubte Aktion! Du kannst nicht erhöhen, weil du nicht genug Chips hast.");
                             }
                             break;
                         case "allin":
@@ -149,7 +199,7 @@ public class Poker {
                             validAction = true;
                             break;
                         case "check":
-                            if(check(i)) {
+                            if (check(i)) {
                                 validAction = true;
                                 checkCounter++;
                                 if (checkCounter == players.size()) {
@@ -164,10 +214,14 @@ public class Poker {
                                 validAction = true;
                             } catch (NumberFormatException e) {
                                 System.out.println("Unerlaubte Eingabe. Bitte gib eine ganze Zahl ein oder 'allin'.");
+                                gui.fadingLabel.setText("Unerlaubte Eingabe! Bitte gib eine ganze Zahl ein oder 'allin'.");
                             }
                             break;
                     }
+                    gui.setAction("idle");
                     if (validAction) {
+                        // Setze den action String auf "idle" zurück und bewege zum nächsten Spieler
+
                         i++;
                     }
                 } else {
@@ -194,12 +248,10 @@ public class Poker {
         System.out.println("Der Pot beträgt: " + GewinnPot.getAmount());
     }
 
-
-
     public void spielerKartenAusgabe() {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
-            if (!player.isFolded()) { // Skip players who have folded
+            if (player != null && !player.isFolded()) { // Skip players who have folded
                 System.out.println("Karten des Spielers " + (i + 1) + ": ");
                 for (Card card : player.getHand()) {
                     System.out.println(card);
@@ -218,6 +270,7 @@ public class Poker {
             Card drawnCard = dealer.drawCards();
             dealer.receiveCard(drawnCard);
             System.out.println("Dealer hat eine neue Karte gezogen: " + drawnCard);
+            gui.fadingLabel.setText("Dealer hat eine neue Karte gezogen: " + drawnCard);
             ausgabeDealerKarten();
         }
     }
@@ -275,10 +328,6 @@ public class Poker {
     }
 
     public void blinds() {
-        int smallBlind = 25;
-        int bigBlind = 50;
-        //GewinnPot.addChips(smallBlind + bigBlind);
-
         blindsOrder.get(0).bet(smallBlind);
         System.out.println(blindsOrder.get(0).getName() + " hat den Small Blind von " + smallBlind + " gesetzt. Übrige Chips: " + blindsOrder.get(0).getChips().getAmount());
 
@@ -311,6 +360,7 @@ public class Poker {
             }
         }
     }
+
     public int setAnzahlSpieler() {
         int anzahlSpieler = 0;
         boolean validInput = false;
@@ -331,17 +381,27 @@ public class Poker {
         return anzahlSpieler;
     }
 
-    public static void main(String[] args) {
-        Poker pokerTemp = new Poker(5000, 50, 2);
-        int anzahlSpieler = pokerTemp.setAnzahlSpieler();
-        Poker poker = new Poker(5000, 50, anzahlSpieler);
+    public void startGame() {
 
-        System.out.println("Ihr habt alle zu Beginn " + poker.players.get(0).getChips().getAmount() + " Chips.");
+
+
+
+
+        Poker poker = this;
+
+        System.out.println("Ihr habt alle zu Beginn " + gui.startChips + " Chips.");
         poker.kartenAusteilen();
         poker.blinds();
 
-        while (true) {
-            for(Player player : poker.players) player.setFolded(false);
+        for (Player player : poker.players) player.setFolded(false);
+
+        for(int i = 0; i <= (poker.players.size()-1); i++){
+            if(!poker.actualPlayers.get(i)){
+                poker.players.get(i).setFolded(true);
+            }
+        }
+
+        while (!isGameOver) {
             // Betting
             poker.playRunde();
 
@@ -367,15 +427,35 @@ public class Poker {
             Player winner = poker.gewinner();
             if (winner == null) {
                 System.out.println("Unentschieden! Der Pot wird geteilt.");
+                gui.fadingLabel.setText("Unentschieden! Der Pot wird geteilt.", false);
+                isGameOver = true;
             } else {
                 System.out.println(winner.getName() + " hat gewonnen mit " + poker.handRanker.rankHand(winner.getHand(), poker.dealer.getHand()));
+                gui.fadingLabel.setText(winner.getName() + " hat gewonnen mit " + poker.handRanker.rankHand(winner.getHand(), poker.dealer.getHand()), false);
+                isGameOver = true;
             }
 
             // Check if any player has no chips left and end the game if true
-            if (poker.players.stream().anyMatch(player -> player.getChips().getAmount() == 0)) {
+            if (poker.players.stream().anyMatch(player -> player.getChips().getAmount() <= 0)) {
                 System.out.println("Spiel Ende. Ein Spieler hat keine Chips mehr.");
-                break;
+                gui.fadingLabel.setText("Spiel Ende. Ein Spieler hat keine Chips mehr.");
+                isGameOver = true;
             }
+            /* FUNKTIONIERT NICHT!!!
+            int tempPlayerCount = 0;
+            for (Player player : poker.players) {
+                if (!player.isFolded()) {
+                    tempPlayerCount++;
+                }
+            }
+            if (tempPlayerCount <= 1) {
+                System.out.println("Spiel Ende. Es ist nur noch ein Spieler übrig!");
+                isGameOver = true;
+            }*/
         }
+    }
+
+    public static void main(String[] args) {
+        //Poker poker = new Poker(6000, 50, 4);
     }
 }

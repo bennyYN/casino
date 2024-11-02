@@ -6,11 +6,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseWheelEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 public class PlayerSelectionIDEE extends JFrame {
 
     int numPlayers = 2;
+    int actualPlayerCount = 0;
     int startChips = 200;
     int bigBlind = 20;
 
@@ -148,7 +150,7 @@ public class PlayerSelectionIDEE extends JFrame {
 
         exitButton.addActionListener(e -> {
             this.dispose();
-            new PokerGUI(numPlayers, playerNames, startChips, bigBlind).setVisible(true);
+            new PokerGUI(numPlayers, playerNames, startChips, bigBlind, actualPlayerCount).setVisible(true);
         });
 
         add(panel);
@@ -202,6 +204,7 @@ public class PlayerSelectionIDEE extends JFrame {
     }
 
     public static void main(String[] args) {
+
         new PlayerSelectionIDEE();
     }
 }

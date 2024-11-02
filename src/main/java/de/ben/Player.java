@@ -35,7 +35,14 @@ public class Player {
     }
 
     public void renderCards(Graphics g){
-        if(!handVisible){
+        if(handVisible){
+            if(hand.size()>0){
+                g.drawImage(hand.get(0).getImage(), 480, 520, 104, 145, null);
+            }
+            if(hand.size()>1){
+                g.drawImage(hand.get(1).getImage(), 600, 520, 104, 145, null);
+            }
+        }else{
             g.drawImage(new ImageIcon("img/cards/BACKSIDE.png").getImage(), 480, 520, 104, 145, null);
             g.drawImage(new ImageIcon("img/cards/BACKSIDE.png").getImage(), 600, 520, 104, 145, null);
         }

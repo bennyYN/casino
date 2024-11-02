@@ -19,8 +19,11 @@ public class Card {
     }
 
     public Image getImage(){
-        System.out.println(toString());
-        return new ImageIcon("img/cards/" + toString() + ".png").getImage();
+        return (new ImageIcon("img/cards/" + toString() + ".png").getImage());
+    }
+
+    public ImageIcon getImageIcon(){
+        return (new ImageIcon("img/cards/" + toString() + ".png"));
     }
 
     private String generateImageLink() {

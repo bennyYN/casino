@@ -1,5 +1,7 @@
 package de.ben;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,4 +34,20 @@ public class Dealer {
         this.hand.clear();
     }
 
+    //TODO -> FERTIG MACHEN!
+    public void renderCards(Graphics g){
+
+        int xStart = 327;
+
+        for(int j = 0; j <= hand.size()-1; j++){
+            if(hand.size() == 3){
+                xStart = 435;
+            }else if(hand.size() == 4){
+                xStart = 381;
+            }else if(hand.size() == 5){
+                xStart = 327;
+            }
+            g.drawImage(hand.get(j).getImage(), xStart+(j*110), 325, 94, 131, null);
+        }
+    }
 }
