@@ -65,11 +65,6 @@ public class Playerslot {
                         //Chips
                         g.drawImage(new ImageIcon("img/chips.png").getImage(), 35, 254 + (i * 100), 16, 16, null);
                         g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 55, 267 + (i * 100));
-                        //Karten
-                        if(gui.game.isGameOver){
-                            g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
-                            g.drawString(gui.game.players.get(i).getHand().get(0).toString() + ", " + gui.game.players.get(i).getHand().get(1).toString(), 30, 287 + (i * 100));
-                        }
 
                     }
 
@@ -111,7 +106,7 @@ public String getAction(){
                     slotState.set(i, "inactive_");
                 }
 
-                if (!gui.game.isGameOver){
+                if (!gui.game.playerWon){
                     if (players.get(i) == gui.game.currentPlayer) {
                         slotState.set(i, "active_");
                     }
@@ -122,5 +117,13 @@ public String getAction(){
                 }
             }
         }
+    }
+
+    public void showPlayerCardButtons(){
+
+    }
+
+    public void hidePlayerCardButtons(){
+
     }
 }

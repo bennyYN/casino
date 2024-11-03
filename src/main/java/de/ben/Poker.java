@@ -3,6 +3,7 @@ package de.ben;
 import java.util.*;
 
 public class Poker extends Thread {
+    public boolean playerWon = false;
     private final ArrayList<Boolean> actualPlayers;
     Scanner sc = new Scanner(System.in);
     List<Player> players;
@@ -40,17 +41,24 @@ public class Poker extends Thread {
     }
 
     public void kartenAusteilen() {
+        deck.shuffleDeck();
         for (Player player : players) {
             if(player != null) {
-                for (int i = 0; i < 2; i++) {
-                    player.receiveCard(deck.kartenehmen());
-                }
+                player.receiveCard(deck.kartenehmen(), deck.kartenehmen());
             }
 
         }
-        for (int i = 0; i <= 2; i++) {
-            dealer.receiveCard(deck.kartenehmen());
+        if(dealer.getHand().size() >= 5){
+            dealer.clearHand();
+            for (int i = 0; i <= 2; i++) {
+                dealer.receiveCard(deck.kartenehmen());
+            }
+        }else{
+            for (int i = 0; i <= 2; i++) {
+                dealer.receiveCard(deck.kartenehmen());
+            }
         }
+
         spielerKartenAusgabe();
     }
 
@@ -390,8 +398,8 @@ public class Poker extends Thread {
         Poker poker = this;
 
         System.out.println("Ihr habt alle zu Beginn " + gui.startChips + " Chips.");
-        poker.kartenAusteilen();
-        poker.blinds();
+
+
 
         for (Player player : poker.players) player.setFolded(false);
 
@@ -402,6 +410,13 @@ public class Poker extends Thread {
         }
 
         while (!isGameOver) {
+
+            //(Neue) Karten ausgeben
+            poker.kartenAusteilen();
+
+            //Blinds rotieren lassen und bezahlen
+            poker.blinds();
+
             // Betting
             poker.playRunde();
 
@@ -428,19 +443,37 @@ public class Poker extends Thread {
             if (winner == null) {
                 System.out.println("Unentschieden! Der Pot wird geteilt.");
                 gui.fadingLabel.setText("Unentschieden! Der Pot wird geteilt.", false);
-                isGameOver = true;
+                playerWon = true;
             } else {
                 System.out.println(winner.getName() + " hat gewonnen mit " + poker.handRanker.rankHand(winner.getHand(), poker.dealer.getHand()));
                 gui.fadingLabel.setText(winner.getName() + " hat gewonnen mit " + poker.handRanker.rankHand(winner.getHand(), poker.dealer.getHand()), false);
-                isGameOver = true;
+                playerWon = true;
+                //Spielernummer des Gewinners suchen und in die GUI speichern
+                int temp = 0;
+                for(Player player : players){
+                    if(player.equals(winner)){
+                        gui.playerShowing = temp;
+                    }else{
+                        temp++;
+                    }
+                }
+                while(playerWon){
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
 
             // Check if any player has no chips left and end the game if true
             if (poker.players.stream().anyMatch(player -> player.getChips().getAmount() <= 0)) {
                 System.out.println("Spiel Ende. Ein Spieler hat keine Chips mehr.");
-                gui.fadingLabel.setText("Spiel Ende. Ein Spieler hat keine Chips mehr.");
+                gui.fadingLabel.setText("Spiel Ende. Ein Spieler hat keine Chips mehr.", false);
                 isGameOver = true;
             }
+
+
             /* FUNKTIONIERT NICHT!!!
             int tempPlayerCount = 0;
             for (Player player : poker.players) {

@@ -22,8 +22,14 @@ public class Player {
         this.name = name;
     }
 
-    public void receiveCard(Card card) {
-        hand.add(card);
+    public void receiveCard(Card card1, Card card2) {
+        if(hand.size() >= 2){
+            hand.set(0, card1);
+            hand.set(1, card2);
+        }else{
+            hand.add(card1);
+            hand.add(card2);
+        }
     }
 
     public List<Card> getHand() {

@@ -12,6 +12,7 @@ public class PokerGUI extends JFrame {
 
     // Attribute & Objekte
     public final JLabel betLabel;
+    public final JButton continueButton;
     protected Poker game;
     public JPanel panel;
     public int raiseAmount;
@@ -21,7 +22,6 @@ public class PokerGUI extends JFrame {
     public JLabel bigBlindLabel; // Infotext oben rechts für Big Blind
     public JLabel smallBlindLabel; // Infotext oben rechts für Small Blind
     public JLabel chipsLabel; // Infotext für die Anzahl der Chips
-    public JLabel currentPlayerLabel; // Infotext für den aktuellen Spieler
     public JButton foldButton;
     public JButton checkButton;
     public JButton callButton;
@@ -40,6 +40,8 @@ public class PokerGUI extends JFrame {
     Playerslot slots;
     private String action = "idle";
     FadingLabel fadingLabel;
+    public ArrayList<ViewCardButton> viewCardButtons = new ArrayList<ViewCardButton>();
+    public int playerShowing = -1;
 
     // Konstruktor
     public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, int actualPlayerCount) {
@@ -79,9 +81,14 @@ public class PokerGUI extends JFrame {
                 slots.renderAll(g);
                 if(game != null) {
                     //Spieler-Karten
-                    if (game.currentPlayer != null) {
-                        game.currentPlayer.renderCards(g);
+                    if(!game.playerWon){
+                        if (game.currentPlayer != null) {
+                            game.currentPlayer.renderCards(g);
+                        }
+                    }else{
+                        game.players.get(playerShowing).renderCards(g);
                     }
+
                     //Dealer-Karten
                     if (game.dealer != null) {
                         game.dealer.renderCards(g);
@@ -114,9 +121,6 @@ public class PokerGUI extends JFrame {
         scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
         panel.add(scrollPane);
-
-        //JLabel mit Fading-Animation
-
 
         bigBlindLabel = new JLabel("Big Blind: " + bigBlind);
         bigBlindLabel.setBounds(1000, 10, 150, 30);
@@ -175,6 +179,24 @@ public class PokerGUI extends JFrame {
         raiseButton = createButton("Raise");
         allInButton = createButton("All In");
         toggleButton = createButton("Show/Hide Hand");
+        continueButton = createButton("Continue");
+        continueButton.setVisible(false);
+
+        //Buttons für jeden Spieler zum Karten anzeigen
+        for(int i = 0; i <= 7; i++){
+            if(i <= 3){
+                viewCardButtons.add(new ViewCardButton(this, i, viewCardButtons,15, 280 + (i * 100)));
+                if(slots.actualPlayer.get(i)){
+                    panel.add(viewCardButtons.get(i));
+                }
+            }else{
+                viewCardButtons.add(new ViewCardButton(this, i, viewCardButtons,1003, 280 + ((i-4) * 100)));
+                if(slots.actualPlayer.get(i)){
+                    panel.add(viewCardButtons.get(i));
+                }
+            }
+
+        }
 
         // Hardcoded but centered positions
         int buttonWidth = 140;
@@ -188,12 +210,14 @@ public class PokerGUI extends JFrame {
         foldButton.setBounds(startX + (buttonWidth + spacing) * 3, yPosition, buttonWidth, buttonHeight);
         allInButton.setBounds(startX + (buttonWidth + spacing) * 4, yPosition, buttonWidth, buttonHeight);
         toggleButton.setBounds(startX + (buttonWidth + spacing) * 5, yPosition, buttonWidth, buttonHeight);
+        continueButton.setBounds(raiseButton.getX(), raiseButton.getY(), callButton.getX()+callButton.getWidth()-raiseButton.getX(), raiseButton.getHeight());
         panel.add(foldButton);
         panel.add(checkButton);
         panel.add(callButton);
         panel.add(raiseButton);
         panel.add(allInButton);
         panel.add(toggleButton);
+        panel.add(continueButton);
 
         raiseField = new JTextField();
         raiseField.setBounds(raiseButton.getX(), raiseButton.getY() - 40, buttonWidth, 30); // Position above the raise button
@@ -262,8 +286,25 @@ public class PokerGUI extends JFrame {
         toggleButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(game != null){
-                    game.currentPlayer.handVisible = !game.currentPlayer.handVisible;
+                    if(game.playerWon){
+                        game.players.get(playerShowing).handVisible = !game.players.get(playerShowing).handVisible;
+                    }else{
+                        game.currentPlayer.handVisible = !game.currentPlayer.handVisible;
+                    }
                 }
+            }
+        });
+        continueButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(game != null){
+                    game.playerWon = false;
+                    for(Player player : game.players){
+                        player.handVisible = false;
+                        //Jedem Spieler in einer neuen Runde neue Karten geben
+
+                    }
+                }
+                fadingLabel.killText();
             }
         });
 
@@ -274,33 +315,57 @@ public class PokerGUI extends JFrame {
 
     public void update(){
 
-        if(game.isGameOver){
-            raiseButton.setEnabled(false);
-            callButton.setEnabled(false);
-            checkButton.setEnabled(false);
-            foldButton.setEnabled(false);
-            allInButton.setEnabled(false);
-
+        if(game.playerWon){
+            //Spiel Buttons verschwinden lassen und Weiterspielen Button zeigen
+            raiseButton.setVisible(false);
+            callButton.setVisible(false);
+            checkButton.setVisible(false);
+            foldButton.setVisible(false);
+            allInButton.setVisible(false);
+            continueButton.setVisible(true);
+            //Togglebuttonposition anpassen
+            toggleButton.setBounds(foldButton.getX(), foldButton.getY(), continueButton.getWidth(), continueButton.getHeight());
+            //Buttons zum spieler karten anzeigen lassen sichtbar machen
+            for(ViewCardButton button : viewCardButtons){
+                button.setVisible(true);
+            }
+        }else{
+            raiseButton.setVisible(true);
+            callButton.setVisible(true);
+            checkButton.setVisible(true);
+            foldButton.setVisible(true);
+            allInButton.setVisible(true);
+            continueButton.setVisible(false);
+            //Togglebuttonposition anpassen
+            toggleButton.setBounds(99 + (140 + 30) * 5, 700, 140, 70);
+            //Buttons zum spieler karten anzeigen lassen verstecken
+            for(ViewCardButton button : viewCardButtons){
+                button.setVisible(false);
+            }
         }
 
         if(game != null){
-            if(raiseField.isVisible() && raiseLabel.isVisible() && !game.isGameOver){
+            if(raiseField.isVisible() && raiseLabel.isVisible() && !game.playerWon){
                 if(!raiseField.getText().isEmpty()){
-                    if(Integer.parseInt(raiseField.getText()) <= game.highestBet){
-                        raiseButton.setEnabled(false);
-                    }else{
-                        if(Integer.parseInt(raiseField.getText()) <= game.currentPlayer.getChips().getAmount()){
-                            raiseButton.setEnabled(true);
-                        }else{
+                    try {
+                        if (Integer.parseInt(raiseField.getText()) <= game.highestBet) {
                             raiseButton.setEnabled(false);
-                        }
+                        } else {
+                            if (Integer.parseInt(raiseField.getText()) <= game.currentPlayer.getChips().getAmount()) {
+                                raiseButton.setEnabled(true);
+                            } else {
+                                raiseButton.setEnabled(false);
+                            }
 
+                        }
+                    }catch (Exception e){
+                        e.toString();
                     }
                 }else{
                     raiseButton.setEnabled(false);
                 }
             }else{
-                if(!game.isGameOver)
+                if(!game.playerWon)
                 raiseButton.setEnabled(true);
             }
         }
