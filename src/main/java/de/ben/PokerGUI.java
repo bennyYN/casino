@@ -350,7 +350,7 @@ public class PokerGUI extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 // Assume another class handles the setup and passes the player count here
@@ -362,7 +362,7 @@ public class PokerGUI extends JFrame {
                 new PokerGUI(3, playerNames, 5000, 50, 3).setVisible(true);
             }
         });
-    }
+    }*/
 
     public String getAction() {
        return action;
