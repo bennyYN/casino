@@ -19,6 +19,7 @@ public class Poker extends Thread {
     public volatile boolean isGameOver = false;
     PokerGUI gui;
     Player currentPlayer;
+    boolean ending = false;
 
 
     public Poker(int AnfangsChips, int bigBlind, int numPlayers, ArrayList<Boolean> actualPlayers, PokerGUI gui) {
@@ -406,6 +407,7 @@ public class Poker extends Thread {
         for(int i = 0; i <= (poker.players.size()-1); i++){
             if(!poker.actualPlayers.get(i)){
                 poker.players.get(i).setFolded(true);
+                poker.players.get(i).dummy = (true);
             }
         }
 
@@ -417,26 +419,34 @@ public class Poker extends Thread {
             //Blinds rotieren lassen und bezahlen
             poker.blinds();
 
-            // Betting
-            poker.playRunde();
+            if(!ending) {
+                // Betting
+                poker.playRunde();
+            }
 
             // Dealer revealing his cards
             poker.ausgabeDealerKarten();
 
-            // Betting
-            poker.playRunde();
+            if(!ending) {
+                // Betting
+                poker.playRunde();
+            }
 
             // Dealer getting a card
             poker.dealerneueKarte();
 
-            // Betting
-            poker.playRunde();
+            if(!ending) {
+                // Betting
+                poker.playRunde();
+            }
 
             // Dealer getting the last card
             poker.dealerneueKarte();
 
-            // Betting
-            poker.playRunde();
+            if(!ending){
+                // Betting
+                poker.playRunde();
+            }
 
             // Winner reveal
             Player winner = poker.gewinner();
@@ -457,13 +467,17 @@ public class Poker extends Thread {
                         temp++;
                     }
                 }
-                while(playerWon){
-                    try {
-                        Thread.sleep(30);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                //WARTEN BIS IM GUI WEITERGEKLICKT WIRD
+                if(!isGameOver){
+                    while(playerWon){
+                        try {
+                            Thread.sleep(30);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
+
             }
 
             // Check if any player has no chips left and end the game if true

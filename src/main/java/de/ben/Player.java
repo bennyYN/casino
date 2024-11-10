@@ -14,6 +14,7 @@ public class Player {
     private boolean allIn = false;
     private int currentBet;
     public boolean handVisible = false;
+    boolean dummy = false;
 
     public Player(int initialChips, String name) {
         this.hand = new ArrayList<>();
