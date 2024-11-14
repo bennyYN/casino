@@ -338,9 +338,11 @@ public class Poker extends Thread {
 
     public void blinds() {
         blindsOrder.get(0).bet(smallBlind);
+        GewinnPot.addChips(smallBlind);
         System.out.println(blindsOrder.get(0).getName() + " hat den Small Blind von " + smallBlind + " gesetzt. Übrige Chips: " + blindsOrder.get(0).getChips().getAmount());
 
         blindsOrder.get(1).bet(bigBlind);
+        GewinnPot.addChips(bigBlind);
         //lastPlayerToRaise = blindsOrder.get(1);
         System.out.println(blindsOrder.get(1).getName() + " hat den Big Blind von " + bigBlind + " gesetzt. Übrige Chips: " + blindsOrder.get(1).getChips().getAmount());
 
@@ -405,7 +407,7 @@ public class Poker extends Thread {
         }
     }
 
-    private void updatePlayerStates(){
+    private void resetPlayerStates(){
         for(Player player : players){
             if(player.isFolded() && !player.dummy){
                 player.setFolded(false);
@@ -442,7 +444,7 @@ public class Poker extends Thread {
             //Game- & Playerstates zurücksetzen
             playerWon = false;
             ending = false;
-            updatePlayerStates();
+            resetPlayerStates();
 
             //(Neue) Karten ausgeben
             poker.kartenAusteilen();

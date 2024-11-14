@@ -64,6 +64,7 @@ public class Player {
             Scanner scanner = new Scanner(System.in);
             amount = scanner.nextInt();
         }
+
         currentBet += amount;
         chips.removeChips(amount);
         return chips.getAmount();
