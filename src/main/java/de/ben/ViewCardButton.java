@@ -10,19 +10,23 @@ import java.util.ArrayList;
 public class ViewCardButton extends JButton {
 
     static ArrayList<ViewCardButton> allButtons;
+    int assignedPlayer;
 
     public ViewCardButton(PokerGUI gui, int assignedPlayer, ArrayList<ViewCardButton> allButtons, int x, int y){
         super("View Cards");
 
+        this.assignedPlayer = assignedPlayer;
         this.allButtons = allButtons;
         Color normalColor = new Color(255, 255, 255, 98); // Grau
         setFont(new Font("Arial", Font.PLAIN, 12)); // Schriftart und Größe
         setOpaque(false);
+        setFocusPainted(false);
         setBorderPainted(false);
         setFocusPainted(false); // Fokusrand deaktivieren
         setBackground(normalColor);
-        setForeground(Color.WHITE); // Gelber Text
+        setForeground(new Color(170, 170, 170)); // Gelber Text
         setBounds(x, y, 100, 12); // Größe setzen
+        setContentAreaFilled(false);
 
         addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -38,11 +42,22 @@ public class ViewCardButton extends JButton {
             for(ViewCardButton button : allButtons){
                 button.highlight(false);
             }
+            //set text to underlined & bold for the player currently showing cards
             setFont(new Font("Arial", Font.BOLD, 12));
             setText("<HTML><U>View Cards</U></HTML>");
+            setForeground(Color.WHITE);
         }else{
+            setForeground(new Color(163, 163, 163));
             setFont(new Font("Arial", Font.PLAIN, 12));
             setText("View Cards");
+        }
+    }
+
+    public static void setWinner(int winnerIndex){
+        for(ViewCardButton button : allButtons){
+            if(button.assignedPlayer == winnerIndex){
+                button.highlight(true);
+            }
         }
     }
 

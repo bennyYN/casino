@@ -32,12 +32,11 @@ public class HandRanker {
         }
     }
 
+
     public HandRanking rankHand(List<Card> playerCards, List<Card> dealerCards) {
         List<Card> allCards = new ArrayList<>();
         allCards.addAll(playerCards);
         allCards.addAll(dealerCards);
-        System.out.println(allCards);
-
         allCards.sort(Comparator.comparing(Card::getValue));
 
         if (isRoyalFlush(allCards)) {

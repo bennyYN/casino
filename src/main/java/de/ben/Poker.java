@@ -178,6 +178,7 @@ public class Poker extends Thread {
 
                     switch (action.toLowerCase()) {
                         case "fold":
+
                             fold(i);
                             validAction = true;
                             break;
@@ -200,13 +201,18 @@ public class Poker extends Thread {
                             }
                             break;
                         case "allin":
-                            allIn(i);
-                            if (checkAllIn()) {
-                                roundComplete = true;
-                                gamecomplete = true;
-                            }
-                            validAction = true;
-                            break;
+                            /*if(ending){
+                                break;
+                            }else{*/
+                                allIn(i);
+                                if (checkAllIn()) {
+                                    roundComplete = true;
+                                    gamecomplete = true;
+                                }
+                                validAction = true;
+                                break;
+                            //}
+
                         case "check":
                             if (check(i)) {
                                 validAction = true;
@@ -223,7 +229,7 @@ public class Poker extends Thread {
                                 validAction = true;
                             } catch (NumberFormatException e) {
                                 System.out.println("Unerlaubte Eingabe. Bitte gib eine ganze Zahl ein oder 'allin'.");
-                                gui.fadingLabel.setText("Unerlaubte Eingabe! Bitte gib eine ganze Zahl ein oder 'allin'.");
+                                gui.fadingLabel.setText("Ungültige Eingabe!");
                             }
                             break;
                     }
@@ -420,15 +426,9 @@ public class Poker extends Thread {
 
     public void startGame() {
 
-
-
-
-
         Poker poker = this;
 
         System.out.println("Ihr habt alle zu Beginn " + gui.startChips + " Chips.");
-
-
 
         for (Player player : poker.players) player.setFolded(false);
 
@@ -507,21 +507,25 @@ public class Poker extends Thread {
                 for(Player player : players){
                     if(player.equals(winner)){
                         gui.playerShowing = temp;
+                        ViewCardButton.setWinner(temp);
                     }else{
                         temp++;
                     }
                 }
-                //WARTEN BIS IM GUI WEITERGEKLICKT WIRD
-                if(!isGameOver){
-                    while(playerWon){
-                        try {
-                            Thread.sleep(30);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+
+
+
+            }
+
+            //WARTEN BIS IM GUI WEITERGEKLICKT WIRD
+            if(!isGameOver){
+                while(playerWon){
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 }
-
             }
 
             // Check if any player has no chips left and end the game if true

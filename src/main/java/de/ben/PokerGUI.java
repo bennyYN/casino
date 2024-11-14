@@ -78,7 +78,7 @@ public class PokerGUI extends JFrame {
                 g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
                 g.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
 
-                slots.renderAll(g);
+
                 if(game != null) {
                     //Spieler-Karten
                     if(!game.playerWon){
@@ -98,6 +98,31 @@ public class PokerGUI extends JFrame {
                     g.setFont(new Font("TimesRoman", Font.BOLD, 30));
                     g.setColor(Color.WHITE);
                     g.drawString(String.valueOf(game.GewinnPot.getAmount()), 585, 132);
+
+                    //Transparente Schattenebene bei Spielende
+                    if(game.isGameOver){
+                        g.setColor(new Color(0, 0, 0, 110));
+                        g.fillRect(0, 0, 1200, 850);
+                    }
+
+
+                    //Playerslots zeichnen
+                    slots.renderAll(g);
+
+                    //Karten Icon für den aktuell zeigenden Spieler
+                    if(playerShowing >= 0){
+                        if(playerShowing <= 3){
+                            g.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 153, 276 + (playerShowing * 100), 20, 20, null);
+
+                        }else{
+                            g.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 1142, 276 + ((playerShowing-4) * 100), 20, 20, null);
+                        }
+                    }
+
+
+
+
+
                 }
                 updateBetLabel();
                 PokerGUI.this.update();
@@ -214,9 +239,9 @@ public class PokerGUI extends JFrame {
         foldButton.setBounds(startX + (buttonWidth + spacing) * 3, yPosition, buttonWidth, buttonHeight);
         allInButton.setBounds(startX + (buttonWidth + spacing) * 4, yPosition, buttonWidth, buttonHeight);
         toggleButton.setBounds(startX + (buttonWidth + spacing) * 5, yPosition, buttonWidth, buttonHeight);
-        continueButton.setBounds(raiseButton.getX(), raiseButton.getY(), callButton.getX()+callButton.getWidth()-raiseButton.getX(), raiseButton.getHeight());
+        continueButton.setBounds(raiseButton.getX(), raiseButton.getY(), (callButton.getX()+callButton.getWidth()-raiseButton.getX())*2+30, raiseButton.getHeight());
         menuButton.setBounds(raiseButton.getX(), raiseButton.getY(), callButton.getX()+callButton.getWidth()-raiseButton.getX(), raiseButton.getHeight());
-        exitButton.setBounds(foldButton.getX(), foldButton.getY(), continueButton.getWidth(), continueButton.getHeight());
+        exitButton.setBounds(foldButton.getX(), foldButton.getY(), (continueButton.getWidth()/2)-30, continueButton.getHeight());
         panel.add(foldButton);
         panel.add(checkButton);
         panel.add(callButton);
@@ -317,8 +342,14 @@ public class PokerGUI extends JFrame {
         });
         menuButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                new MainGUI();
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                         // Close the current GUI
+                        new MainGUI(); // Open the new GUI
+                        PokerGUI.this.dispose();
+                    }
+                });
+
             }
         });
         exitButton.addActionListener(new ActionListener() {
@@ -333,6 +364,10 @@ public class PokerGUI extends JFrame {
     }
 
     public void update(){
+        //Spieler kriegen boolean wert für wenn wer gewonnen hat
+        if(game != null){
+            Player.isGameDecided = game.playerWon;
+        }
 
         //Spieler mit 0 Chips auf Allin setzen damit sie nicht mehr dran kommen
         for(Player player : game.players){
@@ -343,7 +378,6 @@ public class PokerGUI extends JFrame {
 
         if(game.isGameOver){
             //Spiel Buttons verschwinden lassen und Exit & Menu Button zeigen
-            System.out.println("Game Over");
             raiseButton.setVisible(false);
             callButton.setVisible(false);
             checkButton.setVisible(false);
@@ -364,9 +398,6 @@ public class PokerGUI extends JFrame {
                     game.ending = true;
                 }
             }
-            if(game.ending){
-                System.out.println("GAME IS ENDING GUE TO LACK OF PLAYERS");
-            }
 
         }
 
@@ -378,8 +409,7 @@ public class PokerGUI extends JFrame {
                 foldButton.setVisible(false);
                 allInButton.setVisible(false);
                 continueButton.setVisible(true);
-                //Togglebuttonposition anpassen
-                toggleButton.setBounds(foldButton.getX(), foldButton.getY(), continueButton.getWidth(), continueButton.getHeight());
+                toggleButton.setVisible(false);
                 //Buttons zum spieler karten anzeigen lassen sichtbar machen
                 for (ViewCardButton button : viewCardButtons) {
                     button.setVisible(true);
@@ -391,8 +421,7 @@ public class PokerGUI extends JFrame {
             foldButton.setVisible(true);
             allInButton.setVisible(true);
             continueButton.setVisible(false);
-            //Togglebuttonposition anpassen
-            toggleButton.setBounds(99 + (140 + 30) * 5, 700, 140, 70);
+            toggleButton.setVisible(true);
             //Buttons zum spieler karten anzeigen lassen verstecken
             for(ViewCardButton button : viewCardButtons){
                 button.setVisible(false);
@@ -461,9 +490,23 @@ public class PokerGUI extends JFrame {
     }
 
     public void nextPlayer() {
-        do {
-            currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
-        } while (slots.players.get(currentPlayerIndex).isFolded() || slots.players.get(currentPlayerIndex).isAllIn());
+        if(game.ending || game.isGameOver){
+            int temp = 0;
+            for(int i = 0; i < 8; i++){
+                if(slots.actualPlayer.get(i)){
+                    temp = i;
+                    break;
+                }
+            }
+            currentPlayerIndex = temp;
+        }else{
+            do {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+            }
+            while (slots.players.get(currentPlayerIndex).isFolded() || slots.players.get(currentPlayerIndex).isAllIn());
+
+        }
+
 
         if (slots.players.get(currentPlayerIndex) != null) {
             slots.players.get(currentPlayerIndex).handVisible = false;

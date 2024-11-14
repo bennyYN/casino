@@ -15,6 +15,7 @@ public class Player {
     private int currentBet;
     public boolean handVisible = false;
     boolean dummy = false;
+    static boolean isGameDecided;
 
     public Player(int initialChips, String name) {
         this.hand = new ArrayList<>();
@@ -42,7 +43,7 @@ public class Player {
     }
 
     public void renderCards(Graphics g){
-        if(handVisible){
+        if(handVisible || isGameDecided){
             if(hand.size()>0){
                 g.drawImage(hand.get(0).getImage(), 480, 520, 104, 145, null);
             }

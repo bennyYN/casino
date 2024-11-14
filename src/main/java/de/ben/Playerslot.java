@@ -41,7 +41,6 @@ public class Playerslot {
                 actualPlayer.set(i, true);
                 actualPlayerCount++;
             }
-            System.out.println(actualPlayer.get(i));
         }
 
 
@@ -114,6 +113,10 @@ public String getAction(){
 
                 if (players.get(i).isFolded() || players.get(i).isAllIn()) {
                     slotState.set(i, "inactive_");
+                }
+
+                if((gui.game.playerWon) && (players.get(i) == gui.game.gewinner())){
+                    slotState.set(i, "winning_");
                 }
             }
         }
