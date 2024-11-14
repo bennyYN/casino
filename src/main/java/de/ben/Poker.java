@@ -443,6 +443,7 @@ public class Poker extends Thread {
 
             //Game- & Playerstates zurücksetzen
             playerWon = false;
+            dealer.handVisible = false;
             ending = false;
             resetPlayerStates();
 
@@ -459,6 +460,9 @@ public class Poker extends Thread {
                 // Betting
                 poker.playRunde();
             }
+
+            // set dealer hand visible
+            dealer.handVisible = true;
 
             // Dealer revealing his cards
             poker.ausgabeDealerKarten();
@@ -493,6 +497,7 @@ public class Poker extends Thread {
                 System.out.println("Unentschieden! Der Pot wird geteilt.");
                 gui.fadingLabel.setText("Unentschieden! Der Pot wird geteilt.", false);
                 playerWon = true;
+
             } else {
                 System.out.println(winner.getName() + " hat gewonnen mit " + poker.handRanker.rankHand(winner.getHand(), poker.dealer.getHand()));
                 gui.fadingLabel.setText(winner.getName() + " hat gewonnen mit " + poker.handRanker.rankHand(winner.getHand(), poker.dealer.getHand()), false);

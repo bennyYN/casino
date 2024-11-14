@@ -8,6 +8,7 @@ import java.util.List;
 public class Dealer {
     private List<Card> hand;
     private Deck deck; // Declare a Deck instance
+    public boolean handVisible = false;
 
     public Dealer() {
         this.hand = new ArrayList<>();
@@ -37,17 +38,20 @@ public class Dealer {
     //TODO -> FERTIG MACHEN!
     public void renderCards(Graphics g){
 
-        int xStart = 327;
+        if(handVisible){
+            int xStart = 327;
 
-        for(int j = 0; j <= hand.size()-1; j++){
-            if(hand.size() == 3){
-                xStart = 435;
-            }else if(hand.size() == 4){
-                xStart = 381;
-            }else if(hand.size() == 5){
-                xStart = 327;
+            for(int j = 0; j <= hand.size()-1; j++){
+                if(hand.size() == 3){
+                    xStart = 435;
+                }else if(hand.size() == 4){
+                    xStart = 381;
+                }else if(hand.size() == 5){
+                    xStart = 327;
+                }
+                g.drawImage(hand.get(j).getImage(), xStart+(j*110), 325, 94, 131, null);
             }
-            g.drawImage(hand.get(j).getImage(), xStart+(j*110), 325, 94, 131, null);
         }
+
     }
 }
