@@ -36,6 +36,7 @@ public class HandRanker {
         List<Card> allCards = new ArrayList<>();
         allCards.addAll(playerCards);
         allCards.addAll(dealerCards);
+        System.out.println(allCards);
 
         allCards.sort(Comparator.comparing(Card::getValue));
 

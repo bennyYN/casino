@@ -341,7 +341,7 @@ public class Poker extends Thread {
         System.out.println(blindsOrder.get(0).getName() + " hat den Small Blind von " + smallBlind + " gesetzt. Übrige Chips: " + blindsOrder.get(0).getChips().getAmount());
 
         blindsOrder.get(1).bet(bigBlind);
-        lastPlayerToRaise = blindsOrder.get(1);
+        //lastPlayerToRaise = blindsOrder.get(1);
         System.out.println(blindsOrder.get(1).getName() + " hat den Big Blind von " + bigBlind + " gesetzt. Übrige Chips: " + blindsOrder.get(1).getChips().getAmount());
 
         // Set the highestBet to the value of the bigBlind
@@ -390,6 +390,32 @@ public class Poker extends Thread {
         return anzahlSpieler;
     }
 
+    private void updateGameState(){
+        int temp = 0;
+        for(Player player : players){
+            if(!player.isFolded()){
+                temp++;
+            }
+        }
+        if(temp == 1){
+            ending = true;
+        }else if(temp <= 0){
+            ending = true;
+            playerWon = true;
+        }
+    }
+
+    private void updatePlayerStates(){
+        for(Player player : players){
+            if(player.isFolded() && !player.dummy){
+                player.setFolded(false);
+            }
+            if(player.isAllIn() && !player.dummy){
+                player.setAllIn(false);
+            }
+        }
+    }
+
     public void startGame() {
 
 
@@ -413,12 +439,20 @@ public class Poker extends Thread {
 
         while (!isGameOver) {
 
+            //Game- & Playerstates zurücksetzen
+            playerWon = false;
+            ending = false;
+            updatePlayerStates();
+
             //(Neue) Karten ausgeben
             poker.kartenAusteilen();
+
+            updateGameState();
 
             //Blinds rotieren lassen und bezahlen
             poker.blinds();
 
+            updateGameState();
             if(!ending) {
                 // Betting
                 poker.playRunde();
@@ -427,6 +461,7 @@ public class Poker extends Thread {
             // Dealer revealing his cards
             poker.ausgabeDealerKarten();
 
+            updateGameState();
             if(!ending) {
                 // Betting
                 poker.playRunde();
@@ -435,6 +470,7 @@ public class Poker extends Thread {
             // Dealer getting a card
             poker.dealerneueKarte();
 
+            updateGameState();
             if(!ending) {
                 // Betting
                 poker.playRunde();
@@ -443,6 +479,7 @@ public class Poker extends Thread {
             // Dealer getting the last card
             poker.dealerneueKarte();
 
+            updateGameState();
             if(!ending){
                 // Betting
                 poker.playRunde();
