@@ -10,8 +10,9 @@ public class SettingsGUI extends JFrame {
 
     private MainGUI mainGUI;
     private BufferedImage backgroundImage; // Hintergrundbild
+    private boolean usedInMainGUI;
 
-    public SettingsGUI(MainGUI mainGUI) {
+    public SettingsGUI(MainGUI mainGUI, boolean usedInMainGUI) {
         this.mainGUI = mainGUI;
         this.setTitle("Settings");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -70,7 +71,10 @@ public class SettingsGUI extends JFrame {
         styleButton(backButton);
         backButton.addActionListener(e -> {
             this.dispose(); // Schließe SettingsGUI
-            mainGUI.setVisible(true); // Zeige MainGUI wieder an
+            if(usedInMainGUI){
+                mainGUI.setVisible(true); // Zeige MainGUI wieder an
+            }
+
         });
 
         GridBagConstraints gbc = new GridBagConstraints();

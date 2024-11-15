@@ -15,12 +15,13 @@ public class PlayerSelectionIDEE extends JFrame {
     int actualPlayerCount = 0;
     int startChips = 200;
     int bigBlind = 20;
-
+    MainGUI mainGUI;
     JLabel startChipsLabel;
     JLabel bigBlindLabel;
     ArrayList<String> playerNames;
 
-    public PlayerSelectionIDEE() {
+    public PlayerSelectionIDEE(MainGUI mainGUI) {
+        this.mainGUI = mainGUI;
         initializeUI();
     }
 
@@ -143,6 +144,7 @@ public class PlayerSelectionIDEE extends JFrame {
         panel.add(confirmButton, gbc);
 
         JButton exitButton = new JButton("Fortfahren");
+        //exitButton.setEnabled(false);
         gbc.gridy = 7;
         panel.add(exitButton, gbc);
 
@@ -150,7 +152,7 @@ public class PlayerSelectionIDEE extends JFrame {
 
         exitButton.addActionListener(e -> {
             this.dispose();
-            new PokerGUI(numPlayers, playerNames, startChips, bigBlind, actualPlayerCount).setVisible(true);
+            new PokerGUI(numPlayers, playerNames, startChips, bigBlind, actualPlayerCount, mainGUI).setVisible(true);
         });
 
         add(panel);
@@ -201,10 +203,5 @@ public class PlayerSelectionIDEE extends JFrame {
 
     private void updatePlayerNames(int index, String newName) {
         playerNames.set(index, newName);
-    }
-
-    public static void main(String[] args) {
-
-        new PlayerSelectionIDEE();
     }
 }

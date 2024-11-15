@@ -23,6 +23,7 @@ public class ViewCardButton extends JButton {
         setFocusPainted(false);
         setBorderPainted(false);
         setFocusPainted(false); // Fokusrand deaktivieren
+        setFocusable(false); // Disable focus on the button
         setBackground(normalColor);
         setForeground(new Color(170, 170, 170)); // Gelber Text
         setBounds(x, y, 100, 12); // Größe setzen
@@ -58,6 +59,12 @@ public class ViewCardButton extends JButton {
             if(button.assignedPlayer == winnerIndex){
                 button.highlight(true);
             }
+        }
+    }
+
+    public static void setAllVisible(boolean state){
+        for(ViewCardButton button : allButtons){
+            button.setVisible(state);
         }
     }
 

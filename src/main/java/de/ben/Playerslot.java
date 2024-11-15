@@ -118,6 +118,14 @@ public String getAction(){
                 if((gui.game.playerWon) && (players.get(i) == gui.game.gewinner())){
                     slotState.set(i, "winning_");
                 }
+
+                if(gui.game.isGameOver){
+                    if(gui.game.players.get(i) != null){
+                        if(gui.game.players.get(i).getChips().getAmount() <= 0){
+                            slotState.set(i, "zero_");
+                        }
+                    }
+                }
             }
         }
     }

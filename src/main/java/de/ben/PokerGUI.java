@@ -5,12 +5,16 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PokerGUI extends JFrame {
+public class PokerGUI extends JFrame implements KeyListener {
 
     // Attribute & Objekte
+    public boolean isMenuOpen = false;
     public final JLabel betLabel;
     public final JButton continueButton;
     protected Poker game;
@@ -36,15 +40,27 @@ public class PokerGUI extends JFrame {
     public int actualPlayerCount;
     public int startChips;
     public int bigBlind;
+    public JButton menuexitButton, menusettingsButton, menuMainMenuButton, menuContinueButton;
+    ArrayList<JButton> menuButtons = new ArrayList<JButton>();
     ArrayList<String> playerNames;
     Playerslot slots;
     private String action = "idle";
     FadingLabel fadingLabel;
     public ArrayList<ViewCardButton> viewCardButtons = new ArrayList<ViewCardButton>();
     public int playerShowing = -1;
+    public BufferedImage blurredImage = null;
+    MainGUI mainGUI;
 
     // Konstruktor
-    public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, int actualPlayerCount) {
+    public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, int actualPlayerCount, MainGUI mainGUI) {
+
+        this.mainGUI = mainGUI;
+
+        //List for all Menu Buttons
+        menuButtons.add(menuexitButton);
+        menuButtons.add(menusettingsButton);
+        menuButtons.add(menuMainMenuButton);
+        menuButtons.add(menuContinueButton);
 
         totalPlayers = numPlayers; // Set total players
         this.actualPlayerCount = actualPlayerCount;
@@ -70,62 +86,107 @@ public class PokerGUI extends JFrame {
         //Spieler-Slots
         slots = new Playerslot(startChips, playerNames, this);
 
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(true);
+
         // Hintergrundbild auf JPanel zeichnen
         panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
-                g.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
 
+                // Create a BufferedImage of the panel
+                BufferedImage screenCapture = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = screenCapture.createGraphics();
+                super.paintComponent(g2d);
 
-                if(game != null) {
-                    //Spieler-Karten
-                    if(!game.playerWon){
+                // Draw the background and other components
+                g2d.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
+                g2d.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
+
+                if (game != null) {
+                    // Player cards
+                    if (!game.playerWon) {
                         if (game.currentPlayer != null) {
-                            game.currentPlayer.renderCards(g);
+                            game.currentPlayer.renderCards(g2d);
                         }
-                    }else{
-                        game.players.get(playerShowing).renderCards(g);
+                    } else {
+                        try {
+                            game.players.get(playerShowing).renderCards(g2d);
+                        } catch (Exception e) {
+                            e.toString();
+                        }
+
                     }
 
-                    //Dealer-Karten
+                    // Dealer cards
                     if (game.dealer != null) {
-                        game.dealer.renderCards(g);
+                        game.dealer.renderCards(g2d);
                     }
-                    //Gewinnpot
-                    g.drawImage(new ImageIcon("img/pot.png").getImage(), 495, 70, null);
-                    g.setFont(new Font("TimesRoman", Font.BOLD, 30));
-                    g.setColor(Color.WHITE);
-                    g.drawString(String.valueOf(game.GewinnPot.getAmount()), 585, 132);
 
-                    //Transparente Schattenebene bei Spielende
-                    if(game.isGameOver){
-                        g.setColor(new Color(0, 0, 0, 110));
-                        g.fillRect(0, 0, 1200, 850);
+                    // Pot
+                    if(!game.isGameOver && !isMenuOpen){
+                        g2d.drawImage(new ImageIcon("img/pot.png").getImage(), 495, 70, null);
+                        g2d.setFont(new Font("TimesRoman", Font.BOLD, 30));
+                        g2d.setColor(Color.WHITE);
+                        g2d.drawString(String.valueOf(game.GewinnPot.getAmount()), 585, 132);
                     }
 
 
-                    //Playerslots zeichnen
-                    slots.renderAll(g);
+                    // Transparent shadow layer at game end
+                    if (game.isGameOver) {
 
-                    //Karten Icon für den aktuell zeigenden Spieler
-                    if(playerShowing >= 0){
-                        if(playerShowing <= 3){
-                            g.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 153, 276 + (playerShowing * 100), 20, 20, null);
+                        g2d.setColor(new Color(0, 0, 0, 120));
+                        g2d.fillRect(0, 0, 1200, 850);
+                    }
 
-                        }else{
-                            g.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 1142, 276 + ((playerShowing-4) * 100), 20, 20, null);
+                    // Render player slots
+                    slots.renderAll(g2d);
+
+                    // Card icon for the currently showing player
+                    if (playerShowing >= 0 && playerShowing < 8 && !game.isGameOver) {
+                        if (playerShowing <= 3) {
+                            g2d.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 153, 276 + (playerShowing * 100), 20, 20, null);
+                        } else {
+                            g2d.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 1142, 276 + ((playerShowing - 4) * 100), 20, 20, null);
                         }
                     }
-
-
-
-
-
                 }
+
                 updateBetLabel();
                 PokerGUI.this.update();
+
+                g2d.dispose();
+
+                // Apply blur to the BufferedImage if menu is open
+                if (isMenuOpen && !game.isGameOver) {
+                    if(blurredImage == null){
+                        blurredImage = ImageUtils.blurImage(screenCapture, 10);
+                    }
+                    g.drawImage(blurredImage, 0, 0, null);
+                    //Shadow layer
+                    g.setColor(new Color(0, 0, 0, 100));
+                    g.fillRect(0, 0, 1200, 850);
+
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Arial", Font.BOLD, 50));
+                    g.drawString("Spiel Pausiert", 425, 120);
+
+
+                } else {
+                    g.drawImage(screenCapture, 0, 0, null);
+                    blurredImage = null;
+                    if(game.isGameOver){
+                        g.setColor(Color.WHITE);
+                        g.setFont(new Font("Arial", Font.BOLD, 50));
+                        g.drawString("Spiel Ende!", 450, 120);
+                        g.setColor(new Color(234, 234, 234, 200));
+                        g.setFont(new Font("Arial", Font.PLAIN, 18));
+                        g.drawString("Ein Spieler hat keine Chips mehr.", 455, 165);
+                    }
+                }
+
                 repaint();
             }
         };
@@ -184,6 +245,7 @@ public class PokerGUI extends JFrame {
         helpButton.setBounds(1150, 10, 30, 30); // Position oben rechts
         helpButton.setBackground(new Color(170, 0, 0)); // Wine red color
         helpButton.setForeground(Color.WHITE);
+        helpButton.setFocusable(false); // Disable focus on the button
         helpButton.setFont(new Font("Arial", Font.BOLD, 20));
         helpButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         helpButton.setFocusPainted(false);
@@ -198,6 +260,39 @@ public class PokerGUI extends JFrame {
         });
 
         // Buttons
+        //Pausemenü Buttons
+
+
+        for(int i = 0; i < 4; i++){
+            String tempButtonText = "[text not set]";
+            switch(i){
+                case 0:
+                    tempButtonText = "Back to Game";
+                    break;
+                case 1:
+                    tempButtonText = "Settings";
+                    break;
+                case 2:
+                    tempButtonText = "Mainmenu";
+                    break;
+                case 3:
+                    tempButtonText = "Leave Game";
+                    break;
+            }
+            menuButtons.set(i, createButton(tempButtonText));
+
+            // Hardcoded but centered positions
+            int buttonWidth = 225;
+            int buttonHeight = 70;
+            int yPosition = 700;
+            int spacing = 30;
+            int startX = ((getWidth() - (140 * 6 + spacing * 5)) / 2) - 6;
+            menuButtons.get(i).setBounds(startX + (buttonWidth + spacing) * i, yPosition, buttonWidth, buttonHeight);
+            menuButtons.get(i).setVisible(false);
+            panel.add(menuButtons.get(i));
+        }
+
+        //Gameplay Buttons
         foldButton = createButton("Fold");
         checkButton = createButton("Check");
         callButton = createButton("Call");
@@ -357,13 +452,46 @@ public class PokerGUI extends JFrame {
                 System.exit(0);
             }
         });
+        menuButtons.get(0).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                isMenuOpen = false;
+            }
+        });
+        menuButtons.get(1).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the settings window
+                SettingsGUI settings = new SettingsGUI(mainGUI, false);
+            }
+        });
+        menuButtons.get(2).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Schließe PokerGUI
+                mainGUI.setVisible(true); // Zeige MainGUI wieder an
+            }
+        });
+        menuButtons.get(3).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0); // Beende das Programm
+            }
+        });
 
-        add(panel);
+        getContentPane().add(panel);
+
+
         game = new Poker(startChips, bigBlind, numPlayers, slots.actualPlayer, this);
         new Thread(game::startGame).start();
     }
 
+    public BufferedImage capturePanelImage() {
+        BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        panel.paintAll(g2d);
+        g2d.dispose();
+        return image;
+    }
+
     public void update(){
+
         //Spieler kriegen boolean wert für wenn wer gewonnen hat
         if(game != null){
             Player.isGameDecided = game.playerWon;
@@ -387,6 +515,7 @@ public class PokerGUI extends JFrame {
             toggleButton.setVisible(false);
             exitButton.setVisible(true);
             menuButton.setVisible(true);
+            ViewCardButton.setAllVisible(false);
         }else{
             //Wenn ein oder weniger Spieler übrig sind wird das Spiel beendet
             int temp = game.anzahlSpieler;
@@ -453,6 +582,48 @@ public class PokerGUI extends JFrame {
                 raiseButton.setEnabled(true);
             }
         }
+
+        //MENU STUFF
+        if(isMenuOpen && !game.isGameOver){
+            System.out.println("PAUSE CONTROL");
+            raiseButton.setVisible(false);
+            callButton.setVisible(false);
+            checkButton.setVisible(false);
+            foldButton.setVisible(false);
+            allInButton.setVisible(false);
+            continueButton.setVisible(false);
+            toggleButton.setVisible(false);
+            exitButton.setVisible(false);
+            menuButton.setVisible(false);
+            ViewCardButton.setAllVisible(false);
+            //Alle label unsichtbar machen
+            raiseField.setVisible(false);
+            raiseLabel.setVisible(false);
+            betLabel.setVisible(false);
+            bigBlindLabel.setVisible(false);
+            smallBlindLabel.setVisible(false);
+            chipsLabel.setVisible(false);
+            fadingLabel.setVisible(false);
+            dialogPane.setVisible(false);
+            //Alle Menu Buttons sichtbar machen
+            for(JButton button : menuButtons){
+                button.setVisible(true);
+            }
+        }else if(!game.isGameOver){
+            //Alle label sichtbar machen
+            betLabel.setVisible(true);
+            bigBlindLabel.setVisible(true);
+            smallBlindLabel.setVisible(true);
+            fadingLabel.setVisible(true);
+            dialogPane.setVisible(true);
+            //Alle Menu Buttons unsichtbar machen
+            for(JButton button : menuButtons){
+                button.setVisible(false);
+            }
+        }
+
+
+
     }
 
     private JButton createButton(String text) {
@@ -462,6 +633,7 @@ public class PokerGUI extends JFrame {
         button.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         button.setFont(new Font("Arial", Font.BOLD, 14));
         button.setOpaque(true);
+        button.setFocusable(false); // Disable focus on the button
         button.setBorderPainted(true);
         return button;
     }
@@ -533,5 +705,20 @@ public class PokerGUI extends JFrame {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == 27){
+            isMenuOpen = !isMenuOpen;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }

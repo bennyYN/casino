@@ -531,7 +531,7 @@ public class Poker extends Thread {
             // Check if any player has no chips left and end the game if true
             if (poker.players.stream().anyMatch(player -> player.getChips().getAmount() <= 0)) {
                 System.out.println("Spiel Ende. Ein Spieler hat keine Chips mehr.");
-                gui.fadingLabel.setText("Spiel Ende. Ein Spieler hat keine Chips mehr.", false);
+                //gui.fadingLabel.setText("Spiel Ende. Ein Spieler hat keine Chips mehr.", false);
                 isGameOver = true;
             }
 
