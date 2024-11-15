@@ -166,7 +166,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                     }
                     g.drawImage(blurredImage, 0, 0, null);
                     //Shadow layer
-                    g.setColor(new Color(0, 0, 0, 100));
+                    g.setColor(new Color(0, 0, 0, 110));
                     g.fillRect(0, 0, 1200, 850);
 
                     g.setColor(Color.WHITE);

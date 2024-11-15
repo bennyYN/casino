@@ -6,10 +6,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseWheelEvent;
-import java.io.File;
 import java.util.ArrayList;
 
-public class PlayerSelectionIDEE extends JFrame {
+public class PlayerSelection extends JFrame {
 
     int numPlayers = 2;
     int actualPlayerCount = 0;
@@ -19,8 +18,9 @@ public class PlayerSelectionIDEE extends JFrame {
     JLabel startChipsLabel;
     JLabel bigBlindLabel;
     ArrayList<String> playerNames;
+    JButton exitButton;
 
-    public PlayerSelectionIDEE(MainGUI mainGUI) {
+    public PlayerSelection(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
         initializeUI();
     }
@@ -56,7 +56,10 @@ public class PlayerSelectionIDEE extends JFrame {
         gbc.gridwidth = 2;
         panel.add(playerDropdown, gbc);
 
-        playerDropdown.addActionListener(e -> numPlayers = (int) playerDropdown.getSelectedItem());
+        playerDropdown.addActionListener(e -> {
+            numPlayers = (int) playerDropdown.getSelectedItem();
+            checkPlayerNames();
+        });
         playerDropdown.addMouseWheelListener(new MouseAdapter() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
@@ -143,8 +146,8 @@ public class PlayerSelectionIDEE extends JFrame {
         gbc.gridwidth = 2;
         panel.add(confirmButton, gbc);
 
-        JButton exitButton = new JButton("Fortfahren");
-        //exitButton.setEnabled(false);
+        exitButton = new JButton("Fortfahren");
+        exitButton.setEnabled(false); // Disable the button by default
         gbc.gridy = 7;
         panel.add(exitButton, gbc);
 
@@ -190,6 +193,7 @@ public class PlayerSelectionIDEE extends JFrame {
                 if (column == 1) {
                     String playerName = (String) table.getValueAt(row, column);
                     updatePlayerNames(row, playerName);
+                    checkPlayerNames(); // Check player names after each update
                 }
             }
         });
@@ -203,5 +207,20 @@ public class PlayerSelectionIDEE extends JFrame {
 
     private void updatePlayerNames(int index, String newName) {
         playerNames.set(index, newName);
+    }
+
+    private void checkPlayerNames() {
+        boolean allNamesEntered = true;
+        for (int i = 0; i < playerNames.size(); i++) {
+            if (i < numPlayers) {
+                if (playerNames.get(i).equals("‒")) {
+                    allNamesEntered = false;
+                    break;
+                }
+            } else {
+                playerNames.set(i, "‒");
+            }
+        }
+        exitButton.setEnabled(allNamesEntered);
     }
 }
