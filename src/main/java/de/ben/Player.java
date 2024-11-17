@@ -42,6 +42,7 @@ public class Player {
         return chips;
     }
 
+    //Methode um die Hand des Spielers zu zeichnen
     public void renderCards(Graphics g){
         if(handVisible || isGameDecided){
             if(hand.size()>0){

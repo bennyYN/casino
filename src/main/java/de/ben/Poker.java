@@ -42,7 +42,7 @@ public class Poker extends Thread {
     }
 
     public void kartenAusteilen() {
-        deck.shuffleDeck();
+        deck.shuffleDeck(); //<-- Hab schon geguckt: hat nichts mit dem Handranking-Bug zutun
         for (Player player : players) {
             if(player != null) {
                 player.receiveCard(deck.kartenehmen(), deck.kartenehmen());
