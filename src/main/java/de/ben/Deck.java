@@ -41,9 +41,6 @@ public class Deck {
         Collections.shuffle(cards);
     }
 
-
-
-
     public Card kartenehmen(){
         return cards.remove(cards.size()-1);
     }

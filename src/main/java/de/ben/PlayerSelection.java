@@ -2,8 +2,12 @@ package de.ben;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
@@ -17,8 +21,10 @@ public class PlayerSelection extends JFrame {
     MainGUI mainGUI;
     JLabel startChipsLabel;
     JLabel bigBlindLabel;
+    JTextField startChipsField;
+    JTextField bigBlindField;
     ArrayList<String> playerNames;
-    JButton exitButton;
+    JButton exitButton, confirmButton;
 
     public PlayerSelection(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
@@ -31,12 +37,27 @@ public class PlayerSelection extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        //Titlebar-Icon mit Skalierung setzen
+        ImageIcon icon = new ImageIcon("img/icon.png");
+        Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
+        setIconImage(scaledIcon);
+
         playerNames = new ArrayList<>(8);
         for (int i = 0; i < 8; i++) {
             playerNames.add("‒");
         }
 
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
+                if(exitButton != null){
+                    exitButton.setOpaque(exitButton.isEnabled());
+                }
+                repaint();
+            }
+        };
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -46,6 +67,7 @@ public class PlayerSelection extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
+        playerLabel.setForeground(Color.WHITE);
         panel.add(playerLabel, gbc);
 
         Integer[] playerOptions = {2, 3, 4, 5, 6, 7, 8};
@@ -54,6 +76,7 @@ public class PlayerSelection extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
+        playerDropdown.setOpaque(false);
         panel.add(playerDropdown, gbc);
 
         playerDropdown.addActionListener(e -> {
@@ -63,7 +86,7 @@ public class PlayerSelection extends JFrame {
         playerDropdown.addMouseWheelListener(new MouseAdapter() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                int notches = e.getWheelRotation();
+                int notches = -e.getWheelRotation();
                 int newIndex = playerDropdown.getSelectedIndex() + notches;
                 if (newIndex >= 0 && newIndex < playerDropdown.getItemCount()) {
                     playerDropdown.setSelectedIndex(newIndex);
@@ -71,24 +94,41 @@ public class PlayerSelection extends JFrame {
             }
         });
 
-        startChipsLabel = new JLabel("Anzahl der Anfangschips (200-10000):  " + startChips);
+        startChipsLabel = new JLabel("Anzahl der Anfangschips (200-10000):");
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
+        startChipsLabel.setForeground(Color.WHITE);
         panel.add(startChipsLabel, gbc);
 
         JSlider startChipsSlider = new JSlider(200, 10000, startChips);
         startChipsSlider.setMajorTickSpacing(2000);
         startChipsSlider.setPaintTicks(false);
         startChipsSlider.setPaintLabels(false);
+        startChipsSlider.setOpaque(false);
         gbc.gridx = 0;
         gbc.gridy = 3;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 1;
         panel.add(startChipsSlider, gbc);
+
+        startChipsField = new JTextField(String.valueOf(startChips), 5);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        startChipsField.setOpaque(false);
+        startChipsField.setForeground(Color.WHITE);
+        startChipsField.setCaretColor(new Color(174, 174, 174));
+        panel.add(startChipsField, gbc);
 
         startChipsSlider.addChangeListener(e -> {
             startChips = startChipsSlider.getValue();
-            startChipsLabel.setText("Anzahl der Anfangschips (200-10000):  " + startChips);
+            startChipsLabel.setText("Anzahl der Anfangschips (200-10000):");
+            startChipsField.setText(String.valueOf(startChips));
+        });
+
+        startChipsField.addActionListener(e -> {
+            int value = Integer.parseInt(startChipsField.getText());
+            value = Math.max(200, Math.min(10000, value));
+            startChipsSlider.setValue(value);
         });
 
         startChipsSlider.addMouseWheelListener(new MouseAdapter() {
@@ -100,10 +140,11 @@ public class PlayerSelection extends JFrame {
             }
         });
 
-        bigBlindLabel = new JLabel("Big Blind (20-2000):  " + bigBlind);
+        bigBlindLabel = new JLabel("Big Blind (20-2000):");
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
+        bigBlindLabel.setForeground(Color.WHITE);
         panel.add(bigBlindLabel, gbc);
 
         JSlider bigBlindSlider = new JSlider(20, 2000, bigBlind);
@@ -111,18 +152,37 @@ public class PlayerSelection extends JFrame {
         bigBlindSlider.setMajorTickSpacing(400);
         bigBlindSlider.setPaintTicks(false);
         bigBlindSlider.setPaintLabels(false);
+        bigBlindSlider.setOpaque(false);
         gbc.gridx = 0;
         gbc.gridy = 5;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 1;
         panel.add(bigBlindSlider, gbc);
+
+        bigBlindField = new JTextField(String.valueOf(bigBlind), 5);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        bigBlindField.setOpaque(false);
+        bigBlindField.setForeground(Color.WHITE);
+        bigBlindField.setCaretColor(new Color(174, 174, 174));
+        panel.add(bigBlindField, gbc);
 
         bigBlindSlider.addChangeListener(e -> {
             bigBlind = bigBlindSlider.getValue();
             if (bigBlind % 2 != 0) {
                 bigBlind -= 1;
             }
-            bigBlindLabel.setText("Big Blind (20-2000):  " + bigBlind);
+            bigBlindLabel.setText("Big Blind (20-2000):");
+            bigBlindField.setText(String.valueOf(bigBlind));
             bigBlindSlider.setValue(bigBlind);
+        });
+
+        bigBlindField.addActionListener(e -> {
+            int value = Integer.parseInt(bigBlindField.getText());
+            value = Math.max(20, Math.min(2000, value));
+            if (value % 2 != 0) {
+                value = (value > bigBlindSlider.getValue() ? value + 1 : value - 1);
+            }
+            bigBlindSlider.setValue(value);
         });
 
         bigBlindSlider.addMouseWheelListener(new MouseAdapter() {
@@ -135,19 +195,22 @@ public class PlayerSelection extends JFrame {
                 if (value % 2 != 0) {
                     value = (value > bigBlindSlider.getValue() ? value + 1 : value - 1);
                 }
-
                 bigBlindSlider.setValue(value);
             }
         });
 
-        JButton confirmButton = new JButton("Namen eingeben");
+        confirmButton = new JButton("Namen eingeben");
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.gridwidth = 2;
+        confirmButton.setBackground(new Color(104, 148, 175, 255));
+        confirmButton.setForeground(Color.WHITE);
         panel.add(confirmButton, gbc);
 
         exitButton = new JButton("Fortfahren");
         exitButton.setEnabled(false); // Disable the button by default
+        exitButton.setBackground(new Color(104, 148, 175, 255));
+        exitButton.setForeground(Color.WHITE);
         gbc.gridy = 7;
         panel.add(exitButton, gbc);
 

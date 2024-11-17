@@ -29,7 +29,7 @@ public class MainGUI extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
-        // Icon setzen mit Skalierung
+        //Titlebar-Icon mit Skalierung setzen
         ImageIcon icon = new ImageIcon("img/icon.png");
         Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
         setIconImage(scaledIcon);
