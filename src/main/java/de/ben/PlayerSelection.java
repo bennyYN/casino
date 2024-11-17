@@ -203,13 +203,13 @@ public class PlayerSelection extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.gridwidth = 2;
-        confirmButton.setBackground(new Color(104, 148, 175, 255));
+        confirmButton.setBackground(new Color(78, 136, 174, 255));
         confirmButton.setForeground(Color.WHITE);
         panel.add(confirmButton, gbc);
 
         exitButton = new JButton("Fortfahren");
         exitButton.setEnabled(false); // Disable the button by default
-        exitButton.setBackground(new Color(104, 148, 175, 255));
+        exitButton.setBackground(new Color(78, 136, 174, 255));
         exitButton.setForeground(Color.WHITE);
         gbc.gridy = 7;
         panel.add(exitButton, gbc);
