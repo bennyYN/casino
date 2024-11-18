@@ -12,6 +12,7 @@ public class Poker extends Thread {
     private final Deck deck;
     HandRanker handRanker = new HandRanker();
     public final GewinnPot GewinnPot = new GewinnPot();
+
     public int highestBet;
     private Player lastPlayerToRaise;
     int anzahlSpieler;

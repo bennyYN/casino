@@ -44,7 +44,7 @@ public class PlayerSelection extends JFrame {
 
         playerNames = new ArrayList<>(8);
         for (int i = 0; i < 8; i++) {
-            playerNames.add("‒");
+            playerNames.add("");
         }
 
         JPanel panel = new JPanel() {
@@ -276,12 +276,12 @@ public class PlayerSelection extends JFrame {
         boolean allNamesEntered = true;
         for (int i = 0; i < playerNames.size(); i++) {
             if (i < numPlayers) {
-                if (playerNames.get(i).equals("‒")) {
+                if (playerNames.get(i).trim().equals("")) {
                     allNamesEntered = false;
                     break;
                 }
             } else {
-                playerNames.set(i, "‒");
+                playerNames.set(i, "");
             }
         }
         exitButton.setEnabled(allNamesEntered);

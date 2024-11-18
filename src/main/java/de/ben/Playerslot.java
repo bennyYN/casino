@@ -32,7 +32,7 @@ public class Playerslot {
 
         //Arraylists füllen
         for(int i = 0; i <= 7; i++){
-            if(playerNames.get(i).equals("‒")) {
+            if(playerNames.get(i).equals("")) {
                 slotState.set(i, "empty_");
                 actualPlayer.set(i, false);
             }else{
@@ -64,6 +64,9 @@ public class Playerslot {
                         //Chips
                         g.drawImage(new ImageIcon("img/chips.png").getImage(), 35, 254 + (i * 100), 16, 16, null);
                         g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 55, 267 + (i * 100));
+                        if(gui.game.players.get(i).getCurrentBet() != 0) {
+                            g.drawString("(-" +gui.game.players.get(i).getCurrentBet()+ ")", 80, 267 + (i * 100));
+                        }
 
                     }
 
@@ -80,6 +83,10 @@ public class Playerslot {
                     if(gui.game.players.get(i) != null){
                         g.drawImage(new ImageIcon("img/chips.png").getImage(), 1023, 254 + ((i-4) * 100), 16, 16, null);
                         g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 1043, 267 + ((i-4) * 100));
+                        if(gui.game.players.get(i).getCurrentBet() != 0) {
+                            g.drawString("(- " + gui.game.players.get(i).getCurrentBet() + ")", 1068, 267 + ((i - 4) * 100));
+                        }
+
                     }
 
                 }
@@ -95,7 +102,7 @@ public String getAction(){
         for(int i = 0; i <= 7; i++){
 
             if(players.get(i)!=null){
-                if(players.get(i).getName().equals("‒")) {
+                if(players.get(i).getName().equals("")) {
                     slotState.set(i, "empty_");
                 }else{
                     slotState.set(i, "");

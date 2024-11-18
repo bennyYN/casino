@@ -17,6 +17,7 @@ public class Player {
     boolean dummy = false;
     static boolean isGameDecided;
 
+
     public Player(int initialChips, String name) {
         this.hand = new ArrayList<>();
         this.chips = new Chips(initialChips);
@@ -104,6 +105,7 @@ public class Player {
 
     public void call(int highestBet) {
     }
+
 
     public void clearHand() {
         this.hand.clear();
