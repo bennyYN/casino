@@ -20,33 +20,19 @@ public class SettingsGUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
-        // Versuche, das Hintergrundbild zu laden, das auch in MainGUI verwendet wird
-        try {
-            backgroundImage = ImageIO.read(SettingsGUI.class.getResource("/background.png"));
-        } catch (IOException e) {
-            System.out.println("Hintergrundbild für Settings konnte nicht geladen werden.");
-        }
-
         // Panel mit GridBagLayout für die Zentrierung der Komponenten
         JPanel panel = new JPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if (backgroundImage != null) {
-                    // Zeichne das Hintergrundbild auf das Panel
-                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-                } else {
-                    // Setze einen dunkelgrünen Fallback-Hintergrund, wenn das Bild nicht geladen werden kann
-                    g.setColor(new Color(0, 51, 0));
-                    g.fillRect(0, 0, getWidth(), getHeight());
-                }
+                g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
             }
         };
         panel.setOpaque(false); // Panel transparent lassen, damit das Hintergrundbild sichtbar bleibt
         this.add(panel);
 
         JLabel volumeLabel = new JLabel("Music-Volume");
-        volumeLabel.setForeground(Color.yellow);
+        volumeLabel.setForeground(Color.WHITE);
         volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         // Musik-Slider erstellen
@@ -55,7 +41,7 @@ public class SettingsGUI extends JFrame {
         musicSlider.setMinorTickSpacing(5);
         musicSlider.setPaintTicks(true);
         musicSlider.setPaintLabels(true);
-        musicSlider.setForeground(Color.yellow);
+        musicSlider.setForeground(Color.WHITE);
         musicSlider.setBackground(new Color(0, 0, 0, 0)); // Transparenter Hintergrund
         musicSlider.setOpaque(false); // Slider transparent machen
         musicSlider.setPreferredSize(new Dimension(300, 50));
@@ -95,16 +81,20 @@ public class SettingsGUI extends JFrame {
     }
 
     private void styleButton(JButton button) {
-        Color normalColor = new Color(0, 100, 0);
-        Color pressedColor = new Color(0, 200, 0);
+        /*Color normalColor = new Color(214, 203, 203, 118); // Grau
+        Color pressedColor = new Color(0, 100, 0); // Helleres Grün
         button.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftart und Größe
-        button.setOpaque(false);
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false); // Fokusrand deaktivieren
+        button.setBackground(normalColor);
+        button.setForeground(Color.yellow); // Gelber Text*/
+        button.setBackground(new Color(78, 136, 174, 255));
+        button.setForeground(Color.WHITE);
+        button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
         button.setBorderPainted(false);
         button.setFocusPainted(false);
-        button.setBackground(normalColor);
-        button.setForeground(Color.YELLOW);
-        button.setPreferredSize(new Dimension(150, 40));
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
+       /* button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 button.setBackground(pressedColor);
@@ -114,6 +104,6 @@ public class SettingsGUI extends JFrame {
             public void mouseReleased(java.awt.event.MouseEvent e) {
                 button.setBackground(normalColor);
             }
-        });
+        });*/
     }
 }

@@ -2,12 +2,12 @@ package de.ben;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ public class PlayerSelection extends JFrame {
     public PlayerSelection(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
         initializeUI();
+        checkPlayerNames();
     }
 
     private void initializeUI() {
@@ -44,7 +45,7 @@ public class PlayerSelection extends JFrame {
 
         playerNames = new ArrayList<>(8);
         for (int i = 0; i < 8; i++) {
-            playerNames.add("");
+            playerNames.add("Spieler " + (i + 1));
         }
 
         JPanel panel = new JPanel() {
@@ -136,7 +137,7 @@ public class PlayerSelection extends JFrame {
             public void mouseWheelMoved(MouseWheelEvent e) {
                 int notches = e.getWheelRotation();
                 int value = startChipsSlider.getValue();
-                startChipsSlider.setValue(value - notches);
+                startChipsSlider.setValue(value - notches * 100); // Increase step size to 100
             }
         });
 
@@ -190,13 +191,14 @@ public class PlayerSelection extends JFrame {
             public void mouseWheelMoved(MouseWheelEvent e) {
                 int notches = e.getWheelRotation();
                 int value = bigBlindSlider.getValue();
-                value -= notches;
+                value -= notches * 20; // Increase step size to 100
                 value = Math.max(20, Math.min(2000, value));
                 if (value % 2 != 0) {
                     value = (value > bigBlindSlider.getValue() ? value + 1 : value - 1);
                 }
                 bigBlindSlider.setValue(value);
             }
+
         });
 
         confirmButton = new JButton("Namen eingeben");
@@ -217,6 +219,11 @@ public class PlayerSelection extends JFrame {
         confirmButton.addActionListener(e -> enterPlayerNames(numPlayers));
 
         exitButton.addActionListener(e -> {
+            for(int i = 0; i < 8; i++){
+                if(i >= numPlayers){
+                    playerNames.set(i, "");
+                }
+            }
             this.dispose();
             new PokerGUI(numPlayers, playerNames, startChips, bigBlind, actualPlayerCount, mainGUI).setVisible(true);
         });
@@ -231,7 +238,7 @@ public class PlayerSelection extends JFrame {
         nameFrame.setLocationRelativeTo(null);
 
         String[] columnNames = {"Spieler", "Name"};
-        Object[][] data = new Object[numPlayers][2];
+        Object[][] data = new Object[numPlayers][2]; // Create rows based on numPlayers
 
         for (int i = 0; i < numPlayers; i++) {
             data[i][0] = "Spieler " + (i + 1);
@@ -245,7 +252,38 @@ public class PlayerSelection extends JFrame {
             }
         };
 
-        JTable table = new JTable(model);
+        JTable table = new JTable(model){
+            @Override
+            public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+                if (columnIndex != 0) {
+                    super.changeSelection(rowIndex, columnIndex, toggle, extend);
+                }
+            }
+
+            @Override
+            protected void processKeyEvent(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_TAB && getSelectedRow() == getRowCount() - 1 && getSelectedColumn() == 1) {
+                    changeSelection(0, 1, false, false);
+                    e.consume();
+                } else {
+                    super.processKeyEvent(e);
+                }
+            }
+        };
+
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (column == 1 && value.equals("Spieler " + (row + 1))) {
+                    c.setForeground(Color.LIGHT_GRAY);
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+                return c;
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(table);
         nameFrame.add(scrollPane, BorderLayout.CENTER);
 
@@ -274,14 +312,10 @@ public class PlayerSelection extends JFrame {
 
     private void checkPlayerNames() {
         boolean allNamesEntered = true;
-        for (int i = 0; i < playerNames.size(); i++) {
-            if (i < numPlayers) {
-                if (playerNames.get(i).trim().equals("")) {
-                    allNamesEntered = false;
-                    break;
-                }
-            } else {
-                playerNames.set(i, "");
+        for (int i = 0; i < numPlayers; i++) {
+            if (playerNames.get(i).trim().equals("")) {
+                allNamesEntered = false;
+                break;
             }
         }
         exitButton.setEnabled(allNamesEntered);

@@ -111,8 +111,21 @@ public class MainGUI extends JFrame implements ActionListener {
             URL url = getClass().getResource("/background.wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(url);
 
+            // Überprüfe das Audioformat und konvertiere es bei Bedarf
+            AudioFormat baseFormat = audioStream.getFormat();
+            AudioFormat decodedFormat = new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    baseFormat.getSampleRate(),
+                    16,
+                    baseFormat.getChannels(),
+                    baseFormat.getChannels() * 2,
+                    baseFormat.getSampleRate(),
+                    false
+            );
+            AudioInputStream decodedAudioStream = AudioSystem.getAudioInputStream(decodedFormat, audioStream);
+
             backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(audioStream);
+            backgroundMusic.open(decodedAudioStream);
 
             // Lautstärkeregelung initialisieren
             volumeControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
