@@ -7,11 +7,12 @@ public class Poker extends Thread {
     private final ArrayList<Boolean> actualPlayers;
     Scanner sc = new Scanner(System.in);
     List<Player> players;
-    private final List<Player> blindsOrder;
+    final List<Player> blindsOrder;
     public final Dealer dealer;
     private final Deck deck;
     HandRanker handRanker = new HandRanker();
     public final GewinnPot GewinnPot = new GewinnPot();
+    public Player bigBlindPlayer, smallBlindPlayer;
 
     public int highestBet;
     private Player lastPlayerToRaise;
@@ -355,6 +356,10 @@ public class Poker extends Thread {
 
         // Set the highestBet to the value of the bigBlind
         highestBet = bigBlind;
+
+        // BB und SB Spieler abspeichern für anzeige
+        smallBlindPlayer = blindsOrder.get(0);
+        bigBlindPlayer = blindsOrder.get(1);
 
         // Rotate the blindsOrder list so that the next player is at the start of the list
         Collections.rotate(blindsOrder, -1);

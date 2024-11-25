@@ -61,15 +61,19 @@ public class Playerslot {
                     //Chips Anzahl & Karten
                     g.setFont(new Font("TimesRoman", Font.PLAIN, 12));
                     if(gui.game.players.get(i) != null){
-                        //Chips
+                        //Chips, Verlust & Blindsanzeige
                         g.drawImage(new ImageIcon("img/chips.png").getImage(), 35, 254 + (i * 100), 16, 16, null);
-                        g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 55, 267 + (i * 100));
                         if(gui.game.players.get(i).getCurrentBet() != 0) {
-                            g.drawString("(-" +gui.game.players.get(i).getCurrentBet()+ ")", 80, 267 + (i * 100));
+                            g.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", 55, 267 + (i * 100));
+                        }else {
+                            g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 55, 267 + (i * 100));
                         }
-
+                        if(gui.game.players.get(i).equals(gui.game.bigBlindPlayer)){
+                            g.drawImage(new ImageIcon("img/bigblind.png").getImage(), 189, 240 + (i * 100), 45, 45, null);
+                        }else if (gui.game.players.get(i).equals(gui.game.smallBlindPlayer)){
+                            g.drawImage(new ImageIcon("img/smallblind.png").getImage(), 191, 244 + (i * 100), 40, 40, null);
+                        }
                     }
-
                 }
             }else{
                 g.drawImage(new ImageIcon("img/" + slotState.get(i) + "playerslot.png").getImage(), 1008, 225 + ((i-4) * 100), null);
@@ -80,15 +84,21 @@ public class Playerslot {
                     g.drawString(players.get(i).getName(), 1023, 247 + ((i-4) * 100));
                     //Chips Anzahl
                     g.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+
                     if(gui.game.players.get(i) != null){
+                        //Chips, Verlust & Blindsanzeige
                         g.drawImage(new ImageIcon("img/chips.png").getImage(), 1023, 254 + ((i-4) * 100), 16, 16, null);
-                        g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 1043, 267 + ((i-4) * 100));
                         if(gui.game.players.get(i).getCurrentBet() != 0) {
-                            g.drawString("(- " + gui.game.players.get(i).getCurrentBet() + ")", 1068, 267 + ((i - 4) * 100));
+                            g.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", 1043, 267 + ((i-4) * 100));
+                        }else {
+                            g.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 1043, 267 + ((i-4) * 100));
                         }
-
+                        if(gui.game.players.get(i).equals(gui.game.bigBlindPlayer)){
+                            g.drawImage(new ImageIcon("img/bigblind.png").getImage(), 959, 240 + ((i-4) * 100), 45, 45, null);
+                        }else if (gui.game.players.get(i).equals(gui.game.smallBlindPlayer)){
+                            g.drawImage(new ImageIcon("img/smallblind.png").getImage(), 959, 244 + ((i-4) * 100), 40, 40, null);
+                        }
                     }
-
                 }
             }
         }

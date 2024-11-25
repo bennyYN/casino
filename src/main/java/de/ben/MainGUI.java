@@ -20,6 +20,7 @@ public class MainGUI extends JFrame implements ActionListener {
     private Clip backgroundMusic;
     private FloatControl volumeControl;
     private final String VOLUME_FILE = "volume.txt"; // Datei zum Speichern der Lautstärke
+    private boolean showLoadingScreen = false;
 
     // Konstruktor
     public MainGUI() {
@@ -38,20 +39,13 @@ public class MainGUI extends JFrame implements ActionListener {
         initMusicPlayer();
 
         // Versuche, den Hintergrund als Bild zu setzen
-        try {
-            BufferedImage backgroundImage = ImageIO.read(getClass().getResource("/background.png"));
-            panel = new JPanel() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // Bild als Hintergrund
-                }
-            };
-        } catch (IOException e) {
-            System.out.println("Hintergrundbild konnte nicht geladen werden, benutze stattdessen dunkelgrün.");
-            panel = new JPanel(); // Standard-Panel, falls das Bild nicht geladen werden konnte
-            panel.setBackground(new Color(0, 51, 0)); // Dunkelgrüner Hintergrund
-        }
+        panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
+            }
+        };
 
         panel.setLayout(new GridBagLayout()); // Setze Layout nach dem Laden des Bildes oder dem Default
         this.add(panel);
@@ -83,17 +77,21 @@ public class MainGUI extends JFrame implements ActionListener {
 
     // Methode, um den Button zu stylen
     private void styleButton(JButton button) {
-        Color normalColor = new Color(35, 35, 35); // Grau
+        /*Color normalColor = new Color(214, 203, 203, 118); // Grau
         Color pressedColor = new Color(0, 100, 0); // Helleres Grün
         button.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftart und Größe
-        button.setOpaque(false);
+        button.setOpaque(true);
         button.setBorderPainted(false);
         button.setFocusPainted(false); // Fokusrand deaktivieren
         button.setBackground(normalColor);
-        button.setForeground(Color.yellow); // Gelber Text
+        button.setForeground(Color.yellow); // Gelber Text*/
+        button.setBackground(new Color(78, 136, 174, 255));
+        button.setForeground(Color.WHITE);
         button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
         button.addActionListener(this);
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+       /* button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 button.setBackground(pressedColor);
@@ -103,7 +101,7 @@ public class MainGUI extends JFrame implements ActionListener {
             public void mouseReleased(java.awt.event.MouseEvent e) {
                 button.setBackground(normalColor);
             }
-        });
+        });*/
     }
 
     // Methode zum Initialisieren und Starten der Hintergrundmusik
@@ -187,12 +185,19 @@ public class MainGUI extends JFrame implements ActionListener {
             // Verstecke das MainGUI-Fenster und zeige den Ladescreen
             this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
 
-            // Ladebildschirm anzeigen und PokerGUI nach dem Laden öffnen
-            LoadingScreen.showLoadingScreen(this, () -> {
-                // PokerGUI öffnen, wenn der Ladevorgang abgeschlossen ist
+            if(showLoadingScreen){
+                // Ladebildschirm anzeigen und PokerGUI nach dem Laden öffnen
+                LoadingScreen.showLoadingScreen(this, () -> {
+                    // PokerGUI öffnen, wenn der Ladevorgang abgeschlossen ist
+                    new PlayerSelection(this);
+                    this.dispose(); // Schließe MainGUI, wenn der Ladevorgang abgeschlossen ist
+                });
+            }else{
+                // PokerGUI direkt öffnen
                 new PlayerSelection(this);
-                this.dispose(); // Schließe MainGUI, wenn der Ladevorgang abgeschlossen ist
-            });
+                this.dispose(); // Schließe MainGUI
+            }
+
         } else if (sourceButton == settingsButton) {
             this.setVisible(false); // Verstecke MainGUI statt es zu schließen
             new SettingsGUI(this, true); // Öffne SettingsGUI und übergebe MainGUI für Lautstärkeanpassung
