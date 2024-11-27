@@ -38,6 +38,10 @@ public class Dealer {
     //TODO -> FERTIG MACHEN!
     public void renderCards(Graphics g){
 
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
         if(handVisible){
             int xStart = 327;
 
@@ -49,7 +53,7 @@ public class Dealer {
                 }else if(hand.size() == 5){
                     xStart = 327;
                 }
-                g.drawImage(hand.get(j).getImage(), xStart+(j*110), 325, 94, 131, null);
+                g2d.drawImage(hand.get(j).getImage(), xStart+(j*110), 325, 94, 131, null);
             }
         }
 

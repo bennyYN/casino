@@ -19,7 +19,7 @@ public class Card {
     }
 
     public Image getImage(){
-        return (new ImageIcon("img/cards/" + toString() + ".png").getImage());
+        return ImageArchive.getImage("card:" + toString());
     }
 
     public ImageIcon getImageIcon(){

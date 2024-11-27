@@ -36,6 +36,9 @@ public class PokerGUI extends JFrame implements KeyListener {
   //Konstruktor
     public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, int actualPlayerCount, MainGUI mainGUI) {
 
+        //Bilderarchiv laden
+        ImageArchive ia = new ImageArchive();
+
         //Übergebene Werte speichern
         this.mainGUI = mainGUI;
         totalPlayers = numPlayers;
@@ -59,10 +62,8 @@ public class PokerGUI extends JFrame implements KeyListener {
         addKeyListener(this); //KeyListener hinzufügen
         setFocusable(true); //Das JFrame fokussierbar machen um KeyEvents zu empfangen
 
-        //Titlebar-Icon mit Skalierung setzen
-        ImageIcon icon = new ImageIcon("img/icon.png");
-        Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
-        setIconImage(scaledIcon);
+        //Titlebar-Icon
+        setIconImage(ImageArchive.getImage("icon"));
 
         //Spieler-Slots instanzieren
         slots = new Playerslot(startChips, playerNames, this);
@@ -77,10 +78,12 @@ public class PokerGUI extends JFrame implements KeyListener {
                 BufferedImage screenCapture = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g2d = screenCapture.createGraphics();
                 super.paintComponent(g2d);
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
                 //Zeichnen des Hintergrunds und des Pokertisches
-                g2d.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
-                g2d.drawImage(new ImageIcon("img/table.png").getImage(), 45, 45, null);
+                g2d.drawImage(ImageArchive.getImage("background"), 0, 0, null);
+                g2d.drawImage(ImageArchive.getImage("table"), 45, 45, null);
 
                 //Zeichnen verschiedener Spielelemente
                 if (game != null) {
@@ -104,7 +107,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
                     //Gewinnpot
                     if(!game.isGameOver && !isMenuOpen){
-                        g2d.drawImage(new ImageIcon("img/pot.png").getImage(), 495, 70, null);
+                        g2d.drawImage(ImageArchive.getImage("pot"), 495, 70, null);
                         g2d.setFont(new Font("TimesRoman", Font.BOLD, 30));
                         g2d.setColor(Color.WHITE);
                         g2d.drawString(String.valueOf(game.GewinnPot.getAmount()), 585, 132);
@@ -122,9 +125,9 @@ public class PokerGUI extends JFrame implements KeyListener {
                     //Karten Symbol im Spieler-Slot des Spielers, wessen Karten am Rundenende angezeigt werden, zeichnen
                     if (playerShowing >= 0 && playerShowing < 8 && !game.isGameOver && game.playerWon && !isMenuOpen) {
                         if (playerShowing <= 3) {
-                            g2d.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 153, 276 + (playerShowing * 100), 20, 20, null);
+                            g2d.drawImage(ImageArchive.getImage("cards"), 153, 276 + (playerShowing * 100), null);
                         } else {
-                            g2d.drawImage(new ImageIcon("img/cards_icon.png").getImage(), 1142, 276 + ((playerShowing - 4) * 100), 20, 20, null);
+                            g2d.drawImage(ImageArchive.getImage("cards"), 1142, 276 + ((playerShowing - 4) * 100), null);
                         }
                     }
                 }
@@ -221,7 +224,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Hilfe-Button zum Anzeigen des Handranking-Bildes
         JButton helpButton = new JButton("?");
         helpButton.setBounds(1150, 10, 30, 30); //Position setzen
-        helpButton.setBackground(new Color(170, 0, 0)); //Farbe setzen
+        helpButton.setBackground(new Color(95, 149, 182)); //Farbe setzen
         helpButton.setForeground(Color.WHITE); //Textfarbe festlegen
         helpButton.setFocusable(false); //Sicherstellen, dass der Button nicht fokussiert werden kann
         helpButton.setFont(new Font("Arial", Font.BOLD, 20)); //Schriftart und Schriftgröße festlegen
@@ -246,7 +249,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                     tempButtonText = "Leave Game";
                     break;
             }
-            menuButtons.set(i, createButton(tempButtonText));
+            menuButtons.set(i, ButtonFactory.getButton(tempButtonText, new Color(151, 217, 255, 89), 20));
 
             //Pausemenü-Button Positionen
             int buttonWidth = 225;
@@ -260,15 +263,15 @@ public class PokerGUI extends JFrame implements KeyListener {
         }
 
         //Gameplay Buttons:
-        foldButton = createButton("Fold");
-        checkButton = createButton("Check");
-        callButton = createButton("Call");
-        raiseButton = createButton("Raise");
-        allInButton = createButton("All In");
-        toggleButton = createButton("Show/Hide Hand");
-        continueButton = createButton("Continue");
-        menuButton = createButton("Back to Menu");
-        exitButton = createButton("Exit");
+        foldButton = ButtonFactory.getButton("Fold", new Color(142, 215, 255, 81), 20);
+        checkButton = ButtonFactory.getButton("Check", new Color(142, 215, 255, 81), 20);
+        callButton = ButtonFactory.getButton("Call", new Color(142, 215, 255, 81), 20);
+        raiseButton = ButtonFactory.getButton("Raise", new Color(142, 215, 255, 81), 20);
+        allInButton = ButtonFactory.getButton("All-In", new Color(142, 215, 255, 81), 20);
+        toggleButton = ButtonFactory.getButton("Toggle Hand", new Color(142, 215, 255, 81), 20);
+        continueButton = ButtonFactory.getButton("Continue", new Color(142, 215, 255, 81), 20);
+        menuButton = ButtonFactory.getButton("Menu", new Color(151, 217, 255, 89), 20);
+        exitButton = ButtonFactory.getButton("Exit", new Color(151, 217, 255, 89), 20);
         continueButton.setVisible(false);
         menuButton.setVisible(false);
         exitButton.setVisible(false);
