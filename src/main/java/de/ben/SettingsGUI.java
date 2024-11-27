@@ -2,9 +2,9 @@ package de.ben;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.IOException;
 
 public class SettingsGUI extends JFrame {
 
@@ -16,11 +16,11 @@ public class SettingsGUI extends JFrame {
         this.mainGUI = mainGUI;
         this.setTitle("Settings");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(400, 300);
+        this.setSize(600, 400); // Set the same window size as PlayerSelectionGUI
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
-        // Panel mit GridBagLayout für die Zentrierung der Komponenten
+        // Panel with GridBagLayout for centering components
         JPanel panel = new JPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -28,82 +28,125 @@ public class SettingsGUI extends JFrame {
                 g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
             }
         };
-        panel.setOpaque(false); // Panel transparent lassen, damit das Hintergrundbild sichtbar bleibt
+        panel.setOpaque(false); // Keep panel transparent to show background image
         this.add(panel);
 
         JLabel volumeLabel = new JLabel("Music-Volume");
         volumeLabel.setForeground(Color.WHITE);
         volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-        // Musik-Slider erstellen
-        JSlider musicSlider = new JSlider(0, 100, (int) mainGUI.getCurrentVolume()); // Verwende die aktuelle Lautstärke
+        // Create music slider
+        JSlider musicSlider = new JSlider(0, 100, (int) mainGUI.getCurrentVolume());
         musicSlider.setMajorTickSpacing(10);
         musicSlider.setMinorTickSpacing(5);
         musicSlider.setPaintTicks(true);
         musicSlider.setPaintLabels(true);
         musicSlider.setForeground(Color.WHITE);
-        musicSlider.setBackground(new Color(0, 0, 0, 0)); // Transparenter Hintergrund
-        musicSlider.setOpaque(false); // Slider transparent machen
-        musicSlider.setPreferredSize(new Dimension(300, 50));
+        musicSlider.setBackground(new Color(0, 0, 0, 0)); // Transparent background
+        musicSlider.setOpaque(false); // Make slider transparent
 
-        // Aktualisiere die Lautstärke, wenn der Slider bewegt wird
+        // Update volume when slider is moved
         musicSlider.addChangeListener(e -> {
             int volume = musicSlider.getValue();
-            mainGUI.setVolume(volume); // Setze die Lautstärke in der MainGUI und speichere sie
+            mainGUI.setVolume(volume); // Set volume in MainGUI and save it
         });
 
-        // Rückkehrbutton
+        // Add mouse wheel listener to music slider
+        musicSlider.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int notches = e.getWheelRotation();
+                musicSlider.setValue(musicSlider.getValue() - notches);
+            }
+        });
+
+        // Create game sounds slider
+        JLabel gameSoundsLabel = new JLabel("Game Sounds:");
+        gameSoundsLabel.setForeground(Color.WHITE);
+        gameSoundsLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        JSlider soundSlider = new JSlider(0, 100, 30);
+        soundSlider.setMajorTickSpacing(10);
+        soundSlider.setPaintTicks(true);
+        soundSlider.setPaintLabels(true);
+        soundSlider.setForeground(Color.WHITE);
+        soundSlider.setBackground(new Color(0, 0, 0, 0)); // Transparent background
+        soundSlider.setOpaque(false); // Make slider transparent
+
+        // Add mouse wheel listener to sound slider
+        soundSlider.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int notches = e.getWheelRotation();
+                soundSlider.setValue(soundSlider.getValue() - notches);
+            }
+        });
+
+        // Create theme dropdown menu
+        JLabel themeLabel = new JLabel("Select Theme:");
+        themeLabel.setForeground(Color.WHITE);
+        themeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        String[] themes = {"Dark", "Original", "Light", "Amethyst"};
+        JComboBox<String> themeDropdown = new JComboBox<>(themes);
+        themeDropdown.setSelectedIndex(1); // Default to "Original"
+
+        // Add mouse wheel listener to theme dropdown
+        themeDropdown.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int notches = e.getWheelRotation();
+                int newIndex = themeDropdown.getSelectedIndex() - notches;
+                if (newIndex >= 0 && newIndex < themeDropdown.getItemCount()) {
+                    themeDropdown.setSelectedIndex(newIndex);
+                }
+            }
+        });
+
+        // Create back button
         JButton backButton = new JButton("Back");
         styleButton(backButton);
         backButton.addActionListener(e -> {
-            this.dispose(); // Schließe SettingsGUI
-            if(usedInMainGUI){
-                mainGUI.setVisible(true); // Zeige MainGUI wieder an
+            this.dispose(); // Close SettingsGUI
+            if (usedInMainGUI) {
+                mainGUI.setVisible(true); // Show MainGUI again
             }
-
         });
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.insets = new Insets(10, 0, 10, 0);
+        gbc.insets = new Insets(10, 100, 10, 100); // Add more space around components
         gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Make components fill horizontally
+        gbc.weightx = 1.0; // Allow components to grow horizontally
 
         gbc.gridy = 0;
-        panel.add(volumeLabel, gbc);
+        panel.add(themeLabel, gbc);
 
         gbc.gridy = 1;
-        panel.add(musicSlider, gbc);
+        panel.add(themeDropdown, gbc);
 
         gbc.gridy = 2;
+        panel.add(volumeLabel, gbc);
+
+        gbc.gridy = 3;
+        panel.add(musicSlider, gbc);
+
+        gbc.gridy = 4;
+        panel.add(gameSoundsLabel, gbc);
+
+        gbc.gridy = 5;
+        panel.add(soundSlider, gbc);
+
+        gbc.gridy = 6;
         panel.add(backButton, gbc);
 
         this.setVisible(true);
     }
 
     private void styleButton(JButton button) {
-        /*Color normalColor = new Color(214, 203, 203, 118); // Grau
-        Color pressedColor = new Color(0, 100, 0); // Helleres Grün
-        button.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftart und Größe
-        button.setOpaque(true);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false); // Fokusrand deaktivieren
-        button.setBackground(normalColor);
-        button.setForeground(Color.yellow); // Gelber Text*/
         button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
-        button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
+        button.setPreferredSize(new Dimension(150, 40)); // Set size
         button.setBorderPainted(false);
         button.setFocusPainted(false);
-       /* button.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                button.setBackground(pressedColor);
-            }
-
-            @Override
-            public void mouseReleased(java.awt.event.MouseEvent e) {
-                button.setBackground(normalColor);
-            }
-        });*/
     }
 }
