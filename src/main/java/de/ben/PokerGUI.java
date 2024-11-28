@@ -1,12 +1,10 @@
 package de.ben;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +30,10 @@ public class PokerGUI extends JFrame implements KeyListener {
     public JPanel panel; //JPanel
     Playerslot slots; //Spieler-Slots
     MainGUI mainGUI; //Mainmenu
+    JButton helpButton; //Hilfe-Button
 
   //Konstruktor
     public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, int actualPlayerCount, MainGUI mainGUI) {
-
-        //Bilderarchiv laden
-        ImageArchive ia = new ImageArchive();
 
         //Übergebene Werte speichern
         this.mainGUI = mainGUI;
@@ -82,7 +78,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                 g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
                 //Zeichnen des Hintergrunds und des Pokertisches
-                g2d.drawImage(ImageArchive.getImage("background"), 0, 0, null);
+                g2d.drawImage(ImageArchive.getImage("background:"+mainGUI.getSelectedTheme()), 0, 0, null);
                 g2d.drawImage(ImageArchive.getImage("table"), 45, 45, null);
 
                 //Zeichnen verschiedener Spielelemente
@@ -107,7 +103,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
                     //Gewinnpot
                     if(!game.isGameOver && !isMenuOpen){
-                        g2d.drawImage(ImageArchive.getImage("pot"), 495, 70, null);
+                        g2d.drawImage(ImageArchive.getImage("pot:"+mainGUI.getSelectedTheme()), 495, 70, null);
                         g2d.setFont(new Font("TimesRoman", Font.BOLD, 30));
                         g2d.setColor(Color.WHITE);
                         g2d.drawString(String.valueOf(game.GewinnPot.getAmount()), 585, 132);
@@ -222,7 +218,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
     //Buttons:
         //Hilfe-Button zum Anzeigen des Handranking-Bildes
-        JButton helpButton = new JButton("?");
+        helpButton = new JButton("?");
         helpButton.setBounds(1150, 10, 30, 30); //Position setzen
         helpButton.setBackground(new Color(95, 149, 182)); //Farbe setzen
         helpButton.setForeground(Color.WHITE); //Textfarbe festlegen
@@ -230,6 +226,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         helpButton.setFont(new Font("Arial", Font.BOLD, 20)); //Schriftart und Schriftgröße festlegen
         helpButton.setBorder(BorderFactory.createLineBorder(Color.WHITE)); //Rahmen um den Button setzen
         helpButton.setFocusPainted(false); //Fokusrand deaktivieren
+        styleButton(helpButton); //Button stylen
         panel.add(helpButton);
 
         //Erstellung der Buttons für das Pausemenü
@@ -249,7 +246,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                     tempButtonText = "Leave Game";
                     break;
             }
-            menuButtons.set(i, ButtonFactory.getButton(tempButtonText, new Color(151, 217, 255, 89), 20));
+            menuButtons.set(i, ButtonFactory.getButton(tempButtonText, new Color(151, 217, 255, 89), 20, true));
 
             //Pausemenü-Button Positionen
             int buttonWidth = 225;
@@ -263,15 +260,15 @@ public class PokerGUI extends JFrame implements KeyListener {
         }
 
         //Gameplay Buttons:
-        foldButton = ButtonFactory.getButton("Fold", new Color(142, 215, 255, 81), 20);
-        checkButton = ButtonFactory.getButton("Check", new Color(142, 215, 255, 81), 20);
-        callButton = ButtonFactory.getButton("Call", new Color(142, 215, 255, 81), 20);
-        raiseButton = ButtonFactory.getButton("Raise", new Color(142, 215, 255, 81), 20);
-        allInButton = ButtonFactory.getButton("All-In", new Color(142, 215, 255, 81), 20);
-        toggleButton = ButtonFactory.getButton("Toggle Hand", new Color(142, 215, 255, 81), 20);
-        continueButton = ButtonFactory.getButton("Continue", new Color(142, 215, 255, 81), 20);
-        menuButton = ButtonFactory.getButton("Menu", new Color(151, 217, 255, 89), 20);
-        exitButton = ButtonFactory.getButton("Exit", new Color(151, 217, 255, 89), 20);
+        foldButton = ButtonFactory.getButton("Fold", new Color(142, 215, 255, 81), 20, false);
+        checkButton = ButtonFactory.getButton("Check", new Color(142, 215, 255, 81), 20, false);
+        callButton = ButtonFactory.getButton("Call", new Color(142, 215, 255, 81), 20, false);
+        raiseButton = ButtonFactory.getButton("Raise", new Color(142, 215, 255, 81), 20, false);
+        allInButton = ButtonFactory.getButton("All-In", new Color(142, 215, 255, 81), 20, false);
+        toggleButton = ButtonFactory.getButton("Toggle Hand", new Color(142, 215, 255, 81), 20, false);
+        continueButton = ButtonFactory.getButton("Continue", new Color(142, 215, 255, 81), 20, true);
+        menuButton = ButtonFactory.getButton("Menu", new Color(151, 217, 255, 89), 20, true);
+        exitButton = ButtonFactory.getButton("Exit", new Color(151, 217, 255, 89), 20, true);
         continueButton.setVisible(false);
         menuButton.setVisible(false);
         exitButton.setVisible(false);
@@ -333,7 +330,9 @@ public class PokerGUI extends JFrame implements KeyListener {
 
     //ActionListener Methoden um den Buttons eine Aktion/Funktion zuzuweisen
         //Hilfe-Button
-        helpButton.addActionListener(e -> new ImageWindow().setVisible(true)); //Öffnet Fenster mit Handranking-Bild
+        helpButton.addActionListener(e -> {
+            new ImageWindow().setVisible(true);
+        });
 
         //Fold Button
         foldButton.addActionListener(e -> {
@@ -359,9 +358,13 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Raise Button
         raiseButton.addActionListener(e -> {
             //Textfeld und Label für das Erhöhen sichtbar machen
+            if(!raiseField.isVisible()){
+                MainGUI.playSound("click");
+            }
             raiseField.setVisible(true);
             raiseLabel.setVisible(true);
             //Wenn der Inhalt des Textfeldes nicht leer ist, wird der Wert in raiseAmount gespeichert
+
             if (!raiseField.getText().isEmpty()) {
                 raiseAmount = Integer.parseInt(raiseField.getText());
                 raiseField.setText(""); // Clear the field after submission
@@ -381,7 +384,13 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         //Button zum Anziegen/Verdecken der Hand
         toggleButton.addActionListener(e -> {
+
             if(game != null){
+                if(game.currentPlayer.handVisible){
+                    MainGUI.playSound("toggle1");
+                }else{
+                    MainGUI.playSound("toggle2");
+                }
                 //Wenn ein Spieler eine Runde gewonnen hat, wird die Hand des ausgewählten Spielers gezeigt...
                 if(game.playerWon){
                     game.players.get(playerShowing).handVisible = !game.players.get(playerShowing).handVisible;
@@ -389,6 +398,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                 }else{
                     game.currentPlayer.handVisible = !game.currentPlayer.handVisible;
                 }
+
             }
             hideRaiseField(); //Das Eingabefeld zum Erhöhen verstecken
         });
@@ -455,6 +465,9 @@ public class PokerGUI extends JFrame implements KeyListener {
     //Methode, welche kontinuierlich aufgerufen wird (bis das Spiel zuende ist)
     //-> Wird für die Aktualisierung der GUI und verschiedene Werte benötigt
     public void update(){
+
+        //Aktualisierung der Buttonfarben
+        mainGUI.updateButtonColor(helpButton, false);
 
         //Aktualisierung der statischen Booleanvariable isGameDecided der Klasse Spieler
         if(game != null){
@@ -600,17 +613,32 @@ public class PokerGUI extends JFrame implements KeyListener {
         }
     }
 
-    //Methode um einen custom Button zu erstellen
-    private JButton createButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(new Color(170, 0, 0)); // Wine red color
+    // Methode, um den Button zu stylen
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
-        button.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setOpaque(true);
-        button.setFocusable(false); // Disable focus on the button
-        button.setBorderPainted(true);
-        return button;
+        button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.addActionListener(e -> {
+            mainGUI.playSound("click");
+        });
+
+        // Create a thin line border
+        Border thinBorder = BorderFactory.createLineBorder(new Color(255, 255, 255, 81), 2); // 1 pixel thick
+        button.setBorder(thinBorder);
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBorderPainted(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBorderPainted(false);
+            }
+        });
     }
 
     //Methode um eine Nachricht zur Dialogbox hinzuzufügen
@@ -673,6 +701,11 @@ public class PokerGUI extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         //Wenn die Escape-Taste gedrückt wird, wird das Menü geöffnet/geschlossen
         if(e.getKeyCode() == 27){
+            if(isMenuOpen){
+                MainGUI.playSound("close_menu");
+            }else{
+                MainGUI.playSound("open_menu");
+            }
             isMenuOpen = !isMenuOpen;
         }
     }

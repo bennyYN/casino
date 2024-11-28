@@ -7,7 +7,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ButtonFactory {
-    public static JButton getButton(String buttonText, Color color, int textSize) {
+
+    public static JButton getButton(String buttonText, Color color, int textSize, boolean playingSounds) {
         JButton button = new JButton(buttonText) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -53,6 +54,13 @@ public class ButtonFactory {
                 button.setBorderPainted(false);
             }
         });
+
+        if(playingSounds){
+            // Add an ActionListener
+            button.addActionListener(e -> {
+                MainGUI.playSound("click");
+            });
+        }
 
         // Erstelle einen zusammengesetzten Rand für den Button
         Border raisedbevel = BorderFactory.createRaisedBevelBorder();

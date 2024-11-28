@@ -1,7 +1,10 @@
 package de.ben;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
@@ -11,8 +14,9 @@ public class SettingsGUI extends JFrame {
     private MainGUI mainGUI;
     private BufferedImage backgroundImage; // Hintergrundbild
     private boolean usedInMainGUI;
-    String[] themes = {"Original", "Dark", "Darkblue", "Light", "Scarlet"};
-    JComboBox<String> themeDropdown = new JComboBox<>(themes);;
+    String[] themes = {"Original", "Dark", "Darkblue", "Scarlet"};
+    JComboBox<String> themeDropdown = new JComboBox<>(themes);
+    private JButton backButton;
 
     public SettingsGUI(MainGUI mainGUI, boolean usedInMainGUI) {
         this.mainGUI = mainGUI;
@@ -27,7 +31,10 @@ public class SettingsGUI extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
+                g.drawImage(ImageArchive.getImage("background:"+mainGUI.getSelectedTheme()), 0, 0, null);
+                if(backButton != null) {
+                    mainGUI.updateButtonColor(backButton, false);
+                }
             }
         };
         panel.setOpaque(false); // Keep panel transparent to show background image
@@ -74,13 +81,19 @@ public class SettingsGUI extends JFrame {
         JLabel gameSoundsLabel = new JLabel("Game Sounds:");
         gameSoundsLabel.setForeground(Color.WHITE);
         gameSoundsLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        JSlider soundSlider = new JSlider(0, 100, 30);
+        JSlider soundSlider = new JSlider(0, 100, (int) mainGUI.getGameSoundsVolume());
         soundSlider.setMajorTickSpacing(10);
         soundSlider.setPaintTicks(true);
         soundSlider.setPaintLabels(true);
         soundSlider.setForeground(Color.WHITE);
         soundSlider.setBackground(new Color(0, 0, 0, 0)); // Transparent background
         soundSlider.setOpaque(false); // Make slider transparent
+
+        // Update game sounds volume when slider is moved
+        soundSlider.addChangeListener(e -> {
+            int volume = soundSlider.getValue();
+            mainGUI.setGameSoundsVolume(volume); // Set game sounds volume in MainGUI and save it
+        });
 
         // Add mouse wheel listener to sound slider
         soundSlider.addMouseWheelListener(new MouseWheelListener() {
@@ -95,15 +108,6 @@ public class SettingsGUI extends JFrame {
         JLabel themeLabel = new JLabel("Select Theme:");
         themeLabel.setForeground(Color.WHITE);
         themeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-
-        for(int i = 0; i < themes.length; i++) {
-            if (themes[i].equals(mainGUI.getSelectedTheme())) {
-                themeDropdown.setSelectedIndex(i);
-                break;
-            }
-        }
-        //themeDropdown.setSelectedIndex(0); // Default to "Original"
 
         // Add mouse wheel listener to theme dropdown
         themeDropdown.addMouseWheelListener(new MouseWheelListener() {
@@ -121,9 +125,11 @@ public class SettingsGUI extends JFrame {
         themeDropdown.addActionListener(e -> {
             String selectedTheme = (String) themeDropdown.getSelectedItem();
             mainGUI.saveSelectedTheme(selectedTheme); // Set theme in MainGUI and save it
+            repaint();
         });
+
         // Create back button
-        JButton backButton = new JButton("Back");
+        backButton = new JButton("Back");
         styleButton(backButton);
         backButton.addActionListener(e -> {
             this.dispose(); // Close SettingsGUI
@@ -163,11 +169,31 @@ public class SettingsGUI extends JFrame {
         this.setVisible(true);
     }
 
+    // Methode, um den Button zu stylen
     private void styleButton(JButton button) {
         button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
-        button.setPreferredSize(new Dimension(150, 40)); // Set size
+        button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
         button.setBorderPainted(false);
         button.setFocusPainted(false);
+        button.addActionListener(e -> {
+            mainGUI.playSound("click");
+        });
+
+        // Create a thin line border
+        Border thinBorder = BorderFactory.createLineBorder(new Color(255, 255, 255, 81), 2); // 1 pixel thick
+        button.setBorder(thinBorder);
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBorderPainted(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBorderPainted(false);
+            }
+        });
     }
 }

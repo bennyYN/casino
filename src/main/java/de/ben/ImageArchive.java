@@ -57,7 +57,7 @@ public class ImageArchive {
             darkblueBackgroundImg = ImageIO.read(new File("img/background-darkblue.jpg"));
             lightBackgroundImg = ImageIO.read(new File("img/background-light.jpg"));
             scarletBackgroundImg = ImageIO.read(new File("img/background-scarlet.jpg"));
-            darkPotImg = ImageIO.read(new File("img/pot-dark.jpg"));
+            darkPotImg = ImageIO.read(new File("img/pot-dark.png"));
             tableImg = ImageIO.read(new File("img/table.png"));
             potImg = ImageIO.read(new File("img/pot.png"));
             //Cards
@@ -356,21 +356,21 @@ public class ImageArchive {
                 case "zero_playerslot":
                     return scaledZeroPlayerslot;
                 //Misc
-                case "background:original":
+                case "background:Original":
                     return scaledBackgroundImg;
-                case "background:dark":
+                case "background:Dark":
                     return scaledDarkBackgroundImg;
-                case "background:darkblue":
+                case "background:Darkblue":
                     return scaledDarkblueBackgroundImg;
-                case "background:light":
+                case "background:Light":
                     return scaledLightBackgroundImg;
-                case "background:scarlet":
+                case "background:Scarlet":
                     return scaledScarletBackgroundImg;
                 case "table":
                     return scaledTableImg;
-                case "pot":
+                case "pot", "pot:", "pot:Original", "pot:Scarlet", "pot:Dark", "pot:Darkblue":
                     return scaledPotImg;
-                case "pot:dark":
+                case "pot:Light":
                     return scaledDarkPotImg;
                 default:
                     return null;
@@ -524,21 +524,21 @@ public class ImageArchive {
                     case "zero_playerslot":
                         return zeroPlayerslot;
                     //Misc
-                    case "background:original":
+                    case "background:Original":
                         return originalBackgroundImg;
-                    case "background:dark":
+                    case "background:Dark":
                         return darkBackgroundImg;
-                    case "background:darkblue":
+                    case "background:Darkblue":
                         return darkblueBackgroundImg;
-                    case "background:light":
+                    case "background:Light":
                         return lightBackgroundImg;
-                    case "background:scarlet":
+                    case "background:Scarlet":
                         return scarletBackgroundImg;
                     case "table":
                         return tableImg;
-                    case "pot":
+                    case "pot", "pot:", "pot:Original", "pot:Scarlet", "pot:Dark", "pot:Darkblue":
                         return potImg;
-                    case "pot:dark":
+                    case "pot:Light":
                         return darkPotImg;
                     //Cards
                     case "card:back":

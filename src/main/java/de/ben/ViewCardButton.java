@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class ViewCardButton extends JButton {
 
+    static int soundVariationCounter = 1;
     static ArrayList<ViewCardButton> allButtons;
     int assignedPlayer;
 
@@ -31,6 +32,15 @@ public class ViewCardButton extends JButton {
 
         addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                if(soundVariationCounter == 1){
+                    MainGUI.playSound("view1");
+                    soundVariationCounter = 2;
+                }else{
+                    MainGUI.playSound("view2");
+                    soundVariationCounter = 1;
+                }
+
                 gui.playerShowing = assignedPlayer;
                 highlight(true);
             }

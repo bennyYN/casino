@@ -54,7 +54,7 @@ public class FadingLabel extends JLabel {
                         alpha = 0;
                     }
                     repaint(); // Repaint the label with updated opacity
-                    Thread.sleep(50); // Wait for 50 milliseconds
+                    Thread.sleep(30); // Wait for 50 milliseconds
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

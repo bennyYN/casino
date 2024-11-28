@@ -1,15 +1,12 @@
 package de.ben;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseWheelEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class PlayerSelection extends JFrame {
@@ -52,9 +49,13 @@ public class PlayerSelection extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
+                g.drawImage(ImageArchive.getImage("background:"+mainGUI.getSelectedTheme()), 0, 0, null);
                 if(exitButton != null){
                     exitButton.setOpaque(exitButton.isEnabled());
+                    mainGUI.updateButtonColor(exitButton, false);
+                }
+                if(confirmButton != null){
+                    mainGUI.updateButtonColor(confirmButton, false);
                 }
                 repaint();
             }
@@ -207,29 +208,63 @@ public class PlayerSelection extends JFrame {
         gbc.gridwidth = 2;
         confirmButton.setBackground(new Color(78, 136, 174, 255));
         confirmButton.setForeground(Color.WHITE);
+        styleButton(confirmButton);
         panel.add(confirmButton, gbc);
 
         exitButton = new JButton("Fortfahren");
         exitButton.setEnabled(false); // Disable the button by default
         exitButton.setBackground(new Color(78, 136, 174, 255));
         exitButton.setForeground(Color.WHITE);
+        styleButton(exitButton);
         gbc.gridy = 7;
         panel.add(exitButton, gbc);
 
-        confirmButton.addActionListener(e -> enterPlayerNames(numPlayers));
+        confirmButton.addActionListener(e -> {
+            mainGUI.playSound("click");
+            enterPlayerNames(numPlayers);
+        });
 
         exitButton.addActionListener(e -> {
+            mainGUI.playSound("click");
             for(int i = 0; i < 8; i++){
                 if(i >= numPlayers){
                     playerNames.set(i, "");
                 }
             }
-            this.dispose();
             new PokerGUI(numPlayers, playerNames, startChips, bigBlind, actualPlayerCount, mainGUI).setVisible(true);
+            this.dispose();
         });
 
         add(panel);
         setVisible(true);
+    }
+
+    // Methode, um den Button zu stylen
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(78, 136, 174, 255));
+        button.setForeground(Color.WHITE);
+        button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        /*button.addActionListener(e -> {
+            mainGUI.playSound("click");
+        });*/
+
+        // Create a thin line border
+        Border thinBorder = BorderFactory.createLineBorder(new Color(255, 255, 255, 81), 2); // 1 pixel thick
+        button.setBorder(thinBorder);
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBorderPainted(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBorderPainted(false);
+            }
+        });
     }
 
     private void enterPlayerNames(int numPlayers) {
