@@ -11,6 +11,8 @@ public class SettingsGUI extends JFrame {
     private MainGUI mainGUI;
     private BufferedImage backgroundImage; // Hintergrundbild
     private boolean usedInMainGUI;
+    String[] themes = {"Original", "Dark", "Darkblue", "Light", "Scarlet"};
+    JComboBox<String> themeDropdown = new JComboBox<>(themes);;
 
     public SettingsGUI(MainGUI mainGUI, boolean usedInMainGUI) {
         this.mainGUI = mainGUI;
@@ -44,6 +46,14 @@ public class SettingsGUI extends JFrame {
         musicSlider.setForeground(Color.WHITE);
         musicSlider.setBackground(new Color(0, 0, 0, 0)); // Transparent background
         musicSlider.setOpaque(false); // Make slider transparent
+
+        //Show current theme
+        for(int i = 0; i < themes.length; i++) {
+            if (themes[i].equals(mainGUI.getSelectedTheme())) {
+                themeDropdown.setSelectedIndex(i);
+                break;
+            }
+        }
 
         // Update volume when slider is moved
         musicSlider.addChangeListener(e -> {
@@ -85,9 +95,15 @@ public class SettingsGUI extends JFrame {
         JLabel themeLabel = new JLabel("Select Theme:");
         themeLabel.setForeground(Color.WHITE);
         themeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        String[] themes = {"Dark", "Original", "Light", "Amethyst"};
-        JComboBox<String> themeDropdown = new JComboBox<>(themes);
-        themeDropdown.setSelectedIndex(1); // Default to "Original"
+
+
+        for(int i = 0; i < themes.length; i++) {
+            if (themes[i].equals(mainGUI.getSelectedTheme())) {
+                themeDropdown.setSelectedIndex(i);
+                break;
+            }
+        }
+        //themeDropdown.setSelectedIndex(0); // Default to "Original"
 
         // Add mouse wheel listener to theme dropdown
         themeDropdown.addMouseWheelListener(new MouseWheelListener() {
@@ -101,6 +117,11 @@ public class SettingsGUI extends JFrame {
             }
         });
 
+        // Update theme when selected
+        themeDropdown.addActionListener(e -> {
+            String selectedTheme = (String) themeDropdown.getSelectedItem();
+            mainGUI.saveSelectedTheme(selectedTheme); // Set theme in MainGUI and save it
+        });
         // Create back button
         JButton backButton = new JButton("Back");
         styleButton(backButton);

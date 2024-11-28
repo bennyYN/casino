@@ -20,7 +20,9 @@ public class MainGUI extends JFrame implements ActionListener {
     private Clip backgroundMusic;
     private FloatControl volumeControl;
     private final String VOLUME_FILE = "volume.txt"; // Datei zum Speichern der Lautstärke
+    private final String THEME_FILE = "theme.txt"; // Datei zum Speichern des Themes
     private boolean showLoadingScreen = false;
+    private String selectedTheme = "Original";
 
     // Konstruktor
     public MainGUI() {
@@ -43,7 +45,25 @@ public class MainGUI extends JFrame implements ActionListener {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
+                switch (selectedTheme) {
+                    case "Original":
+                        g.drawImage(new ImageIcon("img/background.jpg").getImage(), 0, 0, null);
+                        break;
+                    case "Dark":
+                        g.drawImage(new ImageIcon("img/background-dark.jpg").getImage(), 0, 0, null);
+                        break;
+                        case "Darkblue":
+                        g.drawImage(new ImageIcon("img/background-darkblue.jpg").getImage(), 0, 0, null);
+                        break;
+                    case "Light":
+                        g.drawImage(new ImageIcon("img/background-light.jpg").getImage(), 0, 0, null);
+                        break;
+                    case "Scarlet":
+                        g.drawImage(new ImageIcon("img/background-scarlet.jpg").getImage(), 0, 0, null);
+                        break;
+                    default:
+                        break;
+                }
             }
         };
 
@@ -77,31 +97,12 @@ public class MainGUI extends JFrame implements ActionListener {
 
     // Methode, um den Button zu stylen
     private void styleButton(JButton button) {
-        /*Color normalColor = new Color(214, 203, 203, 118); // Grau
-        Color pressedColor = new Color(0, 100, 0); // Helleres Grün
-        button.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftart und Größe
-        button.setOpaque(true);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false); // Fokusrand deaktivieren
-        button.setBackground(normalColor);
-        button.setForeground(Color.yellow); // Gelber Text*/
         button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
         button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
         button.addActionListener(this);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
-       /* button.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                button.setBackground(pressedColor);
-            }
-
-            @Override
-            public void mouseReleased(java.awt.event.MouseEvent e) {
-                button.setBackground(normalColor);
-            }
-        });*/
     }
 
     // Methode zum Initialisieren und Starten der Hintergrundmusik
@@ -222,4 +223,37 @@ public class MainGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         new MainGUI(); // Starte die MainGUI
     }
+
+    public void saveSelectedTheme(String selectedTheme) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(THEME_FILE))) {
+            writer.write(String.valueOf(selectedTheme));
+            updateSelectedTheme();
+            System.out.println("Theme gespeichert: " + selectedTheme);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateSelectedTheme() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(THEME_FILE))) {
+            String theme = reader.readLine();
+            if (theme != null) {
+                this.selectedTheme = theme;
+                System.out.println("Theme loaded: " + theme);
+            } else {
+                this.selectedTheme = "Original"; // Default theme if file is empty
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Theme file not found. Using default theme.");
+            this.selectedTheme = "Original"; // Default theme if file is not found
+        } catch (IOException e) {
+            e.printStackTrace();
+            this.selectedTheme = "Original"; // Default theme in case of an error
+        }
+    }
+
+    public String getSelectedTheme() {
+        return selectedTheme;
+    }
 }
+

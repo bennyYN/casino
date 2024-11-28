@@ -17,8 +17,8 @@ public class ImageArchive {
     private static BufferedImage playerslot, emptyPlayerslot, activePlayerslot, winningPlayerslot, inactivePlayerslot, zeroPlayerslot;
     private static Image scaledPlayerslot, scaledEmptyPlayerslot, scaledActivePlayerslot, scaledWinningPlayerslot, scaledInactivePlayerslot, scaledZeroPlayerslot;
     //Misc
-    private static BufferedImage backgroundImg, tableImg, potImg;
-    private static Image scaledBackgroundImg, scaledTableImg, scaledPotImg;
+    private static BufferedImage originalBackgroundImg, darkBackgroundImg, darkblueBackgroundImg, lightBackgroundImg, scarletBackgroundImg, tableImg, potImg, darkPotImg;
+    private static Image scaledBackgroundImg, scaledDarkBackgroundImg, scaledDarkblueBackgroundImg, scaledLightBackgroundImg, scaledScarletBackgroundImg, scaledTableImg, scaledPotImg, scaledDarkPotImg;
     //Cards
         //Backside
         private static BufferedImage cardBackImg;
@@ -52,7 +52,12 @@ public class ImageArchive {
             inactivePlayerslot = ImageIO.read(new File("img/inactive_playerslot.png"));
             zeroPlayerslot = ImageIO.read(new File("img/zero_playerslot.png"));
             //Misc
-            backgroundImg = ImageIO.read(new File("img/background.jpg"));
+            originalBackgroundImg = ImageIO.read(new File("img/background.jpg"));
+            darkBackgroundImg = ImageIO.read(new File("img/background-dark.jpg"));
+            darkblueBackgroundImg = ImageIO.read(new File("img/background-darkblue.jpg"));
+            lightBackgroundImg = ImageIO.read(new File("img/background-light.jpg"));
+            scarletBackgroundImg = ImageIO.read(new File("img/background-scarlet.jpg"));
+            darkPotImg = ImageIO.read(new File("img/pot-dark.jpg"));
             tableImg = ImageIO.read(new File("img/table.png"));
             potImg = ImageIO.read(new File("img/pot.png"));
             //Cards
@@ -136,9 +141,14 @@ public class ImageArchive {
         scaledInactivePlayerslot = inactivePlayerslot.getScaledInstance((int)(inactivePlayerslot.getWidth()*xScale), (int)(inactivePlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledZeroPlayerslot = zeroPlayerslot.getScaledInstance((int)(zeroPlayerslot.getWidth()*xScale), (int)(zeroPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         //Misc
-        scaledBackgroundImg = backgroundImg.getScaledInstance((int)(backgroundImg.getWidth()*xScale), (int)(backgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledBackgroundImg = originalBackgroundImg.getScaledInstance((int)(originalBackgroundImg.getWidth()*xScale), (int)(originalBackgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledDarkBackgroundImg = darkBackgroundImg.getScaledInstance((int)(darkBackgroundImg.getWidth()*xScale), (int)(darkBackgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledDarkblueBackgroundImg = darkblueBackgroundImg.getScaledInstance((int)(darkblueBackgroundImg.getWidth()*xScale), (int)(darkblueBackgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledLightBackgroundImg = lightBackgroundImg.getScaledInstance((int)(lightBackgroundImg.getWidth()*xScale), (int)(lightBackgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledScarletBackgroundImg = scarletBackgroundImg.getScaledInstance((int)(scarletBackgroundImg.getWidth()*xScale), (int)(scarletBackgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledTableImg = tableImg.getScaledInstance((int)(tableImg.getWidth()*xScale), (int)(tableImg.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledPotImg = potImg.getScaledInstance((int)(potImg.getWidth()*xScale), (int)(potImg.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledDarkPotImg = darkPotImg.getScaledInstance((int)(darkPotImg.getWidth()*xScale), (int)(darkPotImg.getHeight()*yScale), Image.SCALE_SMOOTH);
         //Cards
             //Backside
             scaledCardBackImg = cardBackImg.getScaledInstance((int)(104*xScale), (int)(145*yScale), Image.SCALE_SMOOTH);
@@ -346,12 +356,22 @@ public class ImageArchive {
                 case "zero_playerslot":
                     return scaledZeroPlayerslot;
                 //Misc
-                case "background":
+                case "background:original":
                     return scaledBackgroundImg;
+                case "background:dark":
+                    return scaledDarkBackgroundImg;
+                case "background:darkblue":
+                    return scaledDarkblueBackgroundImg;
+                case "background:light":
+                    return scaledLightBackgroundImg;
+                case "background:scarlet":
+                    return scaledScarletBackgroundImg;
                 case "table":
                     return scaledTableImg;
                 case "pot":
                     return scaledPotImg;
+                case "pot:dark":
+                    return scaledDarkPotImg;
                 default:
                     return null;
             }
@@ -504,12 +524,22 @@ public class ImageArchive {
                     case "zero_playerslot":
                         return zeroPlayerslot;
                     //Misc
-                    case "background":
-                        return backgroundImg;
+                    case "background:original":
+                        return originalBackgroundImg;
+                    case "background:dark":
+                        return darkBackgroundImg;
+                    case "background:darkblue":
+                        return darkblueBackgroundImg;
+                    case "background:light":
+                        return lightBackgroundImg;
+                    case "background:scarlet":
+                        return scarletBackgroundImg;
                     case "table":
                         return tableImg;
                     case "pot":
                         return potImg;
+                    case "pot:dark":
+                        return darkPotImg;
                     //Cards
                     case "card:back":
                         return cardBackImg;
