@@ -46,9 +46,6 @@ public class Player {
     //Methode um die Hand des Spielers zu zeichnen
     public void renderCards(Graphics g){
         if(gui != null){
-            if(isFolded()){
-                System.out.println("someone has folded flag!");
-            }
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -61,8 +58,8 @@ public class Player {
                     g2d.drawImage(hand.get(1).getImage(), gui.scaleX(605), gui.scaleY((int)(521-Math.pow(gui.getScaleY(), 15))), null);
                 }
             }else{
-                g2d.drawImage(ImageArchive.getImage("card:back"), gui.scaleX(481), gui.scaleY((int)(521-Math.pow(gui.getScaleY(), 15))), null);
-                g2d.drawImage(ImageArchive.getImage("card:back"), gui.scaleX(605), gui.scaleY((int)(521-Math.pow(gui.getScaleY(), 15))), null);
+                g2d.drawImage(ImageArchive.getImage("card:back:"+gui.mainGUI.getSelectedTheme()), gui.scaleX(481), gui.scaleY((int)(521-Math.pow(gui.getScaleY(), 15))), null);
+                g2d.drawImage(ImageArchive.getImage("card:back:"+gui.mainGUI.getSelectedTheme()), gui.scaleX(605), gui.scaleY((int)(521-Math.pow(gui.getScaleY(), 15))), null);
             }
         }
 

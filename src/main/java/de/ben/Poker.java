@@ -544,23 +544,6 @@ public class Poker extends Thread {
                 isGameOver = true;
                 MainGUI.playSound("KSHMR_Hans_Zimmer_Horn_05__Cm_");
             }
-
-
-            /* FUNKTIONIERT NICHT!!!
-            int tempPlayerCount = 0;
-            for (Player player : poker.players) {
-                if (!player.isFolded()) {
-                    tempPlayerCount++;
-                }
-            }
-            if (tempPlayerCount <= 1) {
-                System.out.println("Spiel Ende. Es ist nur noch ein Spieler übrig!");
-                isGameOver = true;
-            }*/
         }
     }
-
-    /*public static void main(String[] args) {
-        //Poker poker = new Poker(6000, 50, 4);
-    }*/
 }

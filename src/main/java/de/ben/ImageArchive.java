@@ -21,8 +21,8 @@ public class ImageArchive {
     private static Image scaledBackgroundImg, scaledDarkBackgroundImg, scaledDarkblueBackgroundImg, scaledLightBackgroundImg, scaledScarletBackgroundImg, scaledTableImg, scaledPotImg, scaledDarkPotImg;
     //Cards
         //Backside
-        private static BufferedImage cardBackImg;
-        private static Image scaledCardBackImg;
+        private static BufferedImage cardBackImg, scarletCardBackImg;
+        private static Image scaledCardBackImg, scaledScarletCardBackImg;
         //Clubs
         private static BufferedImage clubs2, clubs3, clubs4, clubs5, clubs6, clubs7, clubs8, clubs9, clubs10, clubsJ, clubsQ, clubsK, clubsA;
         private static Image scaledClubs2, scaledClubs3, scaledClubs4, scaledClubs5, scaledClubs6, scaledClubs7, scaledClubs8, scaledClubs9, scaledClubs10, scaledClubsJ, scaledClubsQ, scaledClubsK, scaledClubsA;
@@ -62,7 +62,8 @@ public class ImageArchive {
             potImg = ImageIO.read(new File("img/pot.png"));
             //Cards
                 //Backside
-                cardBackImg = ImageIO.read(new File("img/cards/BACKSIDE.png"));
+                cardBackImg = ImageIO.read(new File("img/cards/BACKSIDE-original.png"));
+                scarletCardBackImg = ImageIO.read(new File("img/cards/BACKSIDE-scarlet.png"));
                 //Clubs
                 clubs2 = ImageIO.read(new File("img/cards/CLUBS 2.png"));
                 clubs3 = ImageIO.read(new File("img/cards/CLUBS 3.png"));
@@ -129,7 +130,7 @@ public class ImageArchive {
     public static void rescaleImages(double xScale, double yScale){
         //Icons
         scaledIconImg = iconImg.getScaledInstance((int)(32*xScale), (int)(32*yScale), Image.SCALE_SMOOTH);
-        scaledChipsImg = chipsImg.getScaledInstance((int)(16*xScale), (int)(16*yScale), Image.SCALE_SMOOTH);
+        scaledChipsImg = chipsImg.getScaledInstance((int)(16*xScale), (int)(16*xScale), Image.SCALE_SMOOTH);
         scaledBigBlindImg = bigBlindImg.getScaledInstance((int)(45*xScale), (int)(45*yScale), Image.SCALE_SMOOTH);
         scaledSmallBlindImg = smallBlindImg.getScaledInstance((int)(40*xScale), (int)(40*yScale), Image.SCALE_SMOOTH);
         scaledCardsImg = cardsImg.getScaledInstance((int)(20*xScale), (int)(20*yScale), Image.SCALE_SMOOTH);
@@ -152,6 +153,7 @@ public class ImageArchive {
         //Cards
             //Backside
             scaledCardBackImg = cardBackImg.getScaledInstance((int)(104*xScale), (int)((145+(145*Math.pow(yScale, 3.7)))/2), Image.SCALE_SMOOTH);
+            scaledScarletCardBackImg = scarletCardBackImg.getScaledInstance((int)(104*xScale), (int)((145+(145*Math.pow(yScale, 3.7)))/2), Image.SCALE_SMOOTH);
             //Clubs
             scaledClubs2 = clubs2.getScaledInstance((int)(104*xScale), (int)((145+(145*Math.pow(yScale, 3.7)))/2), Image.SCALE_SMOOTH);
             scaledClubs3 = clubs3.getScaledInstance((int)(104*xScale), (int)((145+(145*Math.pow(yScale, 3.7)))/2), Image.SCALE_SMOOTH);
@@ -215,8 +217,10 @@ public class ImageArchive {
             //Cards
             switch(imageName){
                 //Backside
-                case "card:back":
+                case "card:back:Original", "card:back:Darkblue", "card:back:Dark":
                     return scaledCardBackImg;
+                case "card:back:Scarlet":
+                    return scaledScarletCardBackImg;
                 //Clubs
                 case "card:CLUBS 2":
                     return scaledClubs2;

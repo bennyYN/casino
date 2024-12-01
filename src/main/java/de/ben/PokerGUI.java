@@ -126,9 +126,9 @@ public class PokerGUI extends JFrame implements KeyListener {
                     //Karten Symbol im Spieler-Slot des Spielers, wessen Karten am Rundenende angezeigt werden, zeichnen
                     if (playerShowing >= 0 && playerShowing < 8 && !game.isGameOver && game.playerWon && !isMenuOpen) {
                         if (playerShowing <= 3) {
-                            g2d.drawImage(ImageArchive.getImage("cards"), (int)(153*widthScale), (int)((276 + (playerShowing * 100))*heightScale), null);
+                            g2d.drawImage(ImageArchive.getImage("cards"), (int)(154*widthScale), (int)((276 + (playerShowing * 100))*heightScale), null);
                         } else {
-                            g2d.drawImage(ImageArchive.getImage("cards"), (int)(1142*widthScale), (int)((276 + ((playerShowing - 4) * 100))*heightScale), null);
+                            g2d.drawImage(ImageArchive.getImage("cards"), (int)(1143*widthScale), (int)((276 + ((playerShowing - 4) * 100))*heightScale), null);
                         }
                     }
                 }
@@ -190,7 +190,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         dialogPane.setForeground(Color.WHITE); //Textfarbe auf weiß setzen
         dialogPane.setFont(new Font("Arial", Font.PLAIN, 16)); //Schriftart und -Größe setzen
         scrollPane = new JScrollPane(dialogPane);
-        scrollPane.setBounds(10, 10, 350, 170); //Position und Größe des ScrollPanes setzen
+        scrollPane.setBounds(10, 10, 350, 127); //Position und Größe des ScrollPanes setzen
         scrollPane.setOpaque(false); //ScrollPane transparent machen
         scrollPane.getViewport().setOpaque(false); //Viewport transparent machen
         scrollPane.setBorder(BorderFactory.createEmptyBorder()); //Rahmen des ScrollPanes entfernen
@@ -202,21 +202,21 @@ public class PokerGUI extends JFrame implements KeyListener {
     //Textlabels:
         //Big Blind
         bigBlindLabel = new JLabel("Big Blind: " + bigBlind);
-        bigBlindLabel.setBounds(1000, 10, 150, 30);
+        bigBlindLabel.setBounds(1007, 10, 150, 30);
         bigBlindLabel.setForeground(Color.WHITE);
         bigBlindLabel.setFont(new Font("Arial", Font.BOLD, 16));
         panel.add(bigBlindLabel);
 
         //Small Blind
         smallBlindLabel = new JLabel("Small Blind: " + (bigBlind/2));
-        smallBlindLabel.setBounds(1000, 50, 150, 30);
+        smallBlindLabel.setBounds(1007, 50, 150, 30);
         smallBlindLabel.setForeground(Color.WHITE);
         smallBlindLabel.setFont(new Font("Arial", Font.BOLD, 16));
         panel.add(smallBlindLabel);
 
         //Höchsteinsatz
         betLabel = new JLabel();
-        betLabel.setBounds(1000, 90, 150, 30);
+        betLabel.setBounds(1007, 90, 150, 30);
         betLabel.setForeground(Color.WHITE);
         betLabel.setFont(new Font("Arial", Font.BOLD, 16));
         panel.add(betLabel);
@@ -735,6 +735,10 @@ public class PokerGUI extends JFrame implements KeyListener {
         return heightScale;
     }
 
+    public int scaleFont(int px){
+        return scaleY(px);
+    }
+
     public int scaleX(int x) {
         return (int) (x * widthScale);
     }
@@ -779,21 +783,28 @@ public class PokerGUI extends JFrame implements KeyListener {
         raiseField.setBounds(raiseButton.getX(), raiseButton.getY() - scaleY(40), buttonWidth, scaleY(30));
         raiseLabel.setBounds(raiseField.getX(), raiseField.getY() - scaleY(20), buttonWidth, scaleY(20));
 
-        scrollPane.setBounds(scaleX(10), scaleY(10), scaleX(350), scaleY(170));
+        scrollPane.setBounds(scaleX(10), scaleY(10), scaleX(350), scaleY(127));
 
-        bigBlindLabel.setBounds(scaleX(1000), scaleY(10), scaleX(150), scaleY(30));
-        smallBlindLabel.setBounds(scaleX(1000), scaleY(50), scaleX(150), scaleY(30));
-        betLabel.setBounds(scaleX(1000), scaleY(90), scaleX(150), scaleY(30));
+        bigBlindLabel.setBounds(scaleX(1007), scaleY(10), scaleX(150), scaleY(30));
+        smallBlindLabel.setBounds(scaleX(1007), scaleY(50), scaleX(150), scaleY(30));
+        betLabel.setBounds(scaleX(1007), scaleY(90), scaleX(150), scaleY(30));
 
         fadingLabel.setBounds(scaleX(200), scaleY(20), scaleX(800), scaleY(30));
 
         helpButton.setBounds(scaleX(1150), scaleY(10), scaleX(30), scaleY(30));
 
+        bigBlindLabel.setFont(new Font("Arial", Font.BOLD, scaleFont(17)));
+        smallBlindLabel.setFont(new Font("Arial", Font.BOLD, scaleFont(17)));
+        betLabel.setFont(new Font("Arial", Font.BOLD, scaleFont(17)));
+        fadingLabel.setFont(new Font("Arial", Font.BOLD, scaleFont(17)));
+        scrollPane.setFont(new Font("Arial", Font.PLAIN, scaleFont(17)));
+        dialogPane.setFont(new Font("Arial", Font.PLAIN, scaleFont(16)));
+
         for(int i = 0; i <= 7; i++){
             if(i <= 3){
-                viewCardButtons.get(i).setBounds((int)(scaleX(15)+Math.pow(getScaleX(), 6)), scaleY(280 + (i * 100)), viewCardButtons.get(i).getWidth(), viewCardButtons.get(i).getHeight());
+                viewCardButtons.get(i).setBounds((int)(scaleX(14)+Math.pow(getScaleX(), 6)), scaleY(280 + (i * 100)), viewCardButtons.get(i).getWidth(), viewCardButtons.get(i).getHeight());
             }else{
-                viewCardButtons.get(i).setBounds((int)(scaleX(1003)+Math.pow(getScaleX(), 6)), scaleY(280 + ((i-4) * 100)), viewCardButtons.get(i).getWidth(), viewCardButtons.get(i).getHeight());
+                viewCardButtons.get(i).setBounds((int)(scaleX(1002)+Math.pow(getScaleX(), 6)), scaleY(280 + ((i-4) * 100)), viewCardButtons.get(i).getWidth(), viewCardButtons.get(i).getHeight());
             }
         }
 
@@ -809,6 +820,8 @@ public class PokerGUI extends JFrame implements KeyListener {
             menuButtons.get(i).setBounds(startX + (buttonWidth + spacing) * i, yPosition, buttonWidth, buttonHeight);
         }
     }
+
+
 
 
 
