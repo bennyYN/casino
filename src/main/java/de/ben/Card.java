@@ -66,7 +66,7 @@ public class Card {
         return suit + " " + valueStr;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         for (Suit suit : Suit.values()) {
             for (int value = 2; value <= 14; value++) {
                 Card card = new Card(value, suit);
@@ -74,5 +74,5 @@ public class Card {
             }
 
         }
-    }
+    }*/
 }

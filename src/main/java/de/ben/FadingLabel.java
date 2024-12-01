@@ -54,26 +54,11 @@ public class FadingLabel extends JLabel {
                         alpha = 0;
                     }
                     repaint(); // Repaint the label with updated opacity
-                    Thread.sleep(30); // Wait for 50 milliseconds
+                    Thread.sleep(40); // Wait for 40 milliseconds
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Fading Label Demo");
-        FadingLabel fadingLabel = new FadingLabel("Initial Text");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new FlowLayout());
-        frame.setSize(300, 200);
-        frame.add(fadingLabel);
-
-        JButton button = new JButton("Set Text");
-        button.addActionListener(e -> fadingLabel.setText("New Text"));
-        frame.add(button);
-
-        frame.setVisible(true);
     }
 }

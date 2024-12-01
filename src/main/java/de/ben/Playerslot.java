@@ -64,51 +64,51 @@ public class Playerslot {
 
         for(int i = 0; i <= 7; i++){
             if(i <= 3){
-                g2d.drawImage(ImageArchive.getImage(slotState.get(i) + "playerslot"), 20, 225 + (i * 100), null);
+                g2d.drawImage(ImageArchive.getImage(slotState.get(i) + "playerslot"), gui.scaleX(20), gui.scaleY(225 + (i * 100)), null);
                 if(players.get(i)!=null){
                     g2d.setColor(Color.WHITE);
                     //Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 16));
-                    g2d.drawString(players.get(i).getName(), 35, 247 + (i * 100));
+                    g2d.drawString(players.get(i).getName(), gui.scaleX(35), gui.scaleY(247 + (i * 100)));
                     //Chips Anzahl & Karten
                     g2d.setFont(new Font("TimesRoman", Font.PLAIN, 12));
                     if(gui.game.players.get(i) != null){
                         //Chips, Verlust & Blindsanzeige
-                        g2d.drawImage(ImageArchive.getImage("chips"), 35, 254 + (i * 100), null);
+                        g2d.drawImage(ImageArchive.getImage("chips"), gui.scaleX(35), gui.scaleY(254 + (i * 100)), null);
                         if(gui.game.players.get(i).getCurrentBet() != 0) {
-                            g2d.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", 55, 267 + (i * 100));
+                            g2d.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", gui.scaleX(55), gui.scaleY(267 + (i * 100)));
                         }else {
-                            g2d.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 55, 267 + (i * 100));
+                            g2d.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), gui.scaleX(55), gui.scaleY(267 + (i * 100)));
                         }
                         if(gui.game.players.get(i).equals(gui.game.bigBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("bigblind"), 189, 240 + (i * 100), null);
+                            g2d.drawImage(ImageArchive.getImage("bigblind"), gui.scaleX(189), gui.scaleY(240 + (i * 100)), null);
                         }else if (gui.game.players.get(i).equals(gui.game.smallBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("smallblind"),  191, 244 + (i * 100), null);
+                            g2d.drawImage(ImageArchive.getImage("smallblind"),  gui.scaleX(191), gui.scaleY(244 + (i * 100)), null);
                         }
                     }
                 }
             }else{
-                g2d.drawImage(ImageArchive.getImage(slotState.get(i) + "playerslot"), 1008, 225 + ((i-4) * 100), null);
+                g2d.drawImage(ImageArchive.getImage(slotState.get(i) + "playerslot"), gui.scaleX(1008), gui.scaleY(225 + ((i-4) * 100)), null);
                 if(players.get(i)!=null){
                     g2d.setColor(Color.WHITE);
                     //Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 16));
-                    g2d.drawString(players.get(i).getName(), 1023, 247 + ((i-4) * 100));
+                    g2d.drawString(players.get(i).getName(), gui.scaleX(1023), gui.scaleY(247 + ((i-4) * 100)));
                     //Chips Anzahl
                     g2d.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 
                     if(gui.game.players.get(i) != null){
                         //Chips, Verlust & Blindsanzeige
-                        g2d.drawImage(ImageArchive.getImage("chips"), 1023, 254 + ((i-4) * 100), 16, 16, null);
+                        g2d.drawImage(ImageArchive.getImage("chips"), gui.scaleX(1023), gui.scaleY(254 + ((i-4) * 100)), null);
                         if(gui.game.players.get(i).getCurrentBet() != 0) {
-                            g2d.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", 1043, 267 + ((i-4) * 100));
+                            g2d.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", gui.scaleX(1043), gui.scaleY(267 + ((i-4) * 100)));
                         }else {
-                            g2d.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), 1043, 267 + ((i-4) * 100));
+                            g2d.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), gui.scaleX(1043), gui.scaleY(267 + ((i-4) * 100)));
                         }
                         if(gui.game.players.get(i).equals(gui.game.bigBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("bigblind"), 959, 240 + ((i-4) * 100), 45, 45, null);
+                            g2d.drawImage(ImageArchive.getImage("bigblind"), gui.scaleX(959), gui.scaleY(240 + ((i-4) * 100)), null);
                         }else if (gui.game.players.get(i).equals(gui.game.smallBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("smallblind"), 959, 244 + ((i-4) * 100), 40, 40, null);
+                            g2d.drawImage(ImageArchive.getImage("smallblind"), gui.scaleX(959), gui.scaleY(244 + ((i-4) * 100)), null);
                         }
                     }
                 }

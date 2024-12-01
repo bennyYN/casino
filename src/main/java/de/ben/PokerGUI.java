@@ -31,6 +31,9 @@ public class PokerGUI extends JFrame implements KeyListener {
     Playerslot slots; //Spieler-Slots
     MainGUI mainGUI; //Mainmenu
     JButton helpButton; //Hilfe-Button
+    int defaultWidth = 1200, defaultHeight = 850, currentWidth = 1200, currentHeight = 850; //Standardgröße des Fensters
+    double widthScale = 1, heightScale = 1;
+    JScrollPane scrollPane; //ScrollPane für die Dialogbox
 
   //Konstruktor
     public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, int actualPlayerCount, MainGUI mainGUI) {
@@ -42,6 +45,8 @@ public class PokerGUI extends JFrame implements KeyListener {
         this.startChips = startChips;
         this.bigBlind = bigBlind;
         this.playerNames = playerNames;
+        Player.gui = this;
+        Dealer.gui = this;
 
         //Liste für die Pausemenü-Buttons
         menuButtons.add(menuexitButton);
@@ -52,7 +57,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         //JFrame-Einstellungen
         setTitle("Poker Game"); //Fenster Titel zuweisen
         setSize(1200, 850); //Größe des Fensters setzen
-        setResizable(false); //Größe des Fensters festsetzen
+        setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Das Programm schließen, wenn das Fenster geschlossen wird
         setLocationRelativeTo(null); //Das Fenster in der Mitte des Bildschirms platzieren
         addKeyListener(this); //KeyListener hinzufügen
@@ -79,7 +84,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
                 //Zeichnen des Hintergrunds und des Pokertisches
                 g2d.drawImage(ImageArchive.getImage("background:"+mainGUI.getSelectedTheme()), 0, 0, null);
-                g2d.drawImage(ImageArchive.getImage("table"), 45, 45, null);
+                g2d.drawImage(ImageArchive.getImage("table"), (int)(45*widthScale), (int)(45*heightScale), null);
 
                 //Zeichnen verschiedener Spielelemente
                 if (game != null) {
@@ -103,16 +108,16 @@ public class PokerGUI extends JFrame implements KeyListener {
 
                     //Gewinnpot
                     if(!game.isGameOver && !isMenuOpen){
-                        g2d.drawImage(ImageArchive.getImage("pot:"+mainGUI.getSelectedTheme()), 495, 70, null);
+                        g2d.drawImage(ImageArchive.getImage("pot:"+mainGUI.getSelectedTheme()), (int)(495*widthScale), (int)(70*heightScale), null);
                         g2d.setFont(new Font("TimesRoman", Font.BOLD, 30));
                         g2d.setColor(Color.WHITE);
-                        g2d.drawString(String.valueOf(game.GewinnPot.getAmount()), 585, 132);
+                        g2d.drawString("Pot: "+game.GewinnPot.getAmount(), (int)(520*widthScale), (int)(132*heightScale));
                     }
 
                     //Abtönungsschicht, wenn das Spiel zuende ist, zeichnen
                     if (game.isGameOver) {
                         g2d.setColor(new Color(0, 0, 0, 120));
-                        g2d.fillRect(0, 0, 1200, 850);
+                        g2d.fillRect(0, 0, (int)(1200*widthScale), (int)(850*heightScale));
                     }
 
                     //Einzeichnen der Spieler-Slots
@@ -121,9 +126,9 @@ public class PokerGUI extends JFrame implements KeyListener {
                     //Karten Symbol im Spieler-Slot des Spielers, wessen Karten am Rundenende angezeigt werden, zeichnen
                     if (playerShowing >= 0 && playerShowing < 8 && !game.isGameOver && game.playerWon && !isMenuOpen) {
                         if (playerShowing <= 3) {
-                            g2d.drawImage(ImageArchive.getImage("cards"), 153, 276 + (playerShowing * 100), null);
+                            g2d.drawImage(ImageArchive.getImage("cards"), (int)(153*widthScale), (int)((276 + (playerShowing * 100))*heightScale), null);
                         } else {
-                            g2d.drawImage(ImageArchive.getImage("cards"), 1142, 276 + ((playerShowing - 4) * 100), null);
+                            g2d.drawImage(ImageArchive.getImage("cards"), (int)(1142*widthScale), (int)((276 + ((playerShowing - 4) * 100))*heightScale), null);
                         }
                     }
                 }
@@ -142,11 +147,11 @@ public class PokerGUI extends JFrame implements KeyListener {
                     g.drawImage(blurredImage, 0, 0, null);
                     //Abtönungsschicht zeichnen
                     g.setColor(new Color(0, 0, 0, 110));
-                    g.fillRect(0, 0, 1200, 850);
+                    g.fillRect(0, 0, (int)(1200*widthScale), (int)(850*heightScale));
                     //Infotext, dass das Spiel pausiert ist
                     g.setColor(Color.WHITE);
                     g.setFont(new Font("Arial", Font.BOLD, 50));
-                    g.drawString("Spiel Pausiert", 425, 120);
+                    g.drawString("Spiel Pausiert", scaleX(425), scaleY(120));
 
                 //Wenn das Menü nicht offen ist, wird das Spiel normal gezeichnet
                 } else {
@@ -156,15 +161,23 @@ public class PokerGUI extends JFrame implements KeyListener {
                     if(game.isGameOver){
                         g.setColor(Color.WHITE);
                         g.setFont(new Font("Arial", Font.BOLD, 50));
-                        g.drawString("Spiel Ende!", 450, 120);
+                        g.drawString("Spiel Ende!", scaleX(450), scaleY(120));
                         g.setColor(new Color(234, 234, 234, 200));
                         g.setFont(new Font("Arial", Font.PLAIN, 18));
-                        g.drawString("Ein Spieler hat keine Chips mehr.", 455, 165);
+                        g.drawString("Ein Spieler hat keine Chips mehr.", scaleX(455), scaleY(165));
                     }
                 }
                 repaint(); //Das Panel neu zeichnen
             }
         };
+
+        // Add component listener for resizing
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                resize();
+            }
+        });
 
         //Layout des Panels setzen
         panel.setLayout(null);
@@ -176,7 +189,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         dialogPane.setOpaque(false); //Dialogbox transparent machen
         dialogPane.setForeground(Color.WHITE); //Textfarbe auf weiß setzen
         dialogPane.setFont(new Font("Arial", Font.PLAIN, 16)); //Schriftart und -Größe setzen
-        JScrollPane scrollPane = new JScrollPane(dialogPane);
+        scrollPane = new JScrollPane(dialogPane);
         scrollPane.setBounds(10, 10, 350, 170); //Position und Größe des ScrollPanes setzen
         scrollPane.setOpaque(false); //ScrollPane transparent machen
         scrollPane.getViewport().setOpaque(false); //Viewport transparent machen
@@ -713,4 +726,90 @@ public class PokerGUI extends JFrame implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
+    public double getScaleX(){
+        return widthScale;
+    }
+
+    public double getScaleY(){
+        return heightScale;
+    }
+
+    public int scaleX(int x) {
+        return (int) (x * widthScale);
+    }
+
+    public int scaleY(int y) {
+        return (int) (y * heightScale);
+    }
+
+    private void resize() {
+        // Calculate new sizes and positions based on the new size of the frame
+        currentWidth = getWidth();
+        currentHeight = getHeight();
+
+        //Calculate Ratio
+        widthScale = (double) currentWidth / defaultWidth;
+        heightScale = (double) currentHeight / defaultHeight;
+
+        //Resizing
+        ImageArchive.rescaleImages(widthScale, heightScale);
+        adjustComponents();
+        adjustMenuButtons();
+
+    }
+
+    private void adjustComponents(){
+        int buttonWidth = (int)(scaleX(140));
+        int buttonHeight = (int)(scaleY(70));
+        int yPosition = (int)(scaleY(700));
+        int spacing = (scaleX(30));
+        int startX = (((currentWidth - (buttonWidth * 6 + spacing * 5)) / 2) - 6);
+        raiseButton.setBounds(startX, yPosition, buttonWidth, buttonHeight);
+        checkButton.setBounds(startX + (buttonWidth + spacing) * 1, yPosition, buttonWidth, buttonHeight);
+        callButton.setBounds(startX + (buttonWidth + spacing) * 2, yPosition, buttonWidth, buttonHeight);
+        foldButton.setBounds(startX + (buttonWidth + spacing) * 3, yPosition, buttonWidth, buttonHeight);
+        allInButton.setBounds(startX + (buttonWidth + spacing) * 4, yPosition, buttonWidth, buttonHeight);
+        toggleButton.setBounds(startX + (buttonWidth + spacing) * 5, yPosition, buttonWidth, buttonHeight);
+
+        continueButton.setBounds(raiseButton.getX(), raiseButton.getY(), (callButton.getX()+callButton.getWidth()-raiseButton.getX())*2+30, raiseButton.getHeight());
+        menuButton.setBounds(raiseButton.getX(), raiseButton.getY(), callButton.getX()+callButton.getWidth()-raiseButton.getX(), raiseButton.getHeight());
+        exitButton.setBounds(foldButton.getX(), foldButton.getY(), (continueButton.getWidth()/2)-30, continueButton.getHeight());
+
+        raiseField.setBounds(raiseButton.getX(), raiseButton.getY() - scaleY(40), buttonWidth, scaleY(30));
+        raiseLabel.setBounds(raiseField.getX(), raiseField.getY() - scaleY(20), buttonWidth, scaleY(20));
+
+        scrollPane.setBounds(scaleX(10), scaleY(10), scaleX(350), scaleY(170));
+
+        bigBlindLabel.setBounds(scaleX(1000), scaleY(10), scaleX(150), scaleY(30));
+        smallBlindLabel.setBounds(scaleX(1000), scaleY(50), scaleX(150), scaleY(30));
+        betLabel.setBounds(scaleX(1000), scaleY(90), scaleX(150), scaleY(30));
+
+        fadingLabel.setBounds(scaleX(200), scaleY(20), scaleX(800), scaleY(30));
+
+        helpButton.setBounds(scaleX(1150), scaleY(10), scaleX(30), scaleY(30));
+
+        for(int i = 0; i <= 7; i++){
+            if(i <= 3){
+                viewCardButtons.get(i).setBounds((int)(scaleX(15)+Math.pow(getScaleX(), 6)), scaleY(280 + (i * 100)), viewCardButtons.get(i).getWidth(), viewCardButtons.get(i).getHeight());
+            }else{
+                viewCardButtons.get(i).setBounds((int)(scaleX(1003)+Math.pow(getScaleX(), 6)), scaleY(280 + ((i-4) * 100)), viewCardButtons.get(i).getWidth(), viewCardButtons.get(i).getHeight());
+            }
+        }
+
+    }
+
+    private void adjustMenuButtons(){
+        int buttonWidth = (int)(scaleX(225));
+        int buttonHeight = (int)(scaleY(70));
+        int yPosition = (int)(scaleY(700));
+        int spacing = (scaleX(30));
+        int startX = ((currentWidth - (scaleX(140) * 6 + spacing * 5)) / 2) - 6;
+        for(int i = 0; i < 4; i++){
+            menuButtons.get(i).setBounds(startX + (buttonWidth + spacing) * i, yPosition, buttonWidth, buttonHeight);
+        }
+    }
+
+
+
 }

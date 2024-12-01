@@ -560,7 +560,7 @@ public class Poker extends Thread {
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         //Poker poker = new Poker(6000, 50, 4);
-    }
+    }*/
 }

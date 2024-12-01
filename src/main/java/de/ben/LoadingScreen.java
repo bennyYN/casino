@@ -6,7 +6,7 @@ import java.awt.*;
 public class LoadingScreen {
 
     // Hauptmethode, um die Klasse direkt ausführbar zu machen
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         // Erstelle ein neues JFrame als Hauptfenster
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,7 +18,7 @@ public class LoadingScreen {
             // Hier kann man den nächsten Schritt nach dem Laden ausführen,
             // z.B. ein neues Fenster öffnen oder die Hauptanwendung starten.
         });
-    }
+    }*/
 
     public static void showLoadingScreen(JFrame parentFrame, Runnable onLoadingComplete) {
         // Erstelle den Lade-Dialog
