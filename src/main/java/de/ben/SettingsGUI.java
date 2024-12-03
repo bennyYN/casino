@@ -11,12 +11,12 @@ import java.awt.image.BufferedImage;
 
 public class SettingsGUI extends JFrame {
 
-    private MainGUI mainGUI;
+    private final MainGUI mainGUI;
     private BufferedImage backgroundImage; // Hintergrundbild
     private boolean usedInMainGUI;
     String[] themes = {"Original", "Dark", "Darkblue", "Scarlet"};
     JComboBox<String> themeDropdown = new JComboBox<>(themes);
-    private JButton backButton;
+    private final JButton backButton;
 
     public SettingsGUI(MainGUI mainGUI, boolean usedInMainGUI) {
         this.mainGUI = mainGUI;
@@ -177,7 +177,7 @@ public class SettingsGUI extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            mainGUI.playSound("click");
+            MainGUI.playSound("click");
         });
 
         // Create a thin line border

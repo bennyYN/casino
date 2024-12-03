@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class PlayerSelection extends JFrame {
+public class PlayerSelectionMP extends JFrame {
 
     int numPlayers = 2;
     int actualPlayerCount = 0;
@@ -23,10 +23,9 @@ public class PlayerSelection extends JFrame {
     ArrayList<String> playerNames;
     JButton exitButton, confirmButton;
 
-    public PlayerSelection(MainGUI mainGUI) {
+    public PlayerSelectionMP(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
         initializeUI();
-        checkPlayerNames();
     }
 
     private void initializeUI() {
@@ -40,10 +39,7 @@ public class PlayerSelection extends JFrame {
         Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
         setIconImage(scaledIcon);
 
-        playerNames = new ArrayList<>(8);
-        for (int i = 0; i < 8; i++) {
-            playerNames.add("Spieler " + (i + 1));
-        }
+
 
         JPanel panel = new JPanel() {
             @Override
@@ -64,37 +60,6 @@ public class PlayerSelection extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JLabel playerLabel = new JLabel("Anzahl der Spieler (2-8):");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        playerLabel.setForeground(Color.WHITE);
-        panel.add(playerLabel, gbc);
-
-        Integer[] playerOptions = {2, 3, 4, 5, 6, 7, 8};
-        JComboBox<Integer> playerDropdown = new JComboBox<>(playerOptions);
-        playerDropdown.setSelectedItem(numPlayers);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        playerDropdown.setOpaque(false);
-        panel.add(playerDropdown, gbc);
-
-        playerDropdown.addActionListener(e -> {
-            numPlayers = (int) playerDropdown.getSelectedItem();
-            checkPlayerNames();
-        });
-        playerDropdown.addMouseWheelListener(new MouseAdapter() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                int notches = -e.getWheelRotation();
-                int newIndex = playerDropdown.getSelectedIndex() + notches;
-                if (newIndex >= 0 && newIndex < playerDropdown.getItemCount()) {
-                    playerDropdown.setSelectedIndex(newIndex);
-                }
-            }
-        });
 
         startChipsLabel = new JLabel("Anzahl der Anfangschips (200-10000):");
         gbc.gridx = 0;

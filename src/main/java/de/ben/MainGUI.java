@@ -28,9 +28,10 @@ public class MainGUI extends JFrame implements ActionListener {
     private final String VOLUME_FILE = "volume.txt"; // Datei zum Speichern der Lautstärke
     private final String THEME_FILE = "theme.txt"; // Datei zum Speichern des Themes
     private final String GAME_SOUNDS_FILE = "gamesounds.txt"; // Datei zum Speichern der Soundeinstellungen
-    private boolean showLoadingScreen = false;
+    private final boolean showLoadingScreen = false;
     private String selectedTheme;
     private static float gameSoundsVolume = 50; // Default game sounds volume
+    private static String MultiplayerName;
     Color originalTheme = new Color(78, 136, 174, 255), transparentOriginalTheme = new Color(142, 215, 255, 81);
     Color darkTheme = new Color(43, 49, 64, 255), transparentDarkTheme = new Color(34, 34, 34, 81);
     Color darkblueTheme = new Color(62, 103, 147, 255), transparentDarkblueTheme = new Color(78, 136, 174, 255);
@@ -331,6 +332,10 @@ public class MainGUI extends JFrame implements ActionListener {
         }
     }
 
+    public static String getMultiplayerName() {
+        return MultiplayerName;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton sourceButton = (JButton) e.getSource();
@@ -352,6 +357,7 @@ public class MainGUI extends JFrame implements ActionListener {
             }
 
         }else if(sourceButton == multiplayerButton){
+            MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben", JOptionPane.PLAIN_MESSAGE);
             new MultiplayerGUI(this);
             this.setVisible(false);
         }else if (sourceButton == settingsButton) {
@@ -406,11 +412,11 @@ public class MainGUI extends JFrame implements ActionListener {
     }
 
     public float getGameSoundsVolume() {
-        return this.gameSoundsVolume;
+        return gameSoundsVolume;
     }
 
     public void setGameSoundsVolume(float volume) {
-        this.gameSoundsVolume = volume;
+        gameSoundsVolume = volume;
         saveGameSoundsVolume(volume); // Save game sounds volume
     }
 

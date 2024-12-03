@@ -19,7 +19,7 @@ public class ImageWindow extends JFrame {
 
         // Hintergrundbild auf JPanel zeichnen
         JPanel imagePanel = new JPanel() {
-            private Image scaledImage;
+            private final Image scaledImage;
 
             {
                 // Bild laden und skalieren

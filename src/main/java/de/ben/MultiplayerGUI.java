@@ -5,10 +5,11 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class MultiplayerGUI extends JFrame {
 
-    private MainGUI mainGUI;
+    private final MainGUI mainGUI;
     JPanel panel;
     JButton startGameButton, joinGameButton, returnButton;
 
@@ -44,7 +45,18 @@ public class MultiplayerGUI extends JFrame {
         startGameButton = new JButton("Spiel starten");
         styleButton(startGameButton);
         startGameButton.addActionListener(e -> {
-            //TODO (Axel)
+            try {
+                PlayerSelectionMP playerSelection = new PlayerSelectionMP(mainGUI);
+                GameServer server = new GameServer(12345,playerSelection.startChips,playerSelection.bigBlind, mainGUI);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                GameClient client = new GameClient("localhost", 12345, MainGUI.getMultiplayerName());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
         });
 
         // Erstelle "Spiel beitreten" Button
@@ -89,7 +101,7 @@ public class MultiplayerGUI extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            mainGUI.playSound("click");
+            MainGUI.playSound("click");
         });
 
         // Create a thin line border

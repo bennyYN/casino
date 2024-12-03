@@ -290,12 +290,12 @@ public class PokerGUI extends JFrame implements KeyListener {
         for(int i = 0; i <= 7; i++){
             if(i <= 3){
                 viewCardButtons.add(new ViewCardButton(this, i, viewCardButtons,15, 280 + (i * 100)));
-                if(slots.actualPlayer.get(i)){
+                if(Playerslot.actualPlayer.get(i)){
                     panel.add(viewCardButtons.get(i));
                 }
             }else{
                 viewCardButtons.add(new ViewCardButton(this, i, viewCardButtons,1003, 280 + ((i-4) * 100)));
-                if(slots.actualPlayer.get(i)){
+                if(Playerslot.actualPlayer.get(i)){
                     panel.add(viewCardButtons.get(i));
                 }
             }
@@ -308,7 +308,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         int spacing = 30;
         int startX = ((getWidth() - (buttonWidth * 6 + spacing * 5)) / 2) - 6;
         raiseButton.setBounds(startX, yPosition, buttonWidth, buttonHeight);
-        checkButton.setBounds(startX + (buttonWidth + spacing) * 1, yPosition, buttonWidth, buttonHeight);
+        checkButton.setBounds(startX + (buttonWidth + spacing), yPosition, buttonWidth, buttonHeight);
         callButton.setBounds(startX + (buttonWidth + spacing) * 2, yPosition, buttonWidth, buttonHeight);
         foldButton.setBounds(startX + (buttonWidth + spacing) * 3, yPosition, buttonWidth, buttonHeight);
         allInButton.setBounds(startX + (buttonWidth + spacing) * 4, yPosition, buttonWidth, buttonHeight);
@@ -389,7 +389,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         //All-In Button
         allInButton.addActionListener(e -> {
-            slots.players.get(currentPlayerIndex).setAllIn(true); //Die All-In Flag des Spielers auf True setzen
+            Playerslot.players.get(currentPlayerIndex).setAllIn(true); //Die All-In Flag des Spielers auf True setzen
             hideRaiseField(); //Das Eingabefeld zum Erhöhen verstecken
             action = "allin"; //Die Aktion des Spielers auf All-In setzen
             nextPlayer(); //Zum nächsten Spieler wechseln
@@ -561,11 +561,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                         if (Integer.parseInt(raiseField.getText()) <= game.highestBet) {
                             raiseButton.setEnabled(false);
                         } else {
-                            if (Integer.parseInt(raiseField.getText()) <= game.currentPlayer.getChips().getAmount()) {
-                                raiseButton.setEnabled(true);
-                            } else {
-                                raiseButton.setEnabled(false);
-                            }
+                            raiseButton.setEnabled(Integer.parseInt(raiseField.getText()) <= game.currentPlayer.getChips().getAmount());
 
                         }
                     }catch (Exception e){
@@ -634,7 +630,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            mainGUI.playSound("click");
+            MainGUI.playSound("click");
         });
 
         // Create a thin line border
@@ -670,7 +666,7 @@ public class PokerGUI extends JFrame implements KeyListener {
     //Methode um den Betrag der höchsten Wette für das zuständige JLabel zu aktualisieren
     private void updateBetLabel(){
         if(game != null) {
-            betLabel.setText("Highest Bet: " + String.valueOf(game.highestBet));
+            betLabel.setText("Highest Bet: " + game.highestBet);
         }
     }
 
@@ -764,13 +760,13 @@ public class PokerGUI extends JFrame implements KeyListener {
     }
 
     private void adjustComponents(){
-        int buttonWidth = (int)(scaleX(140));
-        int buttonHeight = (int)(scaleY(70));
-        int yPosition = (int)(scaleY(700));
+        int buttonWidth = scaleX(140);
+        int buttonHeight = scaleY(70);
+        int yPosition = scaleY(700);
         int spacing = (scaleX(30));
         int startX = (((currentWidth - (buttonWidth * 6 + spacing * 5)) / 2) - 6);
         raiseButton.setBounds(startX, yPosition, buttonWidth, buttonHeight);
-        checkButton.setBounds(startX + (buttonWidth + spacing) * 1, yPosition, buttonWidth, buttonHeight);
+        checkButton.setBounds(startX + (buttonWidth + spacing), yPosition, buttonWidth, buttonHeight);
         callButton.setBounds(startX + (buttonWidth + spacing) * 2, yPosition, buttonWidth, buttonHeight);
         foldButton.setBounds(startX + (buttonWidth + spacing) * 3, yPosition, buttonWidth, buttonHeight);
         allInButton.setBounds(startX + (buttonWidth + spacing) * 4, yPosition, buttonWidth, buttonHeight);
@@ -811,9 +807,9 @@ public class PokerGUI extends JFrame implements KeyListener {
     }
 
     private void adjustMenuButtons(){
-        int buttonWidth = (int)(scaleX(225));
-        int buttonHeight = (int)(scaleY(70));
-        int yPosition = (int)(scaleY(700));
+        int buttonWidth = scaleX(225);
+        int buttonHeight = scaleY(70);
+        int yPosition = scaleY(700);
         int spacing = (scaleX(30));
         int startX = ((currentWidth - (scaleX(140) * 6 + spacing * 5)) / 2) - 6;
         for(int i = 0; i < 4; i++){

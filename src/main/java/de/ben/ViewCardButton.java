@@ -17,7 +17,7 @@ public class ViewCardButton extends JButton {
         super("View Cards");
 
         this.assignedPlayer = assignedPlayer;
-        this.allButtons = allButtons;
+        ViewCardButton.allButtons = allButtons;
         Color normalColor = new Color(255, 255, 255, 98); // Grau
         setFont(new Font("Arial", Font.PLAIN, 12)); // Schriftart und Größe
         setOpaque(false);

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dealer {
-    private List<Card> hand;
+    private final List<Card> hand;
     private Deck deck; // Declare a Deck instance
     public boolean handVisible = false;
     static PokerGUI gui;

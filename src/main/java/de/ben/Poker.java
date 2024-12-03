@@ -30,7 +30,7 @@ public class Poker extends Thread {
 
         this.players = new ArrayList<>();
         for (int i = 0; i < numPlayers; i++) {
-            this.players.add(gui.slots.players.get(i));
+            this.players.add(Playerslot.players.get(i));
         }
         this.blindsOrder = new ArrayList<>(players);
         this.dealer = new Dealer();

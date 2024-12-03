@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Player {
-    private List<Card> hand;
-    private Chips chips;
+    private final List<Card> hand;
+    private final Chips chips;
     private boolean folded;
-    private String name;
+    private final String name;
     private boolean allIn = false;
     private int currentBet;
     public boolean handVisible = false;
