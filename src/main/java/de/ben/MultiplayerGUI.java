@@ -1,36 +1,65 @@
 package de.ben;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MultiplayerGUI extends JFrame {
 
     private MainGUI mainGUI;
+    JPanel panel;
+    JButton startGameButton, joinGameButton, returnButton;
 
-    public MultiplayerGUI(MainGUI mainGUI, boolean usedInMainGUI) {
+    public MultiplayerGUI(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
         this.setTitle("Multiplayer");
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(600, 400);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
+        //Titlebar-Icon mit Skalierung setzen
+        ImageIcon icon = new ImageIcon("img/icon.png");
+        Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
+        setIconImage(scaledIcon);
+
         // Panel mit GridBagLayout zum Zentrieren der Komponenten
-        JPanel panel = new JPanel(new GridBagLayout());
+        panel = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(ImageArchive.getImage("background:"+mainGUI.getSelectedTheme()), 0, 0, null);
+                //Button Farbe regelmäßig updaten um ausgewähltem Theme zu matchen
+                mainGUI.updateButtonColor(startGameButton, false);
+                mainGUI.updateButtonColor(joinGameButton, false);
+                mainGUI.updateButtonColor(returnButton, false);
+            }
+        };
         panel.setOpaque(false); // Panel transparent halten, um Hintergrundbild anzuzeigen
         this.add(panel);
 
         // Erstelle "Spiel starten" Button
-        JButton startGameButton = new JButton("Spiel starten");
+        startGameButton = new JButton("Spiel starten");
         styleButton(startGameButton);
         startGameButton.addActionListener(e -> {
+            //TODO (Axel)
         });
 
         // Erstelle "Spiel beitreten" Button
-        JButton joinGameButton = new JButton("Spiel beitreten");
+        joinGameButton = new JButton("Spiel beitreten");
         styleButton(joinGameButton);
         joinGameButton.addActionListener(e -> {
+            //TODO (Axel)
+        });
 
+        // Erstelle "Zurück zum Menü" Button
+        returnButton = new JButton("Zurück zum Menü");
+        styleButton(returnButton);
+        returnButton.addActionListener(e -> {
+            mainGUI.setVisible(true);
+            this.dispose();
         });
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -46,6 +75,9 @@ public class MultiplayerGUI extends JFrame {
         gbc.gridy = 1;
         panel.add(joinGameButton, gbc);
 
+        gbc.gridy = 2;
+        panel.add(returnButton, gbc);
+
         this.setVisible(true);
     }
 
@@ -53,11 +85,27 @@ public class MultiplayerGUI extends JFrame {
     private void styleButton(JButton button) {
         button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
-        button.setPreferredSize(new Dimension(150, 40));
+        button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
             mainGUI.playSound("click");
+        });
+
+        // Create a thin line border
+        Border thinBorder = BorderFactory.createLineBorder(new Color(255, 255, 255, 81), 2); // 1 pixel thick
+        button.setBorder(thinBorder);
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBorderPainted(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBorderPainted(false);
+            }
         });
     }
 }

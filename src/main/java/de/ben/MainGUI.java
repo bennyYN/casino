@@ -67,9 +67,11 @@ public class MainGUI extends JFrame implements ActionListener {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(ImageArchive.getImage("background:"+selectedTheme), 0, 0, null);
+                //Button Farbe regelmäßig updaten um ausgewähltem Theme zu matchen
                 updateButtonColor(startButton, false);
                 updateButtonColor(settingsButton, false);
                 updateButtonColor(exitButton, false);
+                updateButtonColor(multiplayerButton, false);
             }
         };
 
@@ -88,6 +90,7 @@ public class MainGUI extends JFrame implements ActionListener {
         styleButton(startButton);
         panel.add(startButton, gbc);
 
+        // Multiplayer Button
         multiplayerButton = new JButton("Multiplayer");
         styleButton(multiplayerButton);
         panel.add(multiplayerButton, gbc);
@@ -349,11 +352,11 @@ public class MainGUI extends JFrame implements ActionListener {
             }
 
         }else if(sourceButton == multiplayerButton){
+            new MultiplayerGUI(this);
             this.setVisible(false);
-            new MultiplayerGUI(this, true);
         }else if (sourceButton == settingsButton) {
-            this.setVisible(false); // Verstecke MainGUI statt es zu schließen
             new SettingsGUI(this, true); // Öffne SettingsGUI und übergebe MainGUI für Lautstärkeanpassung
+            this.setVisible(false); // Verstecke MainGUI statt es zu schließen
         } else if (sourceButton == exitButton) {
             System.exit(0); // Beende das Programm
         }
