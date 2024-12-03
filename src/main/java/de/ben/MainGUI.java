@@ -19,6 +19,7 @@ public class MainGUI extends JFrame implements ActionListener {
 
     // Attribute
     JButton startButton;
+    JButton multiplayerButton;
     JButton settingsButton;
     JButton exitButton;
     JPanel panel;
@@ -86,6 +87,10 @@ public class MainGUI extends JFrame implements ActionListener {
         startButton = new JButton("Start");
         styleButton(startButton);
         panel.add(startButton, gbc);
+
+        multiplayerButton = new JButton("Multiplayer");
+        styleButton(multiplayerButton);
+        panel.add(multiplayerButton, gbc);
 
         // Settings Button
         settingsButton = new JButton("Settings");
@@ -343,7 +348,10 @@ public class MainGUI extends JFrame implements ActionListener {
                 this.dispose(); // Schließe MainGUI
             }
 
-        } else if (sourceButton == settingsButton) {
+        }else if(sourceButton == multiplayerButton){
+            this.setVisible(false);
+            new MultiplayerGUI(this, true);
+        }else if (sourceButton == settingsButton) {
             this.setVisible(false); // Verstecke MainGUI statt es zu schließen
             new SettingsGUI(this, true); // Öffne SettingsGUI und übergebe MainGUI für Lautstärkeanpassung
         } else if (sourceButton == exitButton) {
