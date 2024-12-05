@@ -5,17 +5,25 @@ import java.net.Socket;
 
 public class GameClient {
 
-    private final Socket clientSocket;
-    private final PrintWriter out;
-    private final BufferedReader in;
+    private Socket clientSocket;
+    private PrintWriter out;
+    private BufferedReader in;
     private final String name;
+    private int port;
+    private String host;
 
     public GameClient(String host, int port, String name) throws IOException {
-        this.clientSocket = new Socket(host, port);
+        this.host = host;
         this.name = name;
-        this.out = new PrintWriter(clientSocket.getOutputStream(), true);
-        this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        System.out.println("Server: " + host + ":" + port);
+        this.port = port;
+        connect();
+    }
+    public void connect() throws IOException {
+        clientSocket = new Socket(host, port);
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        System.out.println("Connected to server: " + host + ":" + port);
+        out.println(name);
     }
 
     public void sendMessage(String message) {

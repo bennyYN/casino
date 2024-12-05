@@ -20,13 +20,14 @@ public class GameServer {
 
     public GameServer(int port, int startChips, int bigBlind, MainGUI maingui) throws IOException {
         this.serverSocket = new ServerSocket(port);
-        new PokerGUI(8, playerNames, startChips, bigBlind,0, maingui);
+        start();
     }
 
     public void start() {
         while (true) {
             try {
                 Socket clientSocket = serverSocket.accept();
+
                 ClientHandler clientHandler = new ClientHandler(clientSocket, this);
                 clients.add(clientHandler);
                 new Thread(clientHandler).start();
@@ -36,40 +37,58 @@ public class GameServer {
         }
     }
 
-class ClientHandler implements Runnable {
+    class ClientHandler implements Runnable {
 
-    private final Socket socket;
-    private final GameServer server;
-    private PrintWriter out;
-    private BufferedReader in;
+        private final Socket socket;
+        private final GameServer server;
+        private PrintWriter out;
+        private BufferedReader in;
+        private String playerName; // Speichert den Namen des Spielers
 
-    public ClientHandler(Socket socket, GameServer server) {
-        this.socket = socket;
-        this.server = server;
-    }
+        public ClientHandler(Socket socket, GameServer server) {
+            this.socket = socket;
+            this.server = server;
+        }
 
-    @Override
-    public void run() {
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String message;
-            while ((message = in.readLine()) != null) {
-                System.out.println("Received: " + message);
-                // Broadcast message to all clients
-                for (ClientHandler client : server.clients) {
-                    client.out.println(message);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        @Override
+        public void run() {
             try {
-                socket.close();
+                out = new PrintWriter(socket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                // Spielername anfordern
+                out.println("Bitte geben Sie Ihren Namen ein:");
+                playerName = in.readLine();
+                if (playerName != null && !playerName.isEmpty()) {
+                    synchronized (server.getPlayerNames()) {
+                        server.addPlayerNames(playerName);
+                    }
+                    System.out.println("Neuer Spieler verbunden: " + playerName);
+
+                }
+
+                // Nachrichten empfangen (falls nötig)
+                String message;
+                while ((message = in.readLine()) != null) {
+                    System.out.println(playerName + ": " + message);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    synchronized (server.getPlayerNames()) {
+                        server.getPlayerNames().remove(playerName);
+                    }
+                    System.out.println("Spieler getrennt: " + playerName);
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+        public void sendMessage(String message) {
+            out.println(message);
+        }
     }
-    }
+
 }
