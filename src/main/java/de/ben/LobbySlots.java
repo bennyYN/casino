@@ -1,4 +1,4 @@
-package de.ben;
+/*package de.ben;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class Playerslot {
+public class LobbySlots {
 
     static ArrayList<Player> players;
     static ArrayList<String> slotState;
@@ -18,7 +18,7 @@ public class Playerslot {
     int actualPlayerCount = 0;
 
     //Konstruktor
-    public Playerslot(int startChips, ArrayList<String> playerNames, PokerGUI gui){
+    public LobbySlots(int startChips, ArrayList<String> playerNames, PokerGUI gui){
 
         this.gui = gui;
 
@@ -70,22 +70,6 @@ public class Playerslot {
                     //Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, gui.scaleFont(16)));
                     g2d.drawString(players.get(i).getName(), gui.scaleX(35), gui.scaleY(247 + (i * 100)));
-                    //Chips Anzahl & Karten
-                    g2d.setFont(new Font("TimesRoman", Font.PLAIN, gui.scaleFont(12)-1+(int)(Math.pow(gui.getScaleY(), 6))));
-                    if(gui.game.players.get(i) != null){
-                        //Chips, Verlust & Blindsanzeige
-                        g2d.drawImage(ImageArchive.getImage("chips"), gui.scaleX(33), gui.scaleY(255 + (i * 100)), null);
-                        if(gui.game.players.get(i).getCurrentBet() != 0) {
-                            g2d.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", gui.scaleX(55), gui.scaleY(266 + (i * 100))+(int)(Math.pow(gui.getScaleY(), 8)));
-                        }else {
-                            g2d.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), gui.scaleX(55), gui.scaleY(266 + (i * 100))+(int)(Math.pow(gui.getScaleY(), 8)));
-                        }
-                        if(gui.game.players.get(i).equals(gui.game.bigBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("bigblind"), gui.scaleX(189), gui.scaleY(240 + (i * 100)), null);
-                        }else if (gui.game.players.get(i).equals(gui.game.smallBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("smallblind"),  gui.scaleX(191), gui.scaleY(244 + (i * 100)), null);
-                        }
-                    }
                 }
             }else{
                 g2d.drawImage(ImageArchive.getImage(slotState.get(i) + "playerslot"), gui.scaleX(1008), gui.scaleY(225 + ((i-4) * 100)), null);
@@ -94,23 +78,6 @@ public class Playerslot {
                     //Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, gui.scaleFont(16)));
                     g2d.drawString(players.get(i).getName(), gui.scaleX(1023), gui.scaleY(247 + ((i-4) * 100)));
-                    //Chips Anzahl
-                    g2d.setFont(new Font("TimesRoman", Font.PLAIN, gui.scaleFont(12)-1+(int)(Math.pow(gui.getScaleY(), 6))));
-
-                    if(gui.game.players.get(i) != null){
-                        //Chips, Verlust & Blindsanzeige
-                        g2d.drawImage(ImageArchive.getImage("chips"), gui.scaleX(1023), gui.scaleY(255 + ((i-4) * 100)), null);
-                        if(gui.game.players.get(i).getCurrentBet() != 0) {
-                            g2d.drawString(gui.game.players.get(i).getChips().getAmount() + "  (-" +gui.game.players.get(i).getCurrentBet()+ ")", gui.scaleX(1043), gui.scaleY(266 + ((i-4) * 100))+(int)(Math.pow(gui.getScaleY(), 8)));
-                        }else {
-                            g2d.drawString(String.valueOf(gui.game.players.get(i).getChips().getAmount()), gui.scaleX(1043), gui.scaleY(266 + ((i-4) * 100))+(int)(Math.pow(gui.getScaleY(), 8)));
-                        }
-                        if(gui.game.players.get(i).equals(gui.game.bigBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("bigblind"), gui.scaleX(959), gui.scaleY(240 + ((i-4) * 100)), null);
-                        }else if (gui.game.players.get(i).equals(gui.game.smallBlindPlayer) && !gui.game.isGameOver){
-                            g2d.drawImage(ImageArchive.getImage("smallblind"), gui.scaleX(959), gui.scaleY(244 + ((i-4) * 100)), null);
-                        }
-                    }
                 }
             }
         }
@@ -166,4 +133,4 @@ public class Playerslot {
     public void hidePlayerCardButtons(){
 
     }
-}
+}*/

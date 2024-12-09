@@ -36,12 +36,12 @@ public class PokerGUI extends JFrame implements KeyListener {
     JScrollPane scrollPane; //ScrollPane für die Dialogbox
 
   //Konstruktor
-    public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, int actualPlayerCount, MainGUI mainGUI) {
+    public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, /*int actualPlayerCount,*/ MainGUI mainGUI) {
 
         //Übergebene Werte speichern
         this.mainGUI = mainGUI;
         totalPlayers = numPlayers;
-        this.actualPlayerCount = actualPlayerCount;
+        //this.actualPlayerCount = actualPlayerCount;
         this.startChips = startChips;
         this.bigBlind = bigBlind;
         this.playerNames = playerNames;

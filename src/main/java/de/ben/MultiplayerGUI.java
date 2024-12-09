@@ -45,17 +45,20 @@ public class MultiplayerGUI extends JFrame {
         startGameButton = new JButton("Spiel starten");
         styleButton(startGameButton);
         startGameButton.addActionListener(e -> {
-            try {
-                PlayerSelectionMP playerSelection = new PlayerSelectionMP(mainGUI);
-                GameServer server = new GameServer(12345,playerSelection.startChips,playerSelection.bigBlind, mainGUI);
-            } catch (IOException ex) {
+            //try {
+                SwingUtilities.invokeLater(() -> {
+                    new Lobby(mainGUI, true).setVisible(true);
+                    this.dispose();
+                });
+                //GameServer server = new GameServer(12345,playerSelection.startChips,playerSelection.bigBlind, mainGUI);
+           /* } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
             try {
                 GameClient client = new GameClient("localhost", 12345, MainGUI.getMultiplayerName());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
-            }
+            }*/
 
         });
 
@@ -64,6 +67,10 @@ public class MultiplayerGUI extends JFrame {
         styleButton(joinGameButton);
         joinGameButton.addActionListener(e -> {
             //TODO (Axel)
+            SwingUtilities.invokeLater(() -> {
+                new Lobby(mainGUI, false).setVisible(true);
+                this.dispose();
+            });
         });
 
         // Erstelle "Zurück zum Menü" Button

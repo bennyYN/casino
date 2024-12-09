@@ -18,6 +18,7 @@ public class Player {
     static boolean isGameDecided;
     static PokerGUI gui;
 
+
     public Player(int initialChips, String name) {
         this.hand = new ArrayList<>();
         this.chips = new Chips(initialChips);

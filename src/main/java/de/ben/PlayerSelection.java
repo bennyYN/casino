@@ -231,7 +231,7 @@ public class PlayerSelection extends JFrame {
                     playerNames.set(i, "");
                 }
             }
-            new PokerGUI(numPlayers, playerNames, startChips, bigBlind, actualPlayerCount, mainGUI).setVisible(true);
+            new PokerGUI(numPlayers, playerNames, startChips, bigBlind, mainGUI).setVisible(true);
             this.dispose();
         });
 
