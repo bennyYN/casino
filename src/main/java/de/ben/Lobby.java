@@ -6,10 +6,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Lobby extends JFrame {
-
 
     int startChips = 200;
     int bigBlind = 20;
@@ -23,27 +23,36 @@ public class Lobby extends JFrame {
     JButton exitButton, confirmButton;
     boolean isLeader;
     int playerCount = 0;
+    GameServer gameServer; // Add GameServer instance
 
     public Lobby(MainGUI mainGUI, boolean isLeader) {
         this.mainGUI = mainGUI;
         this.isLeader = isLeader;
+        try {
+            this.gameServer = new GameServer(12345, mainGUI); // Initialize GameServer
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         initializeUI();
     }
 
     private void initializeUI() {
-        //Arraylists erstellen
+        // Arraylists erstellen
         playerNames = new ArrayList<>();
-        slotState = new ArrayList<String>(8);
-        for(int i = 0; i <= 7; i++){
+        slotState = new ArrayList<>(8);
+        for (int i = 0; i <= 7; i++) {
             slotState.add("");
         }
-        for(int i = 0; i <= 7; i++){
+        for (int i = 0; i <= 7; i++) {
             playerNames.add("");
         }
-        //SPIELER ZU TESTZWECKEN HINZUFÜGEN
-        addPlayer("Butzbach"); //<-- Da wird der Host dem Spiel hinzugefügt
-        addPlayer("Annanass"); //<-- Spieler der der Lobby beitritt
 
+        for (int i = 0; i <= gameServer.getPlayerNames().size()-1; i++) {
+            if (gameServer.getPlayerNames().get(i) != null) {
+                addPlayer(gameServer.getPlayerNames().get(i));
+                playerCount++;
+            }
+        }
 
         setTitle("Spieler Einstellungen");
         setSize(850, 400);
@@ -62,12 +71,12 @@ public class Lobby extends JFrame {
                 if (exitButton != null) {
                     exitButton.setOpaque(true);
                     mainGUI.updateButtonColor(exitButton, false);
-                    if(playerCount >= 2){
+                    if (playerCount >= 2) {
                         exitButton.setEnabled(true);
-                    }else{
+                    } else {
                         exitButton.setEnabled(false);
                     }
-                    if(!isLeader){
+                    if (!isLeader) {
                         exitButton.setText("Raum verlassen");
                     }
                 }
@@ -210,25 +219,19 @@ public class Lobby extends JFrame {
         panel.add(exitButton, gbc);
 
         exitButton.addActionListener(e -> {
-            if(isLeader){
+            if (isLeader) {
                 MainGUI.playSound("click");
                 SwingUtilities.invokeLater(() -> {
-                    /*for(int i = 0; i < 8; i++){
-                        if(i >= playerNames.size()){
-                            playerNames.add("");
-                        }
-                    }*/
                     new PokerGUI(playerCount, playerNames, startChips, bigBlind, mainGUI).setVisible(true);
                     System.out.println("The Host started the game!");
                     this.dispose();
                 });
                 this.dispose();
-            }else{
+            } else {
                 MainGUI.playSound("invalid");
                 mainGUI.setVisible(true);
                 this.dispose();
             }
-
         });
 
         add(panel);
@@ -258,9 +261,9 @@ public class Lobby extends JFrame {
         });
     }
 
-    public void addPlayer(String name){
-        for(int i = 0; i <= 7; i++){
-            if(playerNames.get(i).equals("")){
+    public void addPlayer(String name) {
+        for (int i = 0; i <= 7; i++) {
+            if (playerNames.get(i).equals("")) {
                 playerNames.set(i, name);
                 playerCount++;
                 break;
@@ -268,18 +271,8 @@ public class Lobby extends JFrame {
         }
     }
 
-    /*public void deletePlayer(String name){
-        for(int i = 0; i < 8; i++){
-            if(playerNames.get(i).equals(name)){
-                playerNames.set(i, "");
-                break;
-            }
-        }
-    }*/
-
     public void renderAll(Graphics g) {
-
-        //Convert the graphics to Graphics2D to allow more advanced rendering
+        // Convert the graphics to Graphics2D to allow more advanced rendering
         Graphics2D g2d = (Graphics2D) g;
 
         // Set rendering hints for high-quality image rendering
@@ -296,20 +289,20 @@ public class Lobby extends JFrame {
 
         for (int i = 0; i <= 7; i++) {
             if (i <= 3) {
-                g2d.drawImage(ImageArchive.getImage("lobby:"+slotState.get(i) + "playerslot"), x1, y + (i * spacing), null);
+                g2d.drawImage(ImageArchive.getImage("lobby:" + slotState.get(i) + "playerslot"), x1, y + (i * spacing), null);
                 if (!playerNames.get(i).equals("")) {
                     g2d.setColor(Color.WHITE);
-                    //Spielername
+                    // Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 16));
-                    g2d.drawString(playerNames.get(i), x1+15, 22+y + (i * spacing));
+                    g2d.drawString(playerNames.get(i), x1 + 15, 22 + y + (i * spacing));
                 }
             } else {
-                g2d.drawImage(ImageArchive.getImage("lobby:"+slotState.get(i) + "playerslot"), x2, y + ((i - 4) * spacing), null);
+                g2d.drawImage(ImageArchive.getImage("lobby:" + slotState.get(i) + "playerslot"), x2, y + ((i - 4) * spacing), null);
                 if (!playerNames.get(i).equals("")) {
                     g2d.setColor(Color.WHITE);
-                    //Spielername
+                    // Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 16));
-                    g2d.drawString(playerNames.get(i), x2+15, 22+y + ((i - 4) * spacing));
+                    g2d.drawString(playerNames.get(i), x2 + 15, 22 + y + ((i - 4) * spacing));
                 }
             }
         }
@@ -317,19 +310,20 @@ public class Lobby extends JFrame {
 
     public void updateSlotStates() {
         for (int i = 0; i <= 7; i++) {
-            try{
-            if (playerNames.get(i) != null) {
-                if (playerNames.get(i).equals("")) {
-                    slotState.set(i, "empty_");
-                } else {
-                    slotState.set(i, "");
-                    if(0 == i) {
-                        slotState.set(i, "host_");
-
+            try {
+                if (playerNames.get(i) != null) {
+                    if (playerNames.get(i).equals("")) {
+                        slotState.set(i, "empty_");
+                    } else {
+                        slotState.set(i, "");
+                        if (0 == i) {
+                            slotState.set(i, "host_");
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            }catch (Exception e){}
         }
     }
 }

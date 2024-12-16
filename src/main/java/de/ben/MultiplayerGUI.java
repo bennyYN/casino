@@ -45,21 +45,20 @@ public class MultiplayerGUI extends JFrame {
         startGameButton = new JButton("Spiel starten");
         styleButton(startGameButton);
         startGameButton.addActionListener(e -> {
-            //try {
-                SwingUtilities.invokeLater(() -> {
-                    new Lobby(mainGUI, true).setVisible(true);
-                    this.dispose();
-                });
-                //GameServer server = new GameServer(12345,playerSelection.startChips,playerSelection.bigBlind, mainGUI);
-           /* } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-            try {
-                GameClient client = new GameClient("localhost", 12345, MainGUI.getMultiplayerName());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }*/
+            new Thread(() -> {
+                try {
+                    SwingUtilities.invokeLater(() -> {
+                        new Lobby(mainGUI, true).setVisible(true);
+                        this.dispose();
+                    });
+                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
+                    System.out.println("GameClient created.");
 
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    throw new RuntimeException(ex);
+                }
+            }).start();
         });
 
         // Erstelle "Spiel beitreten" Button

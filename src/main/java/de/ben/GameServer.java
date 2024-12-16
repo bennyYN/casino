@@ -18,13 +18,12 @@ public class GameServer {
         playerNames.add(playerName);
     }
 
-    public GameServer(int port, int startChips, int bigBlind, MainGUI maingui) throws IOException {
+    public GameServer(int port, MainGUI maingui) throws IOException {
         this.serverSocket = new ServerSocket(port);
-        start();
+        new Thread(this::start).start(); // Run start() in a separate thread
     }
 
     public void start() {
-        while (true) {
             try {
                 Socket clientSocket = serverSocket.accept();
 
@@ -34,7 +33,6 @@ public class GameServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
     }
 
     class ClientHandler implements Runnable {
@@ -56,8 +54,6 @@ public class GameServer {
                 out = new PrintWriter(socket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                // Spielername anfordern
-                out.println("Bitte geben Sie Ihren Namen ein:");
                 playerName = in.readLine();
                 if (playerName != null && !playerName.isEmpty()) {
                     synchronized (server.getPlayerNames()) {
@@ -86,9 +82,9 @@ public class GameServer {
                 }
             }
         }
+
         public void sendMessage(String message) {
             out.println(message);
         }
     }
-
 }

@@ -23,7 +23,8 @@ public class GameClient {
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         System.out.println("Connected to server: " + host + ":" + port);
-        out.println(name);
+        out.write(MainGUI.getMultiplayerName());
+
     }
 
     public void sendMessage(String message) {
