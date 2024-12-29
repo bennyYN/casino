@@ -36,10 +36,13 @@ public class MainGUI extends JFrame implements ActionListener {
     Color darkTheme = new Color(43, 49, 64, 255), transparentDarkTheme = new Color(34, 34, 34, 81);
     Color darkblueTheme = new Color(62, 103, 147, 255), transparentDarkblueTheme = new Color(78, 136, 174, 255);
     Color scarletTheme = new Color(172, 41, 66, 255), transparentScarletTheme = new Color(197, 0, 0, 136);
+    private int z=0;
 
     // Konstruktor
     public MainGUI() {
-
+        //FÜR TESTZWECKE
+        recursiveMethod();
+        //FÜR TESTZWECKE
         //Laden des Bilderarchivs
         new ImageArchive();
 
@@ -107,6 +110,13 @@ public class MainGUI extends JFrame implements ActionListener {
         panel.add(exitButton, gbc);
 
         this.setVisible(true);
+    }
+
+    private void recursiveMethod() {
+        z++;
+        if(z!=1) {
+            new MainGUI();
+        }
     }
 
     public void updateButtonColor(JButton button, boolean isTransparent){

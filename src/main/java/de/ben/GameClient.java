@@ -12,19 +12,22 @@ public class GameClient {
     private int port;
     private String host;
 
-    public GameClient(String host, int port, String name) throws IOException {
+    public GameClient(String host, int port, String name) {
         this.host = host;
         this.name = name;
         this.port = port;
-        connect();
+        try {
+            connect();
+        } catch (IOException e) {
+            System.err.println("Failed to connect to server: " + e.getMessage());
+        }
     }
     public void connect() throws IOException {
         clientSocket = new Socket(host, port);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         System.out.println("Connected to server: " + host + ":" + port);
-        out.write(MainGUI.getMultiplayerName());
-
+        out.println(name);
     }
 
     public void sendMessage(String message) {

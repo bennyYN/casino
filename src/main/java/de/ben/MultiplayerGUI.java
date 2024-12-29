@@ -47,16 +47,23 @@ public class MultiplayerGUI extends JFrame {
         startGameButton.addActionListener(e -> {
             new Thread(() -> {
                 try {
-                    SwingUtilities.invokeLater(() -> {
-                        new Lobby(mainGUI, true).setVisible(true);
-                        this.dispose();
-                    });
+                    // Start the GameServer
+                    GameServer server = new GameServer(12345, mainGUI);
+                    new Thread(server::start).start();
+                    System.out.println("GameServer started.");
+
+                    // Create the GameClient
                     GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
                     System.out.println("GameClient created.");
 
+                    // Show the Lobby
+                    SwingUtilities.invokeLater(() -> {
+                        Lobby lobby = new Lobby(mainGUI, true, server);
+                        lobby.setVisible(true);
+                        this.dispose();
+                    });
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    throw new RuntimeException(ex);
                 }
             }).start();
         });
@@ -65,11 +72,17 @@ public class MultiplayerGUI extends JFrame {
         joinGameButton = new JButton("Spiel beitreten");
         styleButton(joinGameButton);
         joinGameButton.addActionListener(e -> {
-            //TODO (Axel)
-            SwingUtilities.invokeLater(() -> {
-                new Lobby(mainGUI, false).setVisible(true);
-                this.dispose();
-            });
+            new Thread(() -> {
+
+                GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
+                System.out.println("GameClient created.");
+
+                SwingUtilities.invokeLater(() -> {
+                    Lobby lobby = new Lobby(mainGUI, false);
+                    lobby.setVisible(true);
+                    this.dispose();
+                });
+            }).start();
         });
 
         // Erstelle "Zurück zum Menü" Button
@@ -98,6 +111,8 @@ public class MultiplayerGUI extends JFrame {
 
         this.setVisible(true);
     }
+
+
 
     // Methode zum Stylen des Buttons
     private void styleButton(JButton button) {

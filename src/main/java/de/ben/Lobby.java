@@ -25,14 +25,17 @@ public class Lobby extends JFrame {
     int playerCount = 0;
     GameServer gameServer; // Add GameServer instance
 
+    public Lobby(MainGUI mainGUI, boolean isLeader, GameServer gameServer) {
+        this.mainGUI = mainGUI;
+        this.isLeader = isLeader;
+        this.gameServer = gameServer;
+
+        initializeUI();
+    }
     public Lobby(MainGUI mainGUI, boolean isLeader) {
         this.mainGUI = mainGUI;
         this.isLeader = isLeader;
-        try {
-            this.gameServer = new GameServer(12345, mainGUI); // Initialize GameServer
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         initializeUI();
     }
 
@@ -47,10 +50,10 @@ public class Lobby extends JFrame {
             playerNames.add("");
         }
 
-        for (int i = 0; i <= gameServer.getPlayerNames().size()-1; i++) {
-            if (gameServer.getPlayerNames().get(i) != null) {
-                addPlayer(gameServer.getPlayerNames().get(i));
-                playerCount++;
+        // SpielerNamen vom GameServer abrufen und hinzufügen
+        for (String playerName : gameServer.getPlayerNames()) {
+            if (playerName != null && !playerName.isEmpty()) {
+                addPlayer(playerName);
             }
         }
 

@@ -54,13 +54,12 @@ public class GameServer {
                 out = new PrintWriter(socket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                playerName = in.readLine();
+                playerName = in.readLine(); // Empfangen des Namens vom Client
                 if (playerName != null && !playerName.isEmpty()) {
                     synchronized (server.getPlayerNames()) {
                         server.addPlayerNames(playerName);
                     }
                     System.out.println("Neuer Spieler verbunden: " + playerName);
-
                 }
 
                 // Nachrichten empfangen (falls nötig)
