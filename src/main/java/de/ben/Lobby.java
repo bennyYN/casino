@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Lobby extends JFrame {
 
@@ -23,24 +23,26 @@ public class Lobby extends JFrame {
     JButton exitButton, confirmButton;
     boolean isLeader;
     int playerCount = 0;
-    GameServer gameServer; // Add GameServer instance
+    GameServer gameServer;
 
     public Lobby(MainGUI mainGUI, boolean isLeader, GameServer gameServer) {
         this.mainGUI = mainGUI;
         this.isLeader = isLeader;
         this.gameServer = gameServer;
 
-        initializeUI();
-    }
-    public Lobby(MainGUI mainGUI, boolean isLeader) {
-        this.mainGUI = mainGUI;
-        this.isLeader = isLeader;
+        if (gameServer != null) {
+            gameServer.setLobby(this);
+        }
 
         initializeUI();
+        updatePlayerNames();
+    }
+
+    public Lobby(MainGUI mainGUI, boolean isLeader) {
+        this(mainGUI, isLeader, null);
     }
 
     private void initializeUI() {
-        // Arraylists erstellen
         playerNames = new ArrayList<>();
         slotState = new ArrayList<>(8);
         for (int i = 0; i <= 7; i++) {
@@ -50,14 +52,7 @@ public class Lobby extends JFrame {
             playerNames.add("");
         }
 
-        // SpielerNamen vom GameServer abrufen und hinzufügen
-        for (String playerName : gameServer.getPlayerNames()) {
-            if (playerName != null && !playerName.isEmpty()) {
-                addPlayer(playerName);
-            }
-        }
-
-        setTitle("Spieler Einstellungen");
+        setTitle("Player Settings");
         setSize(850, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -80,7 +75,7 @@ public class Lobby extends JFrame {
                         exitButton.setEnabled(false);
                     }
                     if (!isLeader) {
-                        exitButton.setText("Raum verlassen");
+                        exitButton.setText("Leave Room");
                     }
                 }
                 renderAll(g);
@@ -92,7 +87,7 @@ public class Lobby extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         if (isLeader) {
-            startChipsLabel = new JLabel("Anzahl der Anfangschips (200-10000):");
+            startChipsLabel = new JLabel("Starting Chips (200-10000):");
             gbc.gridx = 0;
             gbc.gridy = 2;
             gbc.gridwidth = 2;
@@ -119,7 +114,7 @@ public class Lobby extends JFrame {
 
             startChipsSlider.addChangeListener(e -> {
                 startChips = startChipsSlider.getValue();
-                startChipsLabel.setText("Anzahl der Anfangschips (200-10000):");
+                startChipsLabel.setText("Starting Chips (200-10000):");
                 startChipsField.setText(String.valueOf(startChips));
             });
 
@@ -197,7 +192,7 @@ public class Lobby extends JFrame {
                 }
             });
         } else {
-            startChipsLabel = new JLabel("Anzahl der Anfangschips: " + startChips);
+            startChipsLabel = new JLabel("Starting Chips: " + startChips);
             gbc.gridx = 0;
             gbc.gridy = 2;
             gbc.gridwidth = 2;
@@ -212,7 +207,7 @@ public class Lobby extends JFrame {
             panel.add(bigBlindLabel, gbc);
         }
 
-        exitButton = new JButton("Fortfahren");
+        exitButton = new JButton("Continue");
         exitButton.setBackground(new Color(78, 136, 174, 255));
         exitButton.setForeground(Color.WHITE);
         styleButton(exitButton);
@@ -266,19 +261,41 @@ public class Lobby extends JFrame {
 
     public void addPlayer(String name) {
         for (int i = 0; i <= 7; i++) {
-            if (playerNames.get(i).equals("")) {
-                playerNames.set(i, name);
+            if (playerNames.size() <= i || playerNames.get(i).equals("")) {
+                if (playerNames.size() <= i) {
+                    playerNames.add(name);
+                } else {
+                    playerNames.set(i, name);
+                }
                 playerCount++;
+                System.out.println("Player added: " + name);
                 break;
             }
         }
+        repaint();
+    }
+
+    public void setPlayerNames(List<String> names) {
+        playerNames.clear();
+        playerNames.addAll(names);
+        playerCount = names.size();
+        repaint();
+    }
+
+    public void removePlayer(String name) {
+        for (int i = 0; i <= 7; i++) {
+            if (playerNames.get(i).equals(name)) {
+                playerNames.set(i, "");
+                playerCount--;
+                break;
+            }
+        }
+        repaint();
     }
 
     public void renderAll(Graphics g) {
-        // Convert the graphics to Graphics2D to allow more advanced rendering
         Graphics2D g2d = (Graphics2D) g;
 
-        // Set rendering hints for high-quality image rendering
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -295,7 +312,6 @@ public class Lobby extends JFrame {
                 g2d.drawImage(ImageArchive.getImage("lobby:" + slotState.get(i) + "playerslot"), x1, y + (i * spacing), null);
                 if (!playerNames.get(i).equals("")) {
                     g2d.setColor(Color.WHITE);
-                    // Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 16));
                     g2d.drawString(playerNames.get(i), x1 + 15, 22 + y + (i * spacing));
                 }
@@ -303,7 +319,6 @@ public class Lobby extends JFrame {
                 g2d.drawImage(ImageArchive.getImage("lobby:" + slotState.get(i) + "playerslot"), x2, y + ((i - 4) * spacing), null);
                 if (!playerNames.get(i).equals("")) {
                     g2d.setColor(Color.WHITE);
-                    // Spielername
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 16));
                     g2d.drawString(playerNames.get(i), x2 + 15, 22 + y + ((i - 4) * spacing));
                 }
@@ -327,6 +342,18 @@ public class Lobby extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void updatePlayerNames() {
+        if (gameServer != null) {
+            for (String playerName : gameServer.getPlayerNames()) {
+                if (playerName != null && !playerName.isEmpty()) {
+                    addPlayer(playerName);
+                }
+            }
+        } else {
+            System.out.println("GameServer is null. Skipping player name initialization.");
         }
     }
 }

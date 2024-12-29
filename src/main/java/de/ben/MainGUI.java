@@ -40,9 +40,6 @@ public class MainGUI extends JFrame implements ActionListener {
 
     // Konstruktor
     public MainGUI() {
-        //FÜR TESTZWECKE
-        recursiveMethod();
-        //FÜR TESTZWECKE
         //Laden des Bilderarchivs
         new ImageArchive();
 
@@ -110,13 +107,6 @@ public class MainGUI extends JFrame implements ActionListener {
         panel.add(exitButton, gbc);
 
         this.setVisible(true);
-    }
-
-    private void recursiveMethod() {
-        z++;
-        if(z!=1) {
-            new MainGUI();
-        }
     }
 
     public void updateButtonColor(JButton button, boolean isTransparent){

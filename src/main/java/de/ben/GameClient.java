@@ -2,6 +2,7 @@ package de.ben;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 
 public class GameClient {
 
@@ -11,23 +12,44 @@ public class GameClient {
     private final String name;
     private int port;
     private String host;
+    private GameServer gameServer;
+    private Lobby lobby;
 
-    public GameClient(String host, int port, String name) {
+    public GameClient(String host, int port, String name) throws IOException {
         this.host = host;
         this.name = name;
         this.port = port;
-        try {
-            connect();
-        } catch (IOException e) {
-            System.err.println("Failed to connect to server: " + e.getMessage());
-        }
+        connect();
     }
+
     public void connect() throws IOException {
         clientSocket = new Socket(host, port);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         System.out.println("Connected to server: " + host + ":" + port);
         out.println(name);
+
+        new Thread(() -> {
+            try {
+                String message;
+                while ((message = in.readLine()) != null) {
+                    System.out.println("Received: " + message);
+                    if (message.startsWith("PLAYER:")) {
+                        String playerName = message.substring(7);
+                        if (lobby != null) {
+                            lobby.addPlayer(playerName);
+                        }
+                    } else if (message.startsWith("PLAYERS:")) {
+                        String[] playerNames = message.substring(8).split(",");
+                        if (lobby != null) {
+                            lobby.setPlayerNames(List.of(playerNames));
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void sendMessage(String message) {
@@ -44,7 +66,15 @@ public class GameClient {
         clientSocket.close();
     }
 
-    public String getName() {
-        return name;
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
+    }
+
+    public GameServer getGameServer() {
+        return gameServer;
+    }
+
+    public void setGameServer(GameServer gameServer) {
+        this.gameServer = gameServer;
     }
 }

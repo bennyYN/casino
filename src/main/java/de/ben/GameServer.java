@@ -9,6 +9,7 @@ public class GameServer {
     private final ServerSocket serverSocket;
     private final List<ClientHandler> clients = new ArrayList<>();
     private final ArrayList<String> playerNames = new ArrayList<>();
+    private Lobby lobby;
 
     public List<String> getPlayerNames() {
         return playerNames;
@@ -16,6 +17,10 @@ public class GameServer {
 
     public void addPlayerNames(String playerName) {
         playerNames.add(playerName);
+        if (lobby != null) {
+            lobby.addPlayer(playerName);
+        }
+        broadcastPlayerNames();
     }
 
     public GameServer(int port, MainGUI maingui) throws IOException {
@@ -23,16 +28,36 @@ public class GameServer {
         new Thread(this::start).start(); // Run start() in a separate thread
     }
 
-    public void start() {
-            try {
-                Socket clientSocket = serverSocket.accept();
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
+    }
 
+    public void start() {
+        try {
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(clientSocket, this);
                 clients.add(clientHandler);
                 new Thread(clientHandler).start();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removePlayerName(String playerName) {
+        playerNames.remove(playerName);
+        if (lobby != null) {
+            lobby.removePlayer(playerName);
+        }
+        broadcastPlayerNames();
+    }
+
+    private void broadcastPlayerNames() {
+        String playerNamesMessage = "PLAYERS:" + String.join(",", playerNames);
+        for (ClientHandler client : clients) {
+            client.sendMessage(playerNamesMessage);
+        }
     }
 
     class ClientHandler implements Runnable {
@@ -41,7 +66,7 @@ public class GameServer {
         private final GameServer server;
         private PrintWriter out;
         private BufferedReader in;
-        private String playerName; // Speichert den Namen des Spielers
+        private String playerName;
 
         public ClientHandler(Socket socket, GameServer server) {
             this.socket = socket;
@@ -54,15 +79,14 @@ public class GameServer {
                 out = new PrintWriter(socket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                playerName = in.readLine(); // Empfangen des Namens vom Client
+                playerName = in.readLine();
                 if (playerName != null && !playerName.isEmpty()) {
                     synchronized (server.getPlayerNames()) {
                         server.addPlayerNames(playerName);
                     }
-                    System.out.println("Neuer Spieler verbunden: " + playerName);
+                    System.out.println("New player connected: " + playerName);
                 }
 
-                // Nachrichten empfangen (falls nötig)
                 String message;
                 while ((message = in.readLine()) != null) {
                     System.out.println(playerName + ": " + message);
@@ -72,9 +96,9 @@ public class GameServer {
             } finally {
                 try {
                     synchronized (server.getPlayerNames()) {
-                        server.getPlayerNames().remove(playerName);
+                        server.removePlayerName(playerName);
                     }
-                    System.out.println("Spieler getrennt: " + playerName);
+                    System.out.println("Player disconnected: " + playerName);
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();

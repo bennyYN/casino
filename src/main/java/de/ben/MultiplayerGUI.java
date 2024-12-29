@@ -73,15 +73,22 @@ public class MultiplayerGUI extends JFrame {
         styleButton(joinGameButton);
         joinGameButton.addActionListener(e -> {
             new Thread(() -> {
+                try {
+                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
+                    System.out.println("GameClient created.");
 
-                GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
-                System.out.println("GameClient created.");
-
-                SwingUtilities.invokeLater(() -> {
-                    Lobby lobby = new Lobby(mainGUI, false);
-                    lobby.setVisible(true);
-                    this.dispose();
-                });
+                    SwingUtilities.invokeLater(() -> {
+                        Lobby lobby = new Lobby(mainGUI, false, client.getGameServer());
+                        client.setLobby(lobby);
+                        lobby.setVisible(true);
+                        this.dispose();
+                    });
+                } catch (IOException ex) {
+                    System.err.println("Failed to connect to server: " + ex.getMessage());
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(mainGUI, "Failed to connect to server.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+                    });
+                }
             }).start();
         });
 
