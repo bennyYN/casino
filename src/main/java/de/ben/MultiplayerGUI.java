@@ -52,6 +52,8 @@ public class MultiplayerGUI extends JFrame {
                     new Thread(server::start).start();
                     System.out.println("GameServer started.");
 
+                    mainGUI.playerIndex = 0;
+
                     // Create the GameClient
                     GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
                     System.out.println("GameClient created.");
@@ -60,8 +62,14 @@ public class MultiplayerGUI extends JFrame {
                     SwingUtilities.invokeLater(() -> {
                         Lobby lobby = new Lobby(mainGUI, true, server);
                         lobby.setVisible(true);
+                        try {
+                            client.connect();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         this.dispose();
                     });
+
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -80,6 +88,11 @@ public class MultiplayerGUI extends JFrame {
                     SwingUtilities.invokeLater(() -> {
                         Lobby lobby = new Lobby(mainGUI, false, client.getGameServer());
                         client.setLobby(lobby);
+                        try {
+                            client.connect();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         lobby.setVisible(true);
                         this.dispose();
                     });

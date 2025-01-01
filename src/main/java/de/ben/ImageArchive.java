@@ -17,8 +17,8 @@ public class ImageArchive {
     private static BufferedImage playerslot, emptyPlayerslot, activePlayerslot, winningPlayerslot, inactivePlayerslot, zeroPlayerslot;
     private static Image scaledPlayerslot, scaledEmptyPlayerslot, scaledActivePlayerslot, scaledWinningPlayerslot, scaledInactivePlayerslot, scaledZeroPlayerslot;
     //Lobby-Playerslots
-    private static BufferedImage lobbyPlayerslot, lobbyHostPlayerslot, lobbyEmptyPlayerslot, lobbySelectedPlayerslot;
-    private static Image scaledLobbyPlayerslot, scaledLobbyHostPlayerslot, scaledLobbyEmptyPlayerslot, scaledLobbySelectedPlayerslot;
+    private static BufferedImage lobbyPlayerslot, lobbyHostPlayerslot, lobbyEmptyPlayerslot, lobbyYouPlayerslot, lobbyYouHostPlayerslot;
+    private static Image scaledLobbyPlayerslot, scaledLobbyHostPlayerslot, scaledLobbyEmptyPlayerslot, scaledLobbyYouPlayerslot, scaledLobbyYouHostPlayerslot;
     //Misc
     private static BufferedImage originalBackgroundImg, darkBackgroundImg, darkblueBackgroundImg, lightBackgroundImg, scarletBackgroundImg, tableImg, potImg, darkPotImg;
     private static Image scaledBackgroundImg, scaledDarkBackgroundImg, scaledDarkblueBackgroundImg, scaledLightBackgroundImg, scaledScarletBackgroundImg, scaledTableImg, scaledPotImg, scaledDarkPotImg;
@@ -58,7 +58,8 @@ public class ImageArchive {
             lobbyPlayerslot = ImageIO.read(new File("img/lobby/playerslot.png"));
             lobbyHostPlayerslot = ImageIO.read(new File("img/lobby/host_playerslot.png"));
             lobbyEmptyPlayerslot = ImageIO.read(new File("img/lobby/empty_playerslot.png"));
-            lobbySelectedPlayerslot = ImageIO.read(new File("img/lobby/selected_playerslot.png"));
+            lobbyYouHostPlayerslot = ImageIO.read(new File("img/lobby/you_host_playerslot.png"));
+            lobbyYouPlayerslot = ImageIO.read(new File("img/lobby/you_playerslot.png"));
             //Misc
             originalBackgroundImg = ImageIO.read(new File("img/background.jpg"));
             darkBackgroundImg = ImageIO.read(new File("img/background-dark.jpg"));
@@ -153,7 +154,8 @@ public class ImageArchive {
         scaledLobbyPlayerslot = lobbyPlayerslot.getScaledInstance((int)(lobbyPlayerslot.getWidth()*xScale), (int)(lobbyPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledLobbyHostPlayerslot = lobbyHostPlayerslot.getScaledInstance((int)(lobbyHostPlayerslot.getWidth()*xScale), (int)(lobbyHostPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledLobbyEmptyPlayerslot = lobbyEmptyPlayerslot.getScaledInstance((int)(lobbyEmptyPlayerslot.getWidth()*xScale), (int)(lobbyEmptyPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
-        scaledLobbySelectedPlayerslot = lobbySelectedPlayerslot.getScaledInstance((int)(lobbySelectedPlayerslot.getWidth()*xScale), (int)(lobbySelectedPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledLobbyYouHostPlayerslot = lobbyYouHostPlayerslot.getScaledInstance((int)(lobbyYouHostPlayerslot.getWidth()*xScale), (int)(lobbyYouHostPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledLobbyYouPlayerslot = lobbyYouPlayerslot.getScaledInstance((int)(lobbyYouPlayerslot.getWidth()*xScale), (int)(lobbyYouPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         //Misc
         scaledBackgroundImg = originalBackgroundImg.getScaledInstance((int)(originalBackgroundImg.getWidth()*xScale), (int)(originalBackgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledDarkBackgroundImg = darkBackgroundImg.getScaledInstance((int)(darkBackgroundImg.getWidth()*xScale), (int)(darkBackgroundImg.getHeight()*yScale), Image.SCALE_SMOOTH);
@@ -379,8 +381,10 @@ public class ImageArchive {
                     return scaledLobbyEmptyPlayerslot;
                 case "lobby:host_playerslot":
                     return scaledLobbyHostPlayerslot;
-                case "lobby:selected_playerslot":
-                    return scaledLobbySelectedPlayerslot;
+                case "lobby:you_playerslot":
+                    return scaledLobbyYouPlayerslot;
+                case "lobby:you_host_playerslot":
+                    return scaledLobbyYouHostPlayerslot;
                 //Misc
                 case "background:Original":
                     return scaledBackgroundImg;

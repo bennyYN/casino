@@ -307,7 +307,10 @@ public class Lobby extends JFrame {
         int x1 = 35;
         int y = 75;
 
+        fillEmptySlots();
+
         for (int i = 0; i <= 7; i++) {
+            fillEmptySlots();
             if (i <= 3) {
                 g2d.drawImage(ImageArchive.getImage("lobby:" + slotState.get(i) + "playerslot"), x1, y + (i * spacing), null);
                 if (!playerNames.get(i).equals("")) {
@@ -326,7 +329,17 @@ public class Lobby extends JFrame {
         }
     }
 
+    private void fillEmptySlots() {
+        //Mögliche leere stellen im array mit leeren Strings füllen
+        for (int i = 0; i <= 7; i++) {
+            if (playerNames.size() <= i) {
+                playerNames.add("");
+            }
+        }
+    }
+
     public void updateSlotStates() {
+        fillEmptySlots();
         for (int i = 0; i <= 7; i++) {
             try {
                 if (playerNames.get(i) != null) {
@@ -338,6 +351,9 @@ public class Lobby extends JFrame {
                             slotState.set(i, "host_");
                         }
                     }
+                }
+                if(i == mainGUI.playerIndex) {
+                    slotState.set(i, "you_" + slotState.get(i));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

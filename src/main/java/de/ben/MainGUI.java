@@ -31,11 +31,12 @@ public class MainGUI extends JFrame implements ActionListener {
     private final boolean showLoadingScreen = false;
     private String selectedTheme;
     private static float gameSoundsVolume = 50; // Default game sounds volume
-    private static String MultiplayerName;
+    private String MultiplayerName;
     Color originalTheme = new Color(78, 136, 174, 255), transparentOriginalTheme = new Color(142, 215, 255, 81);
     Color darkTheme = new Color(43, 49, 64, 255), transparentDarkTheme = new Color(34, 34, 34, 81);
     Color darkblueTheme = new Color(62, 103, 147, 255), transparentDarkblueTheme = new Color(78, 136, 174, 255);
     Color scarletTheme = new Color(172, 41, 66, 255), transparentScarletTheme = new Color(197, 0, 0, 136);
+    public int playerIndex = -1;
     private int z=0;
 
     // Konstruktor
@@ -332,7 +333,7 @@ public class MainGUI extends JFrame implements ActionListener {
         }
     }
 
-    public static String getMultiplayerName() {
+    public String getMultiplayerName() {
         return MultiplayerName;
     }
 
@@ -357,10 +358,21 @@ public class MainGUI extends JFrame implements ActionListener {
             }
 
         }else if(sourceButton == multiplayerButton){
-            MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben", JOptionPane.PLAIN_MESSAGE);
-            new MultiplayerGUI(this);
-            this.setVisible(false);
-        }else if (sourceButton == settingsButton) {
+            boolean isRunning = true;
+            while(isRunning){
+                MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben (1-12 Zeichen)", JOptionPane.PLAIN_MESSAGE);
+                if(MultiplayerName == null){
+                    isRunning = false;
+                    break;
+                }else if(!MultiplayerName.isEmpty() && !MultiplayerName.contains(",") && MultiplayerName.length()<=12){
+                    new MultiplayerGUI(this);
+                    this.setVisible(false);
+                    isRunning = false;
+                    break;
+                }
+                JOptionPane.showMessageDialog(this, "1-12 Zeichen & Keine \",\"", "Ungültiger Name", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (sourceButton == settingsButton) {
             new SettingsGUI(this, true); // Öffne SettingsGUI und übergebe MainGUI für Lautstärkeanpassung
             this.setVisible(false); // Verstecke MainGUI statt es zu schließen
         } else if (sourceButton == exitButton) {

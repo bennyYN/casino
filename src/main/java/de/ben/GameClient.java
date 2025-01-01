@@ -19,12 +19,12 @@ public class GameClient {
         this.host = host;
         this.name = name;
         this.port = port;
-        connect();
     }
 
     public void connect() throws IOException {
         clientSocket = new Socket(host, port);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
+
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         System.out.println("Connected to server: " + host + ":" + port);
         out.println(name);
@@ -43,11 +43,15 @@ public class GameClient {
                         String[] playerNames = message.substring(8).split(",");
                         if (lobby != null) {
                             lobby.setPlayerNames(List.of(playerNames));
+                            if(lobby.mainGUI.playerIndex == -1){
+                                lobby.mainGUI.playerIndex = playerNames.length-1;
+                            }
                         }
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Verbindung wurde abgebrochen!");
+                System.exit(1);
             }
         }).start();
     }

@@ -63,7 +63,7 @@ public class GameServer {
     class ClientHandler implements Runnable {
 
         private final Socket socket;
-        private final GameServer server;
+        public final GameServer server;
         private PrintWriter out;
         private BufferedReader in;
         private String playerName;
