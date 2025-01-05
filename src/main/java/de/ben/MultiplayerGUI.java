@@ -55,12 +55,12 @@ public class MultiplayerGUI extends JFrame {
                     mainGUI.playerIndex = 0;
 
                     // Create the GameClient
-                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
+                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName(), mainGUI);
                     System.out.println("GameClient created.");
 
                     // Show the Lobby
                     SwingUtilities.invokeLater(() -> {
-                        Lobby lobby = new Lobby(mainGUI, true, server);
+                        Lobby lobby = new Lobby(mainGUI, true, server, client);
                         lobby.setVisible(true);
                         try {
                             client.connect();
@@ -82,11 +82,11 @@ public class MultiplayerGUI extends JFrame {
         joinGameButton.addActionListener(e -> {
             new Thread(() -> {
                 try {
-                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName());
+                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName(), mainGUI);
                     System.out.println("GameClient created.");
 
                     SwingUtilities.invokeLater(() -> {
-                        Lobby lobby = new Lobby(mainGUI, false, client.getGameServer());
+                        Lobby lobby = new Lobby(mainGUI, false, client.getGameServer(), client);
                         client.setLobby(lobby);
                         try {
                             client.connect();
@@ -131,9 +131,6 @@ public class MultiplayerGUI extends JFrame {
 
         this.setVisible(true);
     }
-
-
-
     // Methode zum Stylen des Buttons
     private void styleButton(JButton button) {
         button.setBackground(new Color(78, 136, 174, 255));

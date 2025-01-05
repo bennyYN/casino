@@ -24,11 +24,13 @@ public class Lobby extends JFrame {
     boolean isLeader;
     int playerCount = 0;
     GameServer gameServer;
+    private GameClient gameClient;
 
-    public Lobby(MainGUI mainGUI, boolean isLeader, GameServer gameServer) {
+    public Lobby(MainGUI mainGUI, boolean isLeader, GameServer gameServer, GameClient client) {
         this.mainGUI = mainGUI;
         this.isLeader = isLeader;
         this.gameServer = gameServer;
+        this.gameClient= client;
 
         if (gameServer != null) {
             gameServer.setLobby(this);
@@ -38,8 +40,8 @@ public class Lobby extends JFrame {
         updatePlayerNames();
     }
 
-    public Lobby(MainGUI mainGUI, boolean isLeader) {
-        this(mainGUI, isLeader, null);
+    public Lobby(MainGUI mainGUI, boolean isLeader, GameClient cliente) {
+        this(mainGUI, isLeader, null, cliente);
     }
 
     private void initializeUI() {
@@ -220,11 +222,15 @@ public class Lobby extends JFrame {
             if (isLeader) {
                 MainGUI.playSound("click");
                 SwingUtilities.invokeLater(() -> {
-                    new PokerGUI(playerCount, playerNames, startChips, bigBlind, mainGUI).setVisible(true);
-                    System.out.println("The Host started the game!");
+
+                    int startChips = Integer.parseInt(startChipsField.getText());
+                    int bigBlind = Integer.parseInt(bigBlindField.getText());
+                    String playerNamesString = String.join(",", playerNames);
+
+                    gameClient.sendMessage("START:" + playerCount+ ":" + startChips + ":" + bigBlind + ":" + playerNamesString);
+
                     this.dispose();
                 });
-                this.dispose();
             } else {
                 MainGUI.playSound("invalid");
                 mainGUI.setVisible(true);

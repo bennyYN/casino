@@ -72,6 +72,21 @@ public class GameServer {
             this.socket = socket;
             this.server = server;
         }
+        private void handleStartMessage(String message) {
+
+            String[] parts = message.split(":");
+            int startChips = Integer.parseInt(parts[1]);
+            int bigBlind = Integer.parseInt(parts[2]);
+            String[] playerNames = parts[3].split(",");
+
+
+            //PokerGUI pokerGUI = new PokerGUI(playerNames.length, new ArrayList<>(Arrays.asList(playerNames)), startChips, bigBlind, true, null);
+            //pokerGUI.setVisible(true);
+
+
+            broadcastMessage(message);
+        }
+
 
         @Override
         public void run() {
@@ -90,6 +105,9 @@ public class GameServer {
                 String message;
                 while ((message = in.readLine()) != null) {
                     System.out.println(playerName + ": " + message);
+                    if (message.startsWith("START:")) {
+                        handleStartMessage(message);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,6 +126,12 @@ public class GameServer {
 
         public void sendMessage(String message) {
             out.println(message);
+        }
+
+        public void broadcastMessage(String message) {
+            for (ClientHandler client : clients) {
+                client.sendMessage(message);
+            }
         }
     }
 }

@@ -2,6 +2,8 @@ package de.ben;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameClient {
@@ -14,11 +16,14 @@ public class GameClient {
     private String host;
     private GameServer gameServer;
     private Lobby lobby;
+    private PokerGUI pokerGUI;
+    private MainGUI mainGui;
 
-    public GameClient(String host, int port, String name) throws IOException {
+    public GameClient(String host, int port, String name, MainGUI mainGUI) throws IOException {
         this.host = host;
         this.name = name;
         this.port = port;
+        this.mainGui = mainGUI;
     }
 
     public void connect() throws IOException {
@@ -34,7 +39,10 @@ public class GameClient {
                 String message;
                 while ((message = in.readLine()) != null) {
                     System.out.println("Received: " + message);
-                    if (message.startsWith("PLAYER:")) {
+                    if (message.startsWith("START:")) {
+                        handleStartMessage(message);
+                    }
+                    else if (message.startsWith("PLAYER:")) {
                         String playerName = message.substring(7);
                         if (lobby != null) {
                             lobby.addPlayer(playerName);
@@ -54,6 +62,30 @@ public class GameClient {
                 System.exit(1);
             }
         }).start();
+    }
+
+    private void handleStartMessage(String message) {
+        String[] parts = message.split(":");
+        int playerCount = Integer.parseInt(parts[1]);
+        int startChips = Integer.parseInt(parts[2]);
+        int bigBlind = Integer.parseInt(parts[3]);
+        String[] playerNames = parts[4].split(",");
+
+        // Log the parsed values
+        System.out.println("playerCount: " + playerCount);
+        System.out.println("startChips: " + startChips);
+        System.out.println("bigBlind: " + bigBlind);
+        System.out.println("playerNames: " + Arrays.toString(playerNames));
+
+        ArrayList<String> playerNamesArrayList = new ArrayList<>(Arrays.asList(playerNames));
+
+        while (playerNamesArrayList.size() < 8) {
+            playerNamesArrayList.add("");
+        }
+
+        System.out.println("Final playerNamesArrayList: " + playerNamesArrayList);
+        new PokerGUI(playerCount, playerNamesArrayList, startChips, bigBlind, mainGui).setVisible(true);
+        lobby.dispose();
     }
 
     public void sendMessage(String message) {
