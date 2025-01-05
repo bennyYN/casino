@@ -14,8 +14,8 @@ public class ImageArchive {
     private static BufferedImage chipsImg, bigBlindImg, smallBlindImg, iconImg, cardsImg;
     private static Image scaledChipsImg, scaledBigBlindImg, scaledSmallBlindImg, scaledIconImg, scaledCardsImg;
     //Playerslots
-    private static BufferedImage playerslot, emptyPlayerslot, activePlayerslot, winningPlayerslot, inactivePlayerslot, zeroPlayerslot;
-    private static Image scaledPlayerslot, scaledEmptyPlayerslot, scaledActivePlayerslot, scaledWinningPlayerslot, scaledInactivePlayerslot, scaledZeroPlayerslot;
+    private static BufferedImage playerslot, emptyPlayerslot, activePlayerslot, winningPlayerslot, inactivePlayerslot, zeroPlayerslot, youPlayerslot, youActivePlayerslot, youWinningPlayerslot, youInactivePlayerslot, youZeroPlayerslot;
+    private static Image scaledPlayerslot, scaledEmptyPlayerslot, scaledActivePlayerslot, scaledWinningPlayerslot, scaledInactivePlayerslot, scaledZeroPlayerslot, scaledYouPlayerslot, scaledYouActivePlayerslot, scaledYouInactivePlayerslot, scaledYouWinningPlayerslot, scaledYouZeroPlayerslot;
     //Lobby-Playerslots
     private static BufferedImage lobbyPlayerslot, lobbyHostPlayerslot, lobbyEmptyPlayerslot, lobbyYouPlayerslot, lobbyYouHostPlayerslot;
     private static Image scaledLobbyPlayerslot, scaledLobbyHostPlayerslot, scaledLobbyEmptyPlayerslot, scaledLobbyYouPlayerslot, scaledLobbyYouHostPlayerslot;
@@ -48,12 +48,17 @@ public class ImageArchive {
             smallBlindImg = ImageIO.read(new File("img/smallBlind.png"));
             cardsImg = ImageIO.read(new File("img/cards_icon.png"));
             //Playerslots
-            playerslot = ImageIO.read(new File("img/playerslot.png"));
-            emptyPlayerslot = ImageIO.read(new File("img/empty_playerslot.png"));
-            activePlayerslot = ImageIO.read(new File("img/active_playerslot.png"));
-            winningPlayerslot = ImageIO.read(new File("img/winning_playerslot.png"));
-            inactivePlayerslot = ImageIO.read(new File("img/inactive_playerslot.png"));
-            zeroPlayerslot = ImageIO.read(new File("img/zero_playerslot.png"));
+            playerslot = ImageIO.read(new File("img/playerslots/playerslot.png"));
+            emptyPlayerslot = ImageIO.read(new File("img/playerslots/empty_playerslot.png"));
+            activePlayerslot = ImageIO.read(new File("img/playerslots/active_playerslot.png"));
+            winningPlayerslot = ImageIO.read(new File("img/playerslots/winning_playerslot.png"));
+            inactivePlayerslot = ImageIO.read(new File("img/playerslots/inactive_playerslot.png"));
+            zeroPlayerslot = ImageIO.read(new File("img/playerslots/zero_playerslot.png"));
+            youPlayerslot = ImageIO.read(new File("img/playerslots/you_playerslot.png"));
+            youActivePlayerslot = ImageIO.read(new File("img/playerslots/you_active_playerslot.png"));
+            youWinningPlayerslot = ImageIO.read(new File("img/playerslots/you_winning_playerslot.png"));
+            youInactivePlayerslot = ImageIO.read(new File("img/playerslots/you_inactive_playerslot.png"));
+            youZeroPlayerslot = ImageIO.read(new File("img/playerslots/you_zero_playerslot.png"));
             //Lobby-Playerslots
             lobbyPlayerslot = ImageIO.read(new File("img/lobby/playerslot.png"));
             lobbyHostPlayerslot = ImageIO.read(new File("img/lobby/host_playerslot.png"));
@@ -150,6 +155,11 @@ public class ImageArchive {
         scaledWinningPlayerslot = winningPlayerslot.getScaledInstance((int)(winningPlayerslot.getWidth()*xScale), (int)(winningPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledInactivePlayerslot = inactivePlayerslot.getScaledInstance((int)(inactivePlayerslot.getWidth()*xScale), (int)(inactivePlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledZeroPlayerslot = zeroPlayerslot.getScaledInstance((int)(zeroPlayerslot.getWidth()*xScale), (int)(zeroPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledYouPlayerslot = youPlayerslot.getScaledInstance((int)(youPlayerslot.getWidth()*xScale), (int)(youPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledYouActivePlayerslot = youActivePlayerslot.getScaledInstance((int)(youActivePlayerslot.getWidth()*xScale), (int)(youActivePlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledYouWinningPlayerslot = youWinningPlayerslot.getScaledInstance((int)(youWinningPlayerslot.getWidth()*xScale), (int)(youWinningPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledYouInactivePlayerslot = youInactivePlayerslot.getScaledInstance((int)(youInactivePlayerslot.getWidth()*xScale), (int)(youInactivePlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledYouZeroPlayerslot = youZeroPlayerslot.getScaledInstance((int)(youZeroPlayerslot.getWidth()*xScale), (int)(youZeroPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         //Lobby-Playerslots
         scaledLobbyPlayerslot = lobbyPlayerslot.getScaledInstance((int)(lobbyPlayerslot.getWidth()*xScale), (int)(lobbyPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledLobbyHostPlayerslot = lobbyHostPlayerslot.getScaledInstance((int)(lobbyHostPlayerslot.getWidth()*xScale), (int)(lobbyHostPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
@@ -374,6 +384,16 @@ public class ImageArchive {
                     return scaledInactivePlayerslot;
                 case "zero_playerslot":
                     return scaledZeroPlayerslot;
+                case "you_playerslot":
+                    return scaledYouPlayerslot;
+                case "you_active_playerslot":
+                    return scaledYouActivePlayerslot;
+                case "you_winning_playerslot":
+                    return scaledYouWinningPlayerslot;
+                case "you_inactive_playerslot":
+                    return scaledYouInactivePlayerslot;
+                case "you_zero_playerslot":
+                    return scaledYouZeroPlayerslot;
                 //Lobby-Playerslots
                 case "lobby:playerslot":
                     return scaledLobbyPlayerslot;

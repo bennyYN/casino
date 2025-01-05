@@ -561,7 +561,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                         if (Integer.parseInt(raiseField.getText()) <= game.highestBet) {
                             raiseButton.setEnabled(false);
                         } else {
-                            raiseButton.setEnabled(Integer.parseInt(raiseField.getText()) <= game.currentPlayer.getChips().getAmount());
+                            raiseButton.setEnabled(Integer.parseInt(raiseField.getText()) <= game.currentPlayer.getChips().getAmount() && (mainGUI.playerIndex == -1 || game.currentPlayer.equals(game.players.get(mainGUI.playerIndex))));
 
                         }
                     }catch (Exception e){
@@ -571,8 +571,9 @@ public class PokerGUI extends JFrame implements KeyListener {
                     raiseButton.setEnabled(false);
                 }
             }else{
-                if(!game.playerWon)
-                raiseButton.setEnabled(true);
+                if(!game.playerWon){
+                    raiseButton.setEnabled(mainGUI.playerIndex == -1 || game.currentPlayer.equals(game.players.get(mainGUI.playerIndex)));
+                }
             }
         }
 
@@ -614,6 +615,19 @@ public class PokerGUI extends JFrame implements KeyListener {
                 smallBlindLabel.setVisible(true);
                 fadingLabel.setVisible(true);
                 dialogPane.setVisible(true);
+                if(mainGUI.playerIndex == -1 || game.currentPlayer.equals(game.players.get(mainGUI.playerIndex))){
+                    //Spiel-Aktions-Buttons einschalten
+                    checkButton.setEnabled(true);
+                    callButton.setEnabled(true);
+                    foldButton.setEnabled(true);
+                    allInButton.setEnabled(true);
+                }else{
+                    //Spiel-Aktions-Buttons ausschalten
+                    checkButton.setEnabled(false);
+                    callButton.setEnabled(false);
+                    foldButton.setEnabled(false);
+                    allInButton.setEnabled(false);
+                }
                 //Alle Menu Buttons unsichtbar machen
                 for(JButton button : menuButtons){
                     button.setVisible(false);

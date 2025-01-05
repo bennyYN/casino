@@ -155,6 +155,9 @@ public class Playerslot {
                         }
                     }
                 }
+                if(i == gui.mainGUI.playerIndex) {
+                    slotState.set(i, "you_" + slotState.get(i));
+                }
             }
         }
     }
