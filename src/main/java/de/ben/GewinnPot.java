@@ -24,4 +24,8 @@ public class GewinnPot {
     public void clear() {
         this.amount = 0;
     }
+
+    public void setAmount(int i) {
+        this.amount = i;
+    }
 }

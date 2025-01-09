@@ -35,8 +35,9 @@ public class PokerGUI extends JFrame implements KeyListener {
     double widthScale = 1, heightScale = 1;
     JScrollPane scrollPane; //ScrollPane für die Dialogbox
 
+
   //Konstruktor
-    public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, /*int actualPlayerCount,*/ MainGUI mainGUI) {
+    public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, MainGUI mainGUI) {
 
         //Übergebene Werte speichern
         this.mainGUI = mainGUI;
@@ -831,8 +832,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         }
     }
 
-
-
-
-
+    public Poker getGameInstance() {
+        return game;
+    }
 }

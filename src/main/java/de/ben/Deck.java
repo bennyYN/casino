@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-    private final List<Card> cards;
+    private List<Card> cards;
 
     public Deck() {
         cards = new ArrayList<>();
@@ -45,8 +45,37 @@ public class Deck {
         return cards.remove(cards.size()-1);
     }
 
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        for (Card card : cards) {
+            sb.append(card.getSuit()).append(",").append(card.getValue()).append(";");
+        }
+        return sb.toString();
+    }
+    public static Deck deserialize(String serializedDeck) {
+        Deck deck = new Deck();
+        deck.cards.clear(); // Clear the existing cards
+        String[] cardStrings = serializedDeck.split(";");
+        for (String cardString : cardStrings) {
+            if (!cardString.isEmpty()) {
+                String[] parts = cardString.split(",");
+                Card.Suit suit = Card.Suit.valueOf(parts[0]);
+                int value = Integer.parseInt(parts[1]);
+                deck.cards.add(new Card(value, suit));
+            }
+        }
+        return deck;
+    }
+    public List<Card> getCards() {
+        return cards;
+    }
+    public void setDeck(Deck newDeck) {
+        this.cards = newDeck.cards;
+    }
+
     public List<Card> shuffleDeck() {
         Collections.shuffle(cards);
         return cards;
     }
+
 }

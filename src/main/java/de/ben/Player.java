@@ -80,6 +80,9 @@ public class Player {
         chips.removeChips(amount);
         return chips.getAmount();
     }
+    public void setCurrentBet(int currentBet) {
+        this.currentBet = currentBet;
+    }
 
     public int goAllIn() {
         int allInAmount = chips.getAmount();

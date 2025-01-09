@@ -25,7 +25,7 @@ public class GameServer {
 
     public GameServer(int port, MainGUI maingui) throws IOException {
         this.serverSocket = new ServerSocket(port);
-        new Thread(this::start).start(); // Run start() in a separate thread
+        new Thread(this::start).start();
     }
 
     public void setLobby(Lobby lobby) {
@@ -72,21 +72,24 @@ public class GameServer {
             this.socket = socket;
             this.server = server;
         }
+
         private void handleStartMessage(String message) {
-
+            System.out.println("1Received START message: " + message);
             String[] parts = message.split(":");
-            int startChips = Integer.parseInt(parts[1]);
-            int bigBlind = Integer.parseInt(parts[2]);
+            Integer.parseInt(parts[1]); //Startchips
+            Integer.parseInt(parts[2]); //BigBlind
             String[] playerNames = parts[3].split(",");
+            /*for (int i = 0; i < parts.length; i++) {
+                System.out.println(i + parts[i]);
+            }*/
+            Deck leaderDeck = new Deck();
 
+            String serializedDeck = leaderDeck.serialize();
+            String startMessage = String.join(":", parts[0], parts[1], parts[2], parts[3], parts[4], serializedDeck);
 
-            //PokerGUI pokerGUI = new PokerGUI(playerNames.length, new ArrayList<>(Arrays.asList(playerNames)), startChips, bigBlind, true, null);
-            //pokerGUI.setVisible(true);
-
-
-            broadcastMessage(message);
+            System.out.println("Broadcasting START message: " + startMessage);
+            broadcastMessage(startMessage);
         }
-
 
         @Override
         public void run() {
@@ -107,6 +110,8 @@ public class GameServer {
                     System.out.println(playerName + ": " + message);
                     if (message.startsWith("START:")) {
                         handleStartMessage(message);
+                    } else if (message.startsWith("DECK:")) {
+                        broadcastMessage(message);
                     }
                 }
             } catch (IOException e) {
@@ -129,7 +134,7 @@ public class GameServer {
         }
 
         public void broadcastMessage(String message) {
-            for (ClientHandler client : clients) {
+            for (ClientHandler client : server.clients) {
                 client.sendMessage(message);
             }
         }

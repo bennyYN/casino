@@ -65,17 +65,24 @@ public class GameClient {
     }
 
     private void handleStartMessage(String message) {
-        String[] parts = message.split(":");
-        int playerCount = Integer.parseInt(parts[1]);
+        System.out.println("Received START message: " + message);
+        String[] parts = message.split(":", 6); // Split into 6 parts to handle the serialized deck correctly
+        if (parts.length < 6) {
+            System.err.println("Invalid START message format");
+            return;
+        }
+        int numPlayers = Integer.parseInt(parts[1]);
         int startChips = Integer.parseInt(parts[2]);
         int bigBlind = Integer.parseInt(parts[3]);
         String[] playerNames = parts[4].split(",");
+        Deck deck = Deck.deserialize(parts[5]);
 
         // Log the parsed values
-        System.out.println("playerCount: " + playerCount);
+        System.out.println("numPlayers: " + numPlayers);
         System.out.println("startChips: " + startChips);
         System.out.println("bigBlind: " + bigBlind);
         System.out.println("playerNames: " + Arrays.toString(playerNames));
+        System.out.println("Deck: " + parts[5]);
 
         ArrayList<String> playerNamesArrayList = new ArrayList<>(Arrays.asList(playerNames));
 
@@ -84,8 +91,14 @@ public class GameClient {
         }
 
         System.out.println("Final playerNamesArrayList: " + playerNamesArrayList);
-        new PokerGUI(playerCount, playerNamesArrayList, startChips, bigBlind, mainGui).setVisible(true);
-        lobby.dispose();
+        PokerGUI pokerVAR = new PokerGUI(numPlayers, playerNamesArrayList, startChips, bigBlind, mainGui);
+        pokerVAR.getGameInstance().getDeck().setDeck(deck);
+        pokerVAR.setVisible(true);
+        try {
+            lobby.dispose();
+        } catch (Exception e) {
+            System.out.println("Lobby already closed");
+        }
     }
 
     public void sendMessage(String message) {

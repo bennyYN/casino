@@ -9,7 +9,7 @@ public class Poker extends Thread {
     List<Player> players;
     final List<Player> blindsOrder;
     public final Dealer dealer;
-    private final Deck deck;
+    private Deck deck;
     HandRanker handRanker = new HandRanker();
     public final GewinnPot GewinnPot = new GewinnPot();
     public Player bigBlindPlayer, smallBlindPlayer;
@@ -34,7 +34,9 @@ public class Poker extends Thread {
         }
         this.blindsOrder = new ArrayList<>(players);
         this.dealer = new Dealer();
-        this.deck = new Deck();
+        if(this.deck == null){
+            this.deck = new Deck();
+        }
         this.bigBlind = bigBlind;
         smallBlind = bigBlind / 2;
         anzahlSpieler = numPlayers;
@@ -44,7 +46,7 @@ public class Poker extends Thread {
     }
 
     public void kartenAusteilen() {
-        deck.shuffleDeck(); //<-- Hab schon geguckt: hat nichts mit dem Handranking-Bug zutun
+        //deck.shuffleDeck(); //<-- Hab schon geguckt: hat nichts mit dem Handranking-Bug zutun
         for (Player player : players) {
             if(player != null) {
                 player.receiveCard(deck.kartenehmen(), deck.kartenehmen());
@@ -546,4 +548,12 @@ public class Poker extends Thread {
             }
         }
     }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+    public Deck getDeck(){
+        return deck;
+    }
+
 }
