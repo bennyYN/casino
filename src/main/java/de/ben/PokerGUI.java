@@ -350,42 +350,22 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         //Fold Button
         foldButton.addActionListener(e -> {
-            hideRaiseField(); //Textfeld zum Erhöhen verstecken
-            action = "fold"; //Die Aktion des Spielers auf Fold setzen
-            nextPlayer(); //Zum nächsten Spieler wechseln
+            doFold();
         });
 
         //Check Button
         checkButton.addActionListener(e -> {
-            hideRaiseField(); //Textfeld zum Erhöhen verstecken
-            action = "check"; //Die Aktion des Spielers auf Check setzen
-            nextPlayer(); //Zum nächsten Spieler wechseln
+            doCheck();
         });
 
         //Call Button
         callButton.addActionListener(e -> {
-            hideRaiseField(); //Textfeld zum Erhöhen verstecken
-            action = "call"; //Die Aktion des Spielers auf Call setzen
-            nextPlayer(); //Zum nächsten Spieler wechseln
+            doCall();
         });
 
         //Raise Button
         raiseButton.addActionListener(e -> {
-            //Textfeld und Label für das Erhöhen sichtbar machen
-            if(!raiseField.isVisible()){
-                MainGUI.playSound("click");
-            }
-            raiseField.setVisible(true);
-            raiseLabel.setVisible(true);
-            //Wenn der Inhalt des Textfeldes nicht leer ist, wird der Wert in raiseAmount gespeichert
-
-            if (!raiseField.getText().isEmpty()) {
-                raiseAmount = Integer.parseInt(raiseField.getText());
-                raiseField.setText(""); // Clear the field after submission
-                hideRaiseField(); //Textfeld zum Erhöhen wieder Verstecken
-                action = "raise"; //Die Aktion des Spielers auf Erhöhen setzen
-                nextPlayer(); //Zum nächsten Spieler wechseln
-            }
+            doRaise();
         });
 
         //All-In Button
@@ -419,19 +399,11 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         //Fortfahren Button um eine neue Runde zu starten
         continueButton.addActionListener(e -> {
-            if(game != null){
-                game.playerWon = false; //Boolean-Flag, für wenn ein Spieler gewonen hat zurücksetzen
-                //Die Hand jedes Spielers beim Beginn einer neuen Runde verdecken
-                for(Player player : game.players){
-                    player.handVisible = false;
-                }
-            }
-            fadingLabel.killText(); //Den eingefrorenen Gewinner-Informations-Text löschen
+            doContinue();
         });
 
         //Hauptmenü Button, für wenn das Spiel zuende ist
         menuButton.addActionListener(e -> SwingUtilities.invokeLater(() -> {
-
             mainGUI.setVisible(true); //Das Hauptmenü im Hintergrund sichtbar machen
             PokerGUI.this.dispose(); //Die Poker-Benutzeroberfläche schließen
         }));
@@ -622,18 +594,26 @@ public class PokerGUI extends JFrame implements KeyListener {
                     callButton.setEnabled(true);
                     foldButton.setEnabled(true);
                     allInButton.setEnabled(true);
+                    toggleButton.setEnabled(true);
                 }else{
                     //Spiel-Aktions-Buttons ausschalten
                     checkButton.setEnabled(false);
                     callButton.setEnabled(false);
                     foldButton.setEnabled(false);
                     allInButton.setEnabled(false);
+                    toggleButton.setEnabled(false);
                 }
                 //Alle Menu Buttons unsichtbar machen
                 for(JButton button : menuButtons){
                     button.setVisible(false);
                 }
             }
+        }
+    }
+
+    public void doButtonAction(JButton button){
+        if(button.isEnabled()){
+            button.doClick();
         }
     }
 
@@ -834,5 +814,52 @@ public class PokerGUI extends JFrame implements KeyListener {
 
     public Poker getGameInstance() {
         return game;
+    }
+
+    public void doFold(){
+        hideRaiseField(); //Textfeld zum Erhöhen verstecken
+        action = "fold"; //Die Aktion des Spielers auf Fold setzen
+        //nextPlayer(); Zum nächsten Spieler wechseln TODO -> GUCKEN OB DAS NÖTIG IST
+    }
+
+    public void doCheck(){
+        hideRaiseField(); //Textfeld zum Erhöhen verstecken
+        action = "check"; //Die Aktion des Spielers auf Check setzen
+        //nextPlayer(); Zum nächsten Spieler wechseln TODO -> GUCKEN OB DAS NÖTIG IST
+    }
+
+    public void doCall(){
+        hideRaiseField(); //Textfeld zum Erhöhen verstecken
+        action = "call"; //Die Aktion des Spielers auf Call setzen
+        //nextPlayer(); Zum nächsten Spieler wechseln TODO -> GUCKEN OB DAS NÖTIG IST
+    }
+
+    public void doRaise(){
+        //Textfeld und Label für das Erhöhen sichtbar machen
+        if(!raiseField.isVisible()){
+            MainGUI.playSound("click");
+        }
+        raiseField.setVisible(true);
+        raiseLabel.setVisible(true);
+        //Wenn der Inhalt des Textfeldes nicht leer ist, wird der Wert in raiseAmount gespeichert
+
+        if (!raiseField.getText().isEmpty()) {
+            raiseAmount = Integer.parseInt(raiseField.getText());
+            raiseField.setText(""); // Clear the field after submission
+            hideRaiseField(); //Textfeld zum Erhöhen wieder Verstecken
+            action = "raise"; //Die Aktion des Spielers auf Erhöhen setzen
+            //nextPlayer(); //Zum nächsten Spieler wechseln //TODO -> GUCKEN OB DAS NÖTIG IST
+        }
+    }
+
+    public void doContinue(){
+        if(game != null){
+            game.playerWon = false; //Boolean-Flag, für wenn ein Spieler gewonen hat zurücksetzen
+            //Die Hand jedes Spielers beim Beginn einer neuen Runde verdecken
+            for(Player player : game.players){
+                player.handVisible = false;
+            }
+        }
+        fadingLabel.killText(); //Den eingefrorenen Gewinner-Informations-Text löschen
     }
 }
