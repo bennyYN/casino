@@ -16,7 +16,7 @@ public class GameClient {
     private String host;
     private GameServer gameServer;
     private Lobby lobby;
-    private PokerGUI pokerGUI;
+    private PokerGUI pokerVAR;
     private MainGUI mainGui;
 
     public GameClient(String host, int port, String name, MainGUI mainGUI) throws IOException {
@@ -55,6 +55,10 @@ public class GameClient {
                                 lobby.mainGUI.playerIndex = playerNames.length-1;
                             }
                         }
+                    } else if(message.startsWith("AKTION:")) {
+                        String[] parts = message.split(":", 3);
+                        handleAktionMessage(message);
+
                     }
                 }
             } catch (IOException e) {
@@ -62,6 +66,29 @@ public class GameClient {
                 System.exit(1);
             }
         }).start();
+    }
+
+    private void handleAktionMessage(String message) {
+        System.out.println("Received AKTION message: " + message);
+        String[] parts = message.split(":", 3);
+        parts[1] = parts[1].trim();
+        switch(parts[1]) {
+            case "CALL":
+                pokerVAR.doCall();
+                break;
+            case "RAISE":
+                pokerVAR.doRaise(Integer.parseInt(parts[2]));
+                break;
+            case "FOLD":
+                pokerVAR.doFold();
+                break;
+            case "CHECK":
+                pokerVAR.doCheck();
+                break;
+            case "ALLIN":
+                pokerVAR.doAllIn();
+                break;
+        }
     }
 
     private void handleStartMessage(String message) {
@@ -91,7 +118,7 @@ public class GameClient {
         }
 
         System.out.println("Final playerNamesArrayList: " + playerNamesArrayList);
-        PokerGUI pokerVAR = new PokerGUI(numPlayers, playerNamesArrayList, startChips, bigBlind, mainGui);
+        pokerVAR = new PokerGUI(numPlayers, playerNamesArrayList, startChips, bigBlind, mainGui);
         pokerVAR.getGameInstance().getDeck().setDeck(deck);
         pokerVAR.setVisible(true);
         try {

@@ -12,6 +12,7 @@ public class MultiplayerGUI extends JFrame {
     private final MainGUI mainGUI;
     JPanel panel;
     JButton startGameButton, joinGameButton, returnButton;
+    static GameClient client;
 
     public MultiplayerGUI(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
@@ -55,7 +56,7 @@ public class MultiplayerGUI extends JFrame {
                     mainGUI.playerIndex = 0;
 
                     // Create the GameClient
-                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName(), mainGUI);
+                    client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName(), mainGUI);
                     System.out.println("GameClient created.");
 
                     // Show the Lobby
@@ -67,7 +68,7 @@ public class MultiplayerGUI extends JFrame {
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
-                        this.dispose();
+                        this.setVisible(false);
                     });
 
                 } catch (IOException ex) {
@@ -82,7 +83,7 @@ public class MultiplayerGUI extends JFrame {
         joinGameButton.addActionListener(e -> {
             new Thread(() -> {
                 try {
-                    GameClient client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName(), mainGUI);
+                    client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName(), mainGUI);
                     System.out.println("GameClient created.");
 
                     SwingUtilities.invokeLater(() -> {
@@ -94,7 +95,7 @@ public class MultiplayerGUI extends JFrame {
                             throw new RuntimeException(ex);
                         }
                         lobby.setVisible(true);
-                        this.dispose();
+                        this.setVisible(false);
                     });
                 } catch (IOException ex) {
                     System.err.println("Failed to connect to server: " + ex.getMessage());
@@ -156,6 +157,12 @@ public class MultiplayerGUI extends JFrame {
             public void mouseExited(MouseEvent e) {
                 button.setBorderPainted(false);
             }
+
+
         });
+
+    }
+    public static GameClient getGameClient() {
+        return client;
     }
 }

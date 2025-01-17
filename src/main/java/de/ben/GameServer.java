@@ -112,6 +112,8 @@ public class GameServer {
                         handleStartMessage(message);
                     } else if (message.startsWith("DECK:")) {
                         broadcastMessage(message);
+                    } else if (message.startsWith("AKTION:")) {
+                        broadcastMessage(message);
                     }
                 }
             } catch (IOException e) {

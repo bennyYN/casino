@@ -351,29 +351,30 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Fold Button
         foldButton.addActionListener(e -> {
             doFold();
+            MultiplayerGUI.getGameClient().sendMessage("AKTION: FOLD");
         });
 
         //Check Button
         checkButton.addActionListener(e -> {
             doCheck();
+            MultiplayerGUI.getGameClient().sendMessage("AKTION: CHECK");
         });
 
         //Call Button
         callButton.addActionListener(e -> {
             doCall();
+            MultiplayerGUI.getGameClient().sendMessage("AKTION: CALL");
         });
 
         //Raise Button
         raiseButton.addActionListener(e -> {
-            doRaise();
+            doRaise(0); // MÖGLICHKEIT FÜR FEHLER
         });
 
         //All-In Button
         allInButton.addActionListener(e -> {
-            Playerslot.players.get(currentPlayerIndex).setAllIn(true); //Die All-In Flag des Spielers auf True setzen
-            hideRaiseField(); //Das Eingabefeld zum Erhöhen verstecken
-            action = "allin"; //Die Aktion des Spielers auf All-In setzen
-            nextPlayer(); //Zum nächsten Spieler wechseln
+            doAllIn();
+            MultiplayerGUI.getGameClient().sendMessage("AKTION: ALLIN");
         });
 
         //Button zum Anziegen/Verdecken der Hand
@@ -833,8 +834,14 @@ public class PokerGUI extends JFrame implements KeyListener {
         action = "call"; //Die Aktion des Spielers auf Call setzen
         //nextPlayer(); Zum nächsten Spieler wechseln TODO -> GUCKEN OB DAS NÖTIG IST
     }
+    public void doAllIn(){
+        Playerslot.players.get(currentPlayerIndex).setAllIn(true); //Die All-In Flag des Spielers auf True setzen
+        hideRaiseField(); //Das Eingabefeld zum Erhöhen verstecken
+        action = "allin"; //Die Aktion des Spielers auf All-In setzen
+        //nextPlayer(); //Zum nächsten Spieler wechseln
+    }
 
-    public void doRaise(){
+    public void doRaise(int ramount){
         //Textfeld und Label für das Erhöhen sichtbar machen
         if(!raiseField.isVisible()){
             MainGUI.playSound("click");
@@ -845,7 +852,13 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         if (!raiseField.getText().isEmpty()) {
             raiseAmount = Integer.parseInt(raiseField.getText());
+            MultiplayerGUI.getGameClient().sendMessage("AKTION: RAISE " + raiseAmount);
             raiseField.setText(""); // Clear the field after submission
+            hideRaiseField(); //Textfeld zum Erhöhen wieder Verstecken
+            action = "raise"; //Die Aktion des Spielers auf Erhöhen setzen
+            //nextPlayer(); //Zum nächsten Spieler wechseln //TODO -> GUCKEN OB DAS NÖTIG IST
+        } else if(ramount != 0 ) {
+            raiseAmount = ramount;
             hideRaiseField(); //Textfeld zum Erhöhen wieder Verstecken
             action = "raise"; //Die Aktion des Spielers auf Erhöhen setzen
             //nextPlayer(); //Zum nächsten Spieler wechseln //TODO -> GUCKEN OB DAS NÖTIG IST
