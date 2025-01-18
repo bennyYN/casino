@@ -19,6 +19,7 @@ public class GameClient {
     private PokerGUI pokerVAR;
     private MainGUI mainGui;
 
+
     public GameClient(String host, int port, String name, MainGUI mainGUI) throws IOException {
         this.host = host;
         this.name = name;
@@ -41,7 +42,16 @@ public class GameClient {
                     System.out.println("Received: " + message);
                     if (message.startsWith("START:")) {
                         handleStartMessage(message);
+                    }else if(message.startsWith("AKTION")) {
+
+                        handleAktionMessage(message);
+
+                    }else if(message.startsWith("DECK:")) {
+                        String deckString = message.substring(5);
+                        Deck deck = Deck.deserialize(deckString);
+                        pokerVAR.getGameInstance().getDeck().setDeck(deck);
                     }
+
                     else if (message.startsWith("PLAYER:")) {
                         String playerName = message.substring(7);
                         if (lobby != null) {
@@ -55,10 +65,6 @@ public class GameClient {
                                 lobby.mainGUI.playerIndex = playerNames.length-1;
                             }
                         }
-                    } else if(message.startsWith("AKTION:")) {
-                        String[] parts = message.split(":", 3);
-                        handleAktionMessage(message);
-
                     }
                 }
             } catch (IOException e) {
@@ -77,7 +83,10 @@ public class GameClient {
                 pokerVAR.doCall();
                 break;
             case "RAISE":
-                pokerVAR.doRaise(Integer.parseInt(parts[2]));
+                if (parts[2] != null) {
+                    parts[2] = parts[2].trim();
+                }
+                pokerVAR.doRaise2(Integer.parseInt(parts[2]));
                 break;
             case "FOLD":
                 pokerVAR.doFold();
@@ -105,11 +114,11 @@ public class GameClient {
         Deck deck = Deck.deserialize(parts[5]);
 
         // Log the parsed values
-        System.out.println("numPlayers: " + numPlayers);
+        /*System.out.println("numPlayers: " + numPlayers);
         System.out.println("startChips: " + startChips);
         System.out.println("bigBlind: " + bigBlind);
         System.out.println("playerNames: " + Arrays.toString(playerNames));
-        System.out.println("Deck: " + parts[5]);
+        System.out.println("Deck: " + parts[5]);*/
 
         ArrayList<String> playerNamesArrayList = new ArrayList<>(Arrays.asList(playerNames));
 
@@ -152,5 +161,9 @@ public class GameClient {
 
     public void setGameServer(GameServer gameServer) {
         this.gameServer = gameServer;
+    }
+
+    public boolean isLeader() {
+        return lobby.getisleader();
     }
 }

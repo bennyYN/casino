@@ -46,7 +46,6 @@ public class Poker extends Thread {
     }
 
     public void kartenAusteilen() {
-        //deck.shuffleDeck(); //<-- Hab schon geguckt: hat nichts mit dem Handranking-Bug zutun
         for (Player player : players) {
             if(player != null) {
                 player.receiveCard(deck.kartenehmen(), deck.kartenehmen());
@@ -99,9 +98,10 @@ public class Poker extends Thread {
         while (!validInput) {
             //System.out.println("Gib den Betrag ein, um den du erhöhen möchtest:");
             try {
+
                 int betAmount = gui.raiseAmount;
                 if (betAmount > highestBet) {
-                    highestBet = betAmount;
+                    highestBet = betAmount + player.getCurrentBet();
                     player.bet(betAmount);
                     GewinnPot.addChips(betAmount); // Add the bet amount to the pot
                     lastPlayerToRaise = players.get(i);
@@ -139,7 +139,12 @@ public class Poker extends Thread {
             System.out.println("Spieler " + (i + 1) + " hat gecheckt.");
             gui.addMessageToDialogBox(currentPlayer.getName() + " checks.");
             return true;
-        } else {
+        } else if(highestBet == player.getCurrentBet()){
+            System.out.println("Spieler " + (i + 1) + " hat gecheckt.");
+            gui.addMessageToDialogBox(currentPlayer.getName() + " checks.");
+            return true;
+        }
+        else {
             System.out.println("Unerlaubte Aktion. Du kannst nicht checken, weil der aktuelle höchste Einsatz " + highestBet + " ist.");
             gui.fadingLabel.setText("Unerlaubte Aktion! Du kannst nicht checken, weil der aktuelle höchste Einsatz " + highestBet + " ist.");
             return false;
@@ -288,7 +293,7 @@ public class Poker extends Thread {
 
     public void dealerneueKarte() {
         if (dealer.getHand().size() < 5) {
-            Card drawnCard = dealer.drawCards();
+            Card drawnCard = deck.kartenehmen();
             dealer.receiveCard(drawnCard);
             System.out.println("Dealer hat eine neue Karte gezogen: " + drawnCard);
             gui.fadingLabel.setText("Dealer hat eine neue Karte gezogen: " + drawnCard);

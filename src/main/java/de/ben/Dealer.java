@@ -1,6 +1,5 @@
 package de.ben;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +21,6 @@ public class Dealer {
 
     public List<Card> getHand() {
         return hand;
-    }
-
-    public Card drawCards() {
-        return deck.kartenehmen(); // Call Kartenehmen on the Deck instance
-    }
-
-    public void setDeck(Deck deck) {
-        this.deck = deck;
     }
 
     public void clearHand() {

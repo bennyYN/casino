@@ -100,6 +100,7 @@ public class HandRanker {
         private boolean isStraight(List<Card> cards) {
             List<Integer> sortedValues = cards.stream()
                     .map(Card::getValue)
+                    .distinct() // Entfernt doppelte Werte
                     .sorted()
                     .toList();
 
@@ -110,8 +111,8 @@ public class HandRanker {
 
             // Check for straight with Ace as 14
             for (int i = 0; i < sortedValues.size() - 4; i++) {
-                if (sortedValues.get(i + 4) - sortedValues.get(i) == 4) {
-                    return true;
+                if (sortedValues.size() < 5) {
+                    return false;
                 }
             }
 

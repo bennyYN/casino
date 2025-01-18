@@ -21,7 +21,7 @@ public class Lobby extends JFrame {
     ArrayList<String> playerNames;
     ArrayList<String> slotState;
     JButton exitButton, confirmButton;
-    boolean isLeader;
+    private boolean isLeader;
     int playerCount = 0;
     GameServer gameServer;
     private GameClient gameClient;
@@ -229,7 +229,7 @@ public class Lobby extends JFrame {
 
                     gameClient.sendMessage("START:" + playerCount+ ":" + startChips + ":" + bigBlind + ":" + playerNamesString);
 
-                    this.dispose();
+                    this.setVisible(false);
                 });
             } else {
                 MainGUI.playSound("invalid");
@@ -377,5 +377,8 @@ public class Lobby extends JFrame {
         } else {
             System.out.println("GameServer is null. Skipping player name initialization.");
         }
+    }
+    public boolean getisleader() {
+        return isLeader;
     }
 }

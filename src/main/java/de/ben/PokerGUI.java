@@ -351,30 +351,38 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Fold Button
         foldButton.addActionListener(e -> {
             doFold();
-            MultiplayerGUI.getGameClient().sendMessage("AKTION: FOLD");
+            if(MultiplayerGUI.getGameClient() != null) {
+                MultiplayerGUI.getGameClient().sendMessage("AKTION: FOLD");
+            }
         });
 
         //Check Button
         checkButton.addActionListener(e -> {
             doCheck();
-            MultiplayerGUI.getGameClient().sendMessage("AKTION: CHECK");
+            if(MultiplayerGUI.getGameClient() != null) {
+                MultiplayerGUI.getGameClient().sendMessage("AKTION: CHECK");
+            }
         });
 
         //Call Button
         callButton.addActionListener(e -> {
             doCall();
-            MultiplayerGUI.getGameClient().sendMessage("AKTION: CALL");
+            if(MultiplayerGUI.getGameClient() != null) {
+                MultiplayerGUI.getGameClient().sendMessage("AKTION: CALL");
+            }
         });
 
         //Raise Button
         raiseButton.addActionListener(e -> {
-            doRaise(0); // MÖGLICHKEIT FÜR FEHLER
+                doRaise();
         });
 
         //All-In Button
         allInButton.addActionListener(e -> {
             doAllIn();
-            MultiplayerGUI.getGameClient().sendMessage("AKTION: ALLIN");
+            if(MultiplayerGUI.getGameClient() != null) {
+                MultiplayerGUI.getGameClient().sendMessage("AKTION: ALLIN");
+            }
         });
 
         //Button zum Anziegen/Verdecken der Hand
@@ -450,7 +458,7 @@ public class PokerGUI extends JFrame implements KeyListener {
     }
 
     //Methode, welche kontinuierlich aufgerufen wird (bis das Spiel zuende ist)
-    //-> Wird für die Aktualisierung der GUI und verschiedene Werte benötigt
+    //→ Wird für die Aktualisierung der GUI und verschiedene Werte benötigt
     public void update(){
 
         //Aktualisierung der Buttonfarben
@@ -497,6 +505,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         //Wenn das Spiel noch nicht zuende ist und ein Spieler eine Runde gewonnen hat:
         if(game.playerWon && !game.isGameOver){
+
                 //Spiel Buttons verschwinden lassen
                 raiseButton.setVisible(false);
                 callButton.setVisible(false);
@@ -832,17 +841,16 @@ public class PokerGUI extends JFrame implements KeyListener {
     public void doCall(){
         hideRaiseField(); //Textfeld zum Erhöhen verstecken
         action = "call"; //Die Aktion des Spielers auf Call setzen
-        //nextPlayer(); Zum nächsten Spieler wechseln TODO -> GUCKEN OB DAS NÖTIG IST
+
     }
     public void doAllIn(){
         Playerslot.players.get(currentPlayerIndex).setAllIn(true); //Die All-In Flag des Spielers auf True setzen
         hideRaiseField(); //Das Eingabefeld zum Erhöhen verstecken
         action = "allin"; //Die Aktion des Spielers auf All-In setzen
-        //nextPlayer(); //Zum nächsten Spieler wechseln
+
     }
 
-    public void doRaise(int ramount){
-        //Textfeld und Label für das Erhöhen sichtbar machen
+    public void doRaise(){
         if(!raiseField.isVisible()){
             MainGUI.playSound("click");
         }
@@ -852,17 +860,22 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         if (!raiseField.getText().isEmpty()) {
             raiseAmount = Integer.parseInt(raiseField.getText());
-            MultiplayerGUI.getGameClient().sendMessage("AKTION: RAISE " + raiseAmount);
+            if(MultiplayerGUI.getGameClient() != null) {
+            MultiplayerGUI.getGameClient().sendMessage("AKTION: RAISE: " + raiseAmount);
+            }
             raiseField.setText(""); // Clear the field after submission
             hideRaiseField(); //Textfeld zum Erhöhen wieder Verstecken
             action = "raise"; //Die Aktion des Spielers auf Erhöhen setzen
-            //nextPlayer(); //Zum nächsten Spieler wechseln //TODO -> GUCKEN OB DAS NÖTIG IST
-        } else if(ramount != 0 ) {
-            raiseAmount = ramount;
-            hideRaiseField(); //Textfeld zum Erhöhen wieder Verstecken
-            action = "raise"; //Die Aktion des Spielers auf Erhöhen setzen
-            //nextPlayer(); //Zum nächsten Spieler wechseln //TODO -> GUCKEN OB DAS NÖTIG IST
+
         }
+    }
+
+    public void doRaise2(int ramount){
+        raiseAmount = ramount;
+        hideRaiseField(); //Textfeld zum Erhöhen wieder Verstecken
+        action = "raise"; //Die Aktion des Spielers auf Erhöhen setzen
+        System.out.println("DO RAISE2 WURDE ERREICHT");
+
     }
 
     public void doContinue(){
@@ -872,7 +885,19 @@ public class PokerGUI extends JFrame implements KeyListener {
             for(Player player : game.players){
                 player.handVisible = false;
             }
+
         }
         fadingLabel.killText(); //Den eingefrorenen Gewinner-Informations-Text löschen
+    }
+    public void newDeckMultiplayer() throws NullPointerException {
+
+            if (MultiplayerGUI.getGameClient() != null && MultiplayerGUI.getGameClient().isLeader()) {
+                if (getGameInstance().getDeck().getCards().size() <=  21) {
+                    Deck deck = new Deck();
+                    String deckString = deck.serialize();
+                    MultiplayerGUI.getGameClient().sendMessage(deckString);
+                }
+
+        }
     }
 }
