@@ -2,8 +2,14 @@ package de.ben;
 
 import java.util.*;
 
+/**
+ * @author Alexander Fischer, Maurice Steimer
+ * @version 1.0
+ * @Description: Logikklasse, die das Spiel steuert und die Spieler, Dealer und Karten verwaltet.
+ */
 public class Poker extends Thread {
     public boolean playerWon = false;
+    boolean alreadyDidThatFlag = false;
     private final ArrayList<Boolean> actualPlayers;
     Scanner sc = new Scanner(System.in);
     List<Player> players;
@@ -13,7 +19,6 @@ public class Poker extends Thread {
     HandRanker handRanker = new HandRanker();
     public final GewinnPot GewinnPot = new GewinnPot();
     public Player bigBlindPlayer, smallBlindPlayer;
-
     public int highestBet;
     private Player lastPlayerToRaise;
     int anzahlSpieler;
@@ -23,7 +28,7 @@ public class Poker extends Thread {
     Player currentPlayer;
     boolean ending = false;
 
-
+    //Konstruktor
     public Poker(int AnfangsChips, int bigBlind, int numPlayers, ArrayList<Boolean> actualPlayers, PokerGUI gui) {
         this.actualPlayers = actualPlayers;
         this.gui = gui;
@@ -41,16 +46,14 @@ public class Poker extends Thread {
         smallBlind = bigBlind / 2;
         anzahlSpieler = numPlayers;
 
-        // Start the game in a new thread
-        //new Thread(this::startGame).start();
     }
 
+    //Methode zum Austeilen der Karten an den Dealer und jeden Spieler
     public void kartenAusteilen() {
         for (Player player : players) {
             if(player != null) {
                 player.receiveCard(deck.kartenehmen(), deck.kartenehmen());
             }
-
         }
         if(dealer.getHand().size() >= 5){
             dealer.clearHand();
@@ -62,10 +65,10 @@ public class Poker extends Thread {
                 dealer.receiveCard(deck.kartenehmen());
             }
         }
-
         spielerKartenAusgabe();
     }
 
+    //Methoden für die verschiedenen Aktionen der Spieler
     public void fold(int i) {
         players.get(i).setFolded(true);
         System.out.println("Spieler " + (i + 1) + " hat gefoldet.");
@@ -274,6 +277,7 @@ public class Poker extends Thread {
         System.out.println("Der Pot beträgt: " + GewinnPot.getAmount());
     }
 
+    //Methode zur Ausgabe der Karten an die Spieler
     public void spielerKartenAusgabe() {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
@@ -286,11 +290,13 @@ public class Poker extends Thread {
         }
     }
 
+    //Methode zum Ausgeben der Karten an den Dealer
     public void ausgabeDealerKarten() {
         highestBet = 0;
         System.out.println("Karten des Dealers: " + dealer.getHand());
     }
 
+    //Methode zum Ziehen einer neuen Karte für den Dealer
     public void dealerneueKarte() {
         if (dealer.getHand().size() < 5) {
             Card drawnCard = deck.kartenehmen();
@@ -301,6 +307,7 @@ public class Poker extends Thread {
         }
     }
 
+    //Methode zum Verwalten des Gewinnpots
     private void verarbeitungPot(Player winner) {
         if (winner == null) {
             int halfPot = GewinnPot.getAmount() / players.size();
@@ -313,6 +320,7 @@ public class Poker extends Thread {
         GewinnPot.clear();
     }
 
+    //Methode um den Gewinner zu ermitteln
     public Player gewinner() {
         Player winner = null;
         int highestRank = -1;
@@ -334,9 +342,24 @@ public class Poker extends Thread {
         }
 
         verarbeitungPot(winner);
+
+
+        if(winner != null && alreadyDidThatFlag == false){
+            if(gui.mainGUI.playerIndex != -1){
+                gui.viewCardButtons.get(gui.mainGUI.playerIndex).doClick();
+            }else{
+                for(int i = 0; i < players.size(); i++){
+                    if(players.get(i).equals(winner)){
+                        gui.viewCardButtons.get(i).doClick();
+                    }
+                }
+            }
+            alreadyDidThatFlag = true;
+        }
         return winner;
     }
 
+    //Methode um zu prüfen, ob alle Spieler all in sind
     public boolean checkAllIn() {
         boolean allIn = true;
         for (Player player : players) {
@@ -353,6 +376,7 @@ public class Poker extends Thread {
         return allIn;
     }
 
+    //Methode zum Verwalten der Blinds
     public void blinds() {
         blindsOrder.get(0).bet(smallBlind);
         GewinnPot.addChips(smallBlind);
@@ -393,26 +417,7 @@ public class Poker extends Thread {
         }
     }
 
-    public int setAnzahlSpieler() {
-        int anzahlSpieler = 0;
-        boolean validInput = false;
-        while (!validInput) {
-            System.out.println("Gib die Anzahl der Spieler ein (mindestens 2):");
-            try {
-                anzahlSpieler = sc.nextInt();
-                if (anzahlSpieler >= 2) {
-                    validInput = true;
-                } else {
-                    System.out.println("Die Anzahl der Spieler muss mindestens 2 sein.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Unerlaubte Eingabe. Bitte gib eine ganze Zahl ein.");
-                sc.next(); // This line discards the current (invalid) input
-            }
-        }
-        return anzahlSpieler;
-    }
-
+    //Methode zum Aktualisieren des Spielstatus
     private void updateGameState(){
         int temp = 0;
         for(Player player : players){
@@ -428,6 +433,7 @@ public class Poker extends Thread {
         }
     }
 
+    //Methode zum Zurücksetzen der Spielerzustände
     private void resetPlayerStates(){
         for(Player player : players){
             if(player.isFolded() && !player.dummy){
@@ -439,6 +445,7 @@ public class Poker extends Thread {
         }
     }
 
+    //Methode zum starten des Spiels (wird von der GUI im seperaten Thread aufgerufen)
     public void startGame() {
 
         Poker poker = this;
@@ -528,9 +535,6 @@ public class Poker extends Thread {
                         temp++;
                     }
                 }
-
-
-
             }
 
             //WARTEN BIS IM GUI WEITERGEKLICKT WIRD
@@ -554,9 +558,6 @@ public class Poker extends Thread {
         }
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
     public Deck getDeck(){
         return deck;
     }

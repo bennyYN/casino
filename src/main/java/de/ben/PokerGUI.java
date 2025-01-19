@@ -8,9 +8,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Description: Graphical-User-Interface for the Pokergame
+ * @author Maurice Steimer
+ * @version 1.0
+ */
 public class PokerGUI extends JFrame implements KeyListener {
 
-  //Attribute & Objekte
+  ///Attribute & Objekte
     public JButton foldButton, checkButton, callButton, raiseButton, allInButton, toggleButton, menuButton, exitButton, continueButton; //Verschiedene Buttons
     public int raiseAmount, totalPlayers, actualPlayerCount, startChips, bigBlind, playerShowing = -1, currentPlayerIndex = 0; //Integer Variablen
     public JButton menuexitButton, menusettingsButton, menuMainMenuButton, menuContinueButton; //Pausemenü-Buttons
@@ -35,13 +40,12 @@ public class PokerGUI extends JFrame implements KeyListener {
     JScrollPane scrollPane; //ScrollPane für die Dialogbox
 
 
-  //Konstruktor
+  ///Konstruktor
     public PokerGUI(int numPlayers, ArrayList<String> playerNames, int startChips, int bigBlind, MainGUI mainGUI) {
 
         //Übergebene Werte speichern
         this.mainGUI = mainGUI;
         totalPlayers = numPlayers;
-        //this.actualPlayerCount = actualPlayerCount;
         this.startChips = startChips;
         this.bigBlind = bigBlind;
         this.playerNames = playerNames;
@@ -92,7 +96,11 @@ public class PokerGUI extends JFrame implements KeyListener {
                     //Spielerkarten
                     if (!game.playerWon) {
                         if (game.currentPlayer != null) {
-                            game.currentPlayer.renderCards(g2d);
+                            if(mainGUI.playerIndex != -1) {
+                                game.players.get(mainGUI.playerIndex).renderCards(g2d);
+                            }else{
+                                game.currentPlayer.renderCards(g2d);
+                            }
                         }
                     } else {
                         try {
@@ -132,6 +140,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                         }
                     }
                 }
+
                 //Aktualisierungsmethoden aufrufen
                 updateBetLabel();
                 PokerGUI.this.update();
@@ -316,6 +325,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         continueButton.setBounds(raiseButton.getX(), raiseButton.getY(), (callButton.getX()+callButton.getWidth()-raiseButton.getX())*2+30, raiseButton.getHeight());
         menuButton.setBounds(raiseButton.getX(), raiseButton.getY(), callButton.getX()+callButton.getWidth()-raiseButton.getX(), raiseButton.getHeight());
         exitButton.setBounds(foldButton.getX(), foldButton.getY(), (continueButton.getWidth()/2)-30, continueButton.getHeight());
+
         //Gameplay-Buttons zum JPanel hinzufügen
         panel.add(foldButton);
         panel.add(checkButton);
@@ -386,21 +396,30 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         //Button zum Anziegen/Verdecken der Hand
         toggleButton.addActionListener(e -> {
-
             if(game != null){
-                if(game.currentPlayer.handVisible){
-                    MainGUI.playSound("toggle1");
+                if(mainGUI.playerIndex != -1){
+                    if(game.players.get(mainGUI.playerIndex).handVisible){
+                        MainGUI.playSound("toggle1");
+                    }else{
+                        MainGUI.playSound("toggle2");
+                    }
+                    game.players.get(mainGUI.playerIndex).handVisible = !game.players.get(mainGUI.playerIndex).handVisible;
                 }else{
-                    MainGUI.playSound("toggle2");
-                }
-                //Wenn ein Spieler eine Runde gewonnen hat, wird die Hand des ausgewählten Spielers gezeigt...
-                if(game.playerWon){
-                    game.players.get(playerShowing).handVisible = !game.players.get(playerShowing).handVisible;
-                //Bei einer unentschiedenen Runde wird die Hand des aktuellen Spielers angezeigt
-                }else{
+                    if(game.currentPlayer.handVisible){
+                        MainGUI.playSound("toggle1");
+                    }else{
+                        MainGUI.playSound("toggle2");
+                    }
                     game.currentPlayer.handVisible = !game.currentPlayer.handVisible;
                 }
 
+                //Wenn ein Spieler eine Runde gewonnen hat, wird die Hand des ausgewählten Spielers gezeigt...
+                //if(game.playerWon){
+                  //  game.players.get(playerShowing).handVisible = !game.players.get(playerShowing).handVisible;
+                //Bei einer unentschiedenen Runde wird die Hand des aktuellen Spielers angezeigt
+               // }else{
+
+                //}
             }
             hideRaiseField(); //Das Eingabefeld zum Erhöhen verstecken
         });
@@ -469,6 +488,11 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Aktualisierung der statischen Booleanvariable isGameDecided der Klasse Spieler
         if(game != null){
             Player.isGameDecided = game.playerWon;
+            //Continue Button je nach Bedarf ändern
+            if(mainGUI.playerIndex != -1 && mainGUI.playerIndex != 0){
+                continueButton.setEnabled(false);
+                continueButton.setText("Auf Host warten...");
+            }
         }
 
         //Spieler mit 0 Chips auf All-in setzen damit sie nicht mehr dran kommen
@@ -521,6 +545,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                 for (ViewCardButton button : viewCardButtons) {
                     button.setVisible(true);
                 }
+
         //Wenn das Spiel nicht zuende ist, aber ein Spieler eine Runde gewonnen hat:
         }else if(!game.isGameOver){
             //Spiel-Aktions-Buttons zeigen
@@ -589,8 +614,7 @@ public class PokerGUI extends JFrame implements KeyListener {
                 button.setVisible(true);
             }
         /*Wenn das Spiel läuft und das Menü geschlossen ist
-          müssen die für das offene Menü geschlossenen Buttons wieder sichtbar gemacht werden (wenn dies
-          nicht bereits durch vorhandene Logik geschieht)*/
+          müssen die für das offene Menü geschlossenen Buttons wieder sichtbar gemacht werden*/
         }else {
             assert game != null;
             if(!game.isGameOver){
@@ -606,14 +630,12 @@ public class PokerGUI extends JFrame implements KeyListener {
                     callButton.setEnabled(true);
                     foldButton.setEnabled(true);
                     allInButton.setEnabled(true);
-                    toggleButton.setEnabled(true);
                 }else{
                     //Spiel-Aktions-Buttons ausschalten
                     checkButton.setEnabled(false);
                     callButton.setEnabled(false);
                     foldButton.setEnabled(false);
                     allInButton.setEnabled(false);
-                    toggleButton.setEnabled(false);
                 }
                 //Alle Menu Buttons unsichtbar machen
                 for(JButton button : menuButtons){
@@ -623,13 +645,12 @@ public class PokerGUI extends JFrame implements KeyListener {
         }
     }
 
-    public void doButtonAction(JButton button){
-        if(button.isEnabled()){
-            button.doClick();
-        }
-    }
-
-    // Methode, um den Button zu stylen
+    /**
+     * Methode, welche einen JButton stilisiert.
+     *
+     * @param  button   JButton, welcher gestylt werden soll
+     * @return          Stilisierte JButton
+     */
     private void styleButton(JButton button) {
         button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
@@ -657,7 +678,11 @@ public class PokerGUI extends JFrame implements KeyListener {
         });
     }
 
-    //Methode um eine Nachricht zur Dialogbox hinzuzufügen
+    /**
+     * Methode, um eine Nachricht zur Dialogbox hinzuzufügen
+     *
+     * @param  message  Nachricht, welche hinzugefügt werden soll
+     */
     public void addMessageToDialogBox(String message) {
         messages.add(message);
         dialogPane.setText(String.join("\n", messages));
@@ -730,6 +755,7 @@ public class PokerGUI extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
+    //Benötigte Methoden zur Skalierung des Hauptfensters
     public double getScaleX(){
         return widthScale;
     }
@@ -766,6 +792,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
     }
 
+    //Alle Komponenten an die neue Fenstergröße anpassen
     private void adjustComponents(){
         int buttonWidth = scaleX(140);
         int buttonHeight = scaleY(70);
@@ -813,6 +840,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
     }
 
+    //Die Menü-Buttons an die neue Fenstergröße anpassen
     private void adjustMenuButtons(){
         int buttonWidth = scaleX(225);
         int buttonHeight = scaleY(70);
@@ -824,10 +852,12 @@ public class PokerGUI extends JFrame implements KeyListener {
         }
     }
 
+    //Get-Methode für eine Referenz zum Pokerspiel
     public Poker getGameInstance() {
         return game;
     }
 
+    //Aktionsmethoden für die verschiedenen Spielaktionen, welche über die Buttons ausgeführt werden
     public void doFold(){
         hideRaiseField(); //Textfeld zum Erhöhen verstecken
         action = "fold"; //Die Aktion des Spielers auf Fold setzen
