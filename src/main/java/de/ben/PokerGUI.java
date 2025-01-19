@@ -2,7 +2,6 @@ package de.ben;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -891,16 +890,5 @@ public class PokerGUI extends JFrame implements KeyListener {
 
         }
         fadingLabel.killText(); //Den eingefrorenen Gewinner-Informations-Text löschen
-    }
-    public void newDeckMultiplayer() throws NullPointerException {
-
-            if (MultiplayerGUI.getGameClient() != null && MultiplayerGUI.getGameClient().isLeader()) {
-                if (getGameInstance().getDeck().getCards().size() <=  21) {
-                    Deck deck = new Deck();
-                    String deckString = deck.serialize();
-                    MultiplayerGUI.getGameClient().sendMessage(deckString);
-                }
-
-        }
     }
 }
