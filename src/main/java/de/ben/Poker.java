@@ -170,7 +170,6 @@ public class Poker extends Thread {
                     }
 
                     boolean validAction = false;
-
                     String action;
 
                     // Warte bis eine Aktion kommt, die nicht "idle" ist
@@ -190,7 +189,6 @@ public class Poker extends Thread {
 
                     switch (action.toLowerCase()) {
                         case "fold":
-
                             fold(i);
                             validAction = true;
                             break;
@@ -198,7 +196,7 @@ public class Poker extends Thread {
                             if (highestBet != 0) {
                                 call(i, highestBet);
                                 validAction = true;
-                            }else {
+                            } else {
                                 System.out.println("Unerlaubte Aktion. Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist oder du nicht genug Chips hast.");
                                 gui.fadingLabel.setText("Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist oder du nicht genug Chips hast.");
                             }
@@ -213,18 +211,13 @@ public class Poker extends Thread {
                             }
                             break;
                         case "allin":
-                            /*if(ending){
-                                break;
-                            }else{*/
-                                allIn(i);
-                                if (checkAllIn()) {
-                                    roundComplete = true;
-                                    gamecomplete = true;
-                                }
-                                validAction = true;
-                                break;
-                            //}
-
+                            allIn(i);
+                            if (checkAllIn()) {
+                                roundComplete = true;
+                                gamecomplete = true;
+                            }
+                            validAction = true;
+                            break;
                         case "check":
                             if (check(i)) {
                                 validAction = true;
@@ -250,12 +243,26 @@ public class Poker extends Thread {
                         // Setze den action String auf "idle" zurück und bewege zum nächsten Spieler
                         MainGUI.playSound("valid");
                         i++;
-                    }else{
+                    } else {
                         MainGUI.playSound("invalid");
                     }
                 } else {
                     i++;
                 }
+
+                //Check ob alle außer einer gefolded haben
+                long activePlayers = players.stream().filter(player -> !player.isFolded()).count();
+                if (activePlayers == 1) {
+                    Player winner = players.stream().filter(player -> !player.isFolded()).findFirst().orElse(null);
+                    if (winner != null) {
+                        System.out.println(winner.getName() + " gewinnt, da alle anderen Spieler gefoldet haben.");
+                        gui.fadingLabel.setText(winner.getName() + " gewinnt, da alle anderen Spieler gefoldet haben.");
+                        verarbeitungPot(winner);
+                        roundComplete = true;
+                        gamecomplete = true;
+                    }
+                }
+
                 if (roundComplete) {
                     break;
                 }

@@ -3,6 +3,8 @@ package de.ben;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -159,10 +161,28 @@ public class Lobby extends JFrame {
             ipAddressLabel = new JLabel("Server IP: " + getLocalIpAddress());
             ipAddressLabel.setForeground(Color.WHITE);
             GridBagConstraints gbc2 = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 6;
-            gbc.gridwidth = 2;
+            gbc2.gridx = 0;
+            gbc2.gridy = 6;
+            gbc2.gridwidth = 1;
             panel.add(ipAddressLabel, gbc2);
+
+            JButton copyButton = new JButton("Copy");
+            copyButton.setBackground(new Color(78, 136, 174, 255));
+            copyButton.setForeground(Color.WHITE);
+            styleButton(copyButton);
+            gbc2.gridx = 1;
+            panel.add(copyButton, gbc2);
+
+            copyButton.addActionListener(e -> {
+                StringSelection stringSelection = new StringSelection(ipAddressLabel.getText().replace("Server IP: ", ""));
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
+                copyButton.setText("Kopiert!");
+
+                Timer timer = new Timer(3000, event -> copyButton.setText("Copy"));
+                timer.setRepeats(false);
+                timer.start();
+            });
 
             bigBlindField = new JTextField(String.valueOf(bigBlind), 5);
             gbc.gridx = 1;
