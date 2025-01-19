@@ -83,8 +83,13 @@ public class MultiplayerGUI extends JFrame {
         joinGameButton.addActionListener(e -> {
             new Thread(() -> {
                 try {
-                    client = new GameClient("localhost", 12345, mainGUI.getMultiplayerName(), mainGUI);
+                    String ipAddress = JOptionPane.showInputDialog(this, "Enter the server IP address:", "Connect to Server", JOptionPane.QUESTION_MESSAGE);
+                    if (ipAddress == null || ipAddress.isEmpty()) {
+                        return;
+                    }
+                    client = new GameClient(ipAddress, 12345, mainGUI.getMultiplayerName(), mainGUI);
                     System.out.println("GameClient created.");
+
 
                     SwingUtilities.invokeLater(() -> {
                         Lobby lobby = new Lobby(mainGUI, false, client.getGameServer(), client);

@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class GameClient {
 
@@ -43,15 +44,12 @@ public class GameClient {
                     if (message.startsWith("START:")) {
                         handleStartMessage(message);
                     }else if(message.startsWith("AKTION")) {
-
                         handleAktionMessage(message);
-
                     }else if(message.startsWith("DECK:")) {
                         String deckString = message.substring(5);
                         Deck deck = Deck.deserialize(deckString);
                         pokerVAR.getGameInstance().getDeck().setDeck(deck);
                     }
-
                     else if (message.startsWith("PLAYER:")) {
                         String playerName = message.substring(7);
                         if (lobby != null) {
@@ -65,6 +63,12 @@ public class GameClient {
                                 lobby.mainGUI.playerIndex = playerNames.length-1;
                             }
                         }
+                    }else if((message.startsWith("STARTCHIPS:") && !Objects.requireNonNull(lobby).getisleader())) {
+                        int startChips = Integer.parseInt(message.substring(11));
+                        lobby.setStartChips(startChips);
+                    }else if(message.startsWith("BIGBLIND:") && !lobby.getisleader()) {
+                        int bigBlind = Integer.parseInt(message.substring(9));
+                        lobby.setBigBlind(bigBlind);
                     }
                 }
             } catch (IOException e) {
@@ -96,6 +100,9 @@ public class GameClient {
                 break;
             case "ALLIN":
                 pokerVAR.doAllIn();
+                break;
+            case "CONTINUE":
+                pokerVAR.doContinue();
                 break;
         }
     }

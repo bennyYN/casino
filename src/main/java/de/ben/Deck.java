@@ -38,10 +38,10 @@ public class Deck {
 
             }
         }
-        /*for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 6; i++) {
             List<Card> duplicateCards = new ArrayList<>(cards);
             cards.addAll(duplicateCards);
-        }*/
+        }
         Collections.shuffle(cards);
     }
 

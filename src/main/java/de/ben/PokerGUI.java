@@ -409,6 +409,9 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Fortfahren Button um eine neue Runde zu starten
         continueButton.addActionListener(e -> {
             doContinue();
+            if(MultiplayerGUI.getGameClient() != null) {
+                MultiplayerGUI.getGameClient().sendMessage("AKTION: CONTINUE");
+            }
         });
 
         //Hauptmenü Button, für wenn das Spiel zuende ist

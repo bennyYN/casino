@@ -114,6 +114,8 @@ public class GameServer {
                         broadcastMessage(message);
                     } else if (message.startsWith("AKTION:")) {
                         broadcastMessage(message);
+                    } else if (message.startsWith("STARTCHIPS:") || message.startsWith("BIGBLIND:")) {
+                        broadcastMessage(message);
                     }
                 }
             } catch (IOException e) {

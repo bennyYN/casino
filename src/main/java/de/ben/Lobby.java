@@ -25,6 +25,7 @@ public class Lobby extends JFrame {
     int playerCount = 0;
     GameServer gameServer;
     private GameClient gameClient;
+    private JLabel ipAddressLabel;
 
     public Lobby(MainGUI mainGUI, boolean isLeader, GameServer gameServer, GameClient client) {
         this.mainGUI = mainGUI;
@@ -118,12 +119,14 @@ public class Lobby extends JFrame {
                 startChips = startChipsSlider.getValue();
                 startChipsLabel.setText("Starting Chips (200-10000):");
                 startChipsField.setText(String.valueOf(startChips));
+                updateAnServer("STARTCHIPS:"+startChipsSlider.getValue());
             });
 
             startChipsField.addActionListener(e -> {
                 int value = Integer.parseInt(startChipsField.getText());
                 value = Math.max(200, Math.min(10000, value));
                 startChipsSlider.setValue(value);
+                updateAnServer("STARTCHIPS:" + value);
             });
 
             startChipsSlider.addMouseWheelListener(new MouseAdapter() {
@@ -153,6 +156,14 @@ public class Lobby extends JFrame {
             gbc.gridwidth = 1;
             panel.add(bigBlindSlider, gbc);
 
+            ipAddressLabel = new JLabel("Server IP: " + getLocalIpAddress());
+            ipAddressLabel.setForeground(Color.WHITE);
+            GridBagConstraints gbc2 = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 6;
+            gbc.gridwidth = 2;
+            panel.add(ipAddressLabel, gbc2);
+
             bigBlindField = new JTextField(String.valueOf(bigBlind), 5);
             gbc.gridx = 1;
             gbc.gridy = 5;
@@ -169,6 +180,7 @@ public class Lobby extends JFrame {
                 bigBlindLabel.setText("Big Blind (20-2000):");
                 bigBlindField.setText(String.valueOf(bigBlind));
                 bigBlindSlider.setValue(bigBlind);
+                updateAnServer("BIGBLIND:"+bigBlindSlider.getValue());
             });
 
             bigBlindField.addActionListener(e -> {
@@ -178,6 +190,7 @@ public class Lobby extends JFrame {
                     value = (value > bigBlindSlider.getValue() ? value + 1 : value - 1);
                 }
                 bigBlindSlider.setValue(value);
+                updateAnServer("BIGBLIND:" + value);
             });
 
             bigBlindSlider.addMouseWheelListener(new MouseAdapter() {
@@ -380,5 +393,26 @@ public class Lobby extends JFrame {
     }
     public boolean getisleader() {
         return isLeader;
+    }
+    private void updateAnServer(String message) {
+        if (gameClient != null) {
+            gameClient.sendMessage(message);
+        }
+    }
+
+    public void setBigBlind(int bigBlind) {
+        this.bigBlindLabel.setText("Big Blind: " + bigBlind);
+    }
+
+    public void setStartChips(int startChips) {
+        this.startChipsLabel.setText("Starting Chips: " + startChips);
+    }
+    private String getLocalIpAddress() {
+        try {
+            return java.net.InetAddress.getLocalHost().getHostAddress();
+        } catch (java.net.UnknownHostException e) {
+            e.printStackTrace();
+            return "Konnte IP nicht ermitteln";
+        }
     }
 }
