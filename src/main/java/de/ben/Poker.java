@@ -195,7 +195,7 @@ public class Poker extends Thread {
                             if (highestBet != 0) {
                                 call(i, highestBet);
                                 validAction = true;
-                            } else {
+                            }else {
                                 System.out.println("Unerlaubte Aktion. Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist oder du nicht genug Chips hast.");
                                 gui.fadingLabel.setText("Du kannst nicht callen, weil der aktuelle höchste Einsatz 0 ist oder du nicht genug Chips hast.");
                             }

@@ -841,8 +841,12 @@ public class PokerGUI extends JFrame implements KeyListener {
     }
 
     public void doCall(){
-        hideRaiseField(); //Textfeld zum Erhöhen verstecken
-        action = "call"; //Die Aktion des Spielers auf Call setzen
+        hideRaiseField();
+        if(this.game.highestBet >= this.game.currentPlayer.getChips().getAmount()) {
+            action ="allin";//Textfeld zum Erhöhen verstecken
+        }else {
+            action = "call"; //Die Aktion des Spielers auf Call setzen
+        }
 
     }
     public void doAllIn(){
