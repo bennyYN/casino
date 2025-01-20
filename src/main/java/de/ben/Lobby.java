@@ -22,7 +22,7 @@ public class Lobby extends JFrame {
     JTextField bigBlindField;
     ArrayList<String> playerNames;
     ArrayList<String> slotState;
-    JButton exitButton, confirmButton;
+    JButton exitButton, confirmButton, copyButton;
     private boolean isLeader;
     int playerCount = 0;
     GameServer gameServer;
@@ -166,18 +166,19 @@ public class Lobby extends JFrame {
             gbc2.gridwidth = 1;
             panel.add(ipAddressLabel, gbc2);
 
-            JButton copyButton = new JButton("Copy");
+            copyButton = new JButton("Copy");
             copyButton.setBackground(new Color(78, 136, 174, 255));
             copyButton.setForeground(Color.WHITE);
-            styleButton(copyButton);
+            styleButton(copyButton, false);
             gbc2.gridx = 1;
             panel.add(copyButton, gbc2);
+            copyButton.setBounds(400, 650, 80, 40);
 
             copyButton.addActionListener(e -> {
                 StringSelection stringSelection = new StringSelection(ipAddressLabel.getText().replace("Server IP: ", ""));
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
-                copyButton.setText("Kopiert!");
+                copyButton.setText("Copied!");
 
                 Timer timer = new Timer(3000, event -> copyButton.setText("Copy"));
                 timer.setRepeats(false);
@@ -245,7 +246,7 @@ public class Lobby extends JFrame {
         exitButton = new JButton("Continue");
         exitButton.setBackground(new Color(78, 136, 174, 255));
         exitButton.setForeground(Color.WHITE);
-        styleButton(exitButton);
+        styleButton(exitButton, true);
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         gbc.gridy = 7;
@@ -275,10 +276,12 @@ public class Lobby extends JFrame {
         setVisible(true);
     }
 
-    private void styleButton(JButton button) {
+    private void styleButton(JButton button, boolean unifySize) {
         button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
-        button.setPreferredSize(new Dimension(150, 40));
+        if(unifySize){
+            button.setPreferredSize(new Dimension(150, 40));
+        }
         button.setBorderPainted(false);
         button.setFocusPainted(false);
 
@@ -410,6 +413,8 @@ public class Lobby extends JFrame {
         } else {
             System.out.println("GameServer is null. Skipping player name initialization.");
         }
+        //General Update Stuff
+        mainGUI.updateButtonColor(copyButton, false);
     }
     public boolean getisleader() {
         return isLeader;
