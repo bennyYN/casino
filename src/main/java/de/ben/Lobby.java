@@ -173,6 +173,8 @@ public class Lobby extends JFrame {
             gbc2.gridx = 1;
             panel.add(copyButton, gbc2);
             copyButton.setBounds(400, 650, 80, 40);
+            mainGUI.updateButtonColor(copyButton, false);
+
 
             copyButton.addActionListener(e -> {
                 StringSelection stringSelection = new StringSelection(ipAddressLabel.getText().replace("Server IP: ", ""));
@@ -413,8 +415,6 @@ public class Lobby extends JFrame {
         } else {
             System.out.println("GameServer is null. Skipping player name initialization.");
         }
-        //General Update Stuff
-        mainGUI.updateButtonColor(copyButton, false);
     }
     public boolean getisleader() {
         return isLeader;

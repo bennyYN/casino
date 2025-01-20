@@ -170,4 +170,13 @@ public class MultiplayerGUI extends JFrame {
     public static GameClient getGameClient() {
         return client;
     }
+
+    private String getLocalIpAddress() {
+        try {
+            return java.net.InetAddress.getLocalHost().getHostAddress();
+        } catch (java.net.UnknownHostException e) {
+            e.printStackTrace();
+            return "Konnte IP nicht ermitteln";
+        }
+    }
 }
