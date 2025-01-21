@@ -24,24 +24,10 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+  </dependencies>
 
     <!-- JavaFX dependencies -->
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>22.0.0.1</version> <!-- Ensure this version matches your JDK version -->
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-media</artifactId>
-      <version>22.0.0.1</version> <!-- For audio playback support -->
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-base</artifactId>
-      <version>22.0.0.1</version>
-    </dependency>
-  </dependencies>
+
 
   <build>
     <plugins>

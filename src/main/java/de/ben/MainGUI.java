@@ -22,6 +22,7 @@ public class MainGUI extends JFrame implements ActionListener {
     JButton multiplayerButton;
     JButton settingsButton;
     JButton exitButton;
+    JButton blackjackButton;
     JPanel panel;
     private Clip backgroundMusic;
     private FloatControl volumeControl;
@@ -74,6 +75,7 @@ public class MainGUI extends JFrame implements ActionListener {
                 updateButtonColor(settingsButton, false);
                 updateButtonColor(exitButton, false);
                 updateButtonColor(multiplayerButton, false);
+                updateButtonColor(blackjackButton, false);
             }
         };
 
@@ -88,14 +90,19 @@ public class MainGUI extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
 
         // Start Button
-        startButton = new JButton("Start");
+        startButton = new JButton("Poker (Singleplayer)");
         styleButton(startButton);
         panel.add(startButton, gbc);
 
         // Multiplayer Button
-        multiplayerButton = new JButton("Multiplayer");
+        multiplayerButton = new JButton("Poker (Multiplayer)");
         styleButton(multiplayerButton);
         panel.add(multiplayerButton, gbc);
+
+        // Blackjack Button
+        blackjackButton = new JButton("Blackjack");
+        styleButton(blackjackButton);
+        panel.add(blackjackButton, gbc);
 
         // Settings Button
         settingsButton = new JButton("Settings");
@@ -377,6 +384,9 @@ public class MainGUI extends JFrame implements ActionListener {
             this.setVisible(false); // Verstecke MainGUI statt es zu schließen
         } else if (sourceButton == exitButton) {
             System.exit(0); // Beende das Programm
+        } else if (sourceButton == blackjackButton) {
+            new BlackjackGUI(this);
+            this.setVisible(false);
         }
     }
 
