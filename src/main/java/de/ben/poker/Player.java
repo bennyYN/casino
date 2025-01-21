@@ -1,6 +1,7 @@
-package de.ben;
+package de.ben.poker;
 
-import javax.swing.*;
+import de.ben.ImageArchive;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

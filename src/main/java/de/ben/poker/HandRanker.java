@@ -1,4 +1,4 @@
-package de.ben;
+package de.ben.poker;
 
 import java.util.*;
 import java.util.stream.Collectors;

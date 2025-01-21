@@ -1,10 +1,11 @@
-package de.ben;
+package de.ben.poker;
+
+import de.ben.MainGUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ViewCardButton extends JButton {

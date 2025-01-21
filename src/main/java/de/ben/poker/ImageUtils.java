@@ -1,4 +1,4 @@
-package de.ben;
+package de.ben.poker;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;

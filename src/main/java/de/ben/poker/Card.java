@@ -1,4 +1,6 @@
-package de.ben;
+package de.ben.poker;
+
+import de.ben.ImageArchive;
 
 import javax.swing.*;
 import java.awt.*;

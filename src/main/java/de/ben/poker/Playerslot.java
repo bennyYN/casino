@@ -1,10 +1,8 @@
-package de.ben;
+package de.ben.poker;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import de.ben.ImageArchive;
+
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
 public class Playerslot {

@@ -1,4 +1,6 @@
-package de.ben;
+package de.ben.blackjack;
+
+import de.ben.MainGUI;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
@@ -61,6 +63,8 @@ public class ButtonFactory {
             }
         };
 
+
+
         // Add MouseListener to change border color on hover
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -98,6 +102,7 @@ public class ButtonFactory {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setFocusable(false);
+
 
         return button;
     }

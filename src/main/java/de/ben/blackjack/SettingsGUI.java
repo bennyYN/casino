@@ -1,4 +1,7 @@
-package de.ben;
+package de.ben.blackjack;
+
+import de.ben.ImageArchive;
+import de.ben.MainGUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;

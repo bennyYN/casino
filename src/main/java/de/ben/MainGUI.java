@@ -1,5 +1,9 @@
 package de.ben;
 
+import de.ben.blackjack.*;
+import de.ben.poker.*;
+import de.ben.poker.SettingsGUI;
+
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.URL;
-import javax.imageio.ImageIO;
 import javax.swing.border.Border;
-import java.awt.image.BufferedImage;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -385,8 +387,9 @@ public class MainGUI extends JFrame implements ActionListener {
         } else if (sourceButton == exitButton) {
             System.exit(0); // Beende das Programm
         } else if (sourceButton == blackjackButton) {
-            new BlackjackGUI(this);
-            this.setVisible(false);
+            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+            new GameSettings(this);
+            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
         }
     }
 

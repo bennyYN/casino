@@ -1,4 +1,4 @@
-package de.ben;
+package de.ben.poker;
 
 public class Chips {
     private int amount;

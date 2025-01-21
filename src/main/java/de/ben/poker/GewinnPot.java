@@ -1,7 +1,4 @@
-package de.ben;
-
-import java.util.ArrayList;
-import java.util.List;
+package de.ben.poker;
 
 public class GewinnPot {
     private int amount;

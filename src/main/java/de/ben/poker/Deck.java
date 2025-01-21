@@ -1,4 +1,4 @@
-package de.ben;
+package de.ben.poker;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package de.ben;
+package de.ben.poker;
 
 import javax.swing.*;
 import java.awt.*;

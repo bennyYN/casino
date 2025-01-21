@@ -1,4 +1,6 @@
-package de.ben;
+package de.ben.poker;
+
+import de.ben.MainGUI;
 
 import java.util.*;
 
