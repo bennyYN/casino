@@ -1,6 +1,7 @@
 package de.ben;
 
 import de.ben.blackjack.*;
+import de.ben.playground.althenpong.PongGUI;
 import de.ben.poker.*;
 import de.ben.poker.SettingsGUI;
 
@@ -25,6 +26,7 @@ public class MainGUI extends JFrame implements ActionListener {
     JButton settingsButton;
     JButton exitButton;
     JButton blackjackButton;
+    JButton pongButton;
     JPanel panel;
     private Clip backgroundMusic;
     private FloatControl volumeControl;
@@ -52,7 +54,7 @@ public class MainGUI extends JFrame implements ActionListener {
         loadVolume();
         loadGameSoundsVolume();
 
-        this.setTitle("Casino");
+        this.setTitle("Game Library");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(800, 600);
         this.setLocationRelativeTo(null);
@@ -92,7 +94,7 @@ public class MainGUI extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
 
         // Start Button
-        startButton = new JButton("Poker (Singleplayer)");
+        startButton = new JButton("Poker (Groupgame)");
         styleButton(startButton);
         panel.add(startButton, gbc);
 
@@ -105,6 +107,11 @@ public class MainGUI extends JFrame implements ActionListener {
         blackjackButton = new JButton("Blackjack");
         styleButton(blackjackButton);
         panel.add(blackjackButton, gbc);
+
+        // Pong Button
+        pongButton = new JButton("Althenpong");
+        styleButton(pongButton);
+        panel.add(pongButton, gbc);
 
         // Settings Button
         settingsButton = new JButton("Settings");
@@ -389,6 +396,10 @@ public class MainGUI extends JFrame implements ActionListener {
         } else if (sourceButton == blackjackButton) {
             // Verstecke das MainGUI-Fenster und zeige den Ladescreen
             new GameSettings(this);
+            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+        }  else if (sourceButton == pongButton) {
+            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+            new PongGUI(this);
             this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
         }
     }
