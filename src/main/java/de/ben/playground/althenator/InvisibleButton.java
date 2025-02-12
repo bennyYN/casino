@@ -1,4 +1,4 @@
-package de.ben.playground.spdfs;
+package de.ben.playground.althenator;
 
 import javax.swing.*;
 import java.awt.*;

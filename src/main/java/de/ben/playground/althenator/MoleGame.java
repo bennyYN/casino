@@ -1,4 +1,6 @@
-package de.ben.playground.spdfs;
+package de.ben.playground.althenator;
+
+import de.ben.MainGUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +18,9 @@ public class MoleGame extends JFrame {
     private static final int DEFAULT_ROWS = 2;
     private static final int DEFAULT_COLS = 8;
     public String cursorState = "inactive";
-    private Image activeCursor = new ImageIcon("img/playground/spdfs/cursor/active.png").getImage();
-    private Image inactiveCursor = new ImageIcon("img/playground/spdfs/cursor/inactive.png").getImage();
-    private Image electrifiedActiveCursor = new ImageIcon("img/playground/spdfs/cursor/electrified_active.png").getImage();
+    private Image activeCursor = new ImageIcon("img/playground/althenator/cursor/active.png").getImage();
+    private Image inactiveCursor = new ImageIcon("img/playground/althenator/cursor/inactive.png").getImage();
+    private Image electrifiedActiveCursor = new ImageIcon("img/playground/althenator/cursor/electrified_active.png").getImage();
 
     private int gameTime;
     private int minMoleAppearInterval;
@@ -35,6 +37,7 @@ public class MoleGame extends JFrame {
     private Random random;
     private int rows;
     private int cols;
+    public static MainGUI mainGUI;
 
     public MoleGame(int rows, int cols, int gameTime, int minMoleAppearInterval, int maxMoleAppearInterval, double moleSpawnProbability) {
         this.rows = rows;
@@ -46,7 +49,7 @@ public class MoleGame extends JFrame {
         this.timeLeft = gameTime;
         this.random = new Random(); // Initialize the random object
 
-        setTitle("Schutzpatron der fliegenden Sicherungen II");
+        setTitle("Althenator II - Der Schutzpatron der FI-Schalter & Schirmherr des Ölpreises");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -61,8 +64,8 @@ public class MoleGame extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon backgroundIcon = new ImageIcon("img/playground/spdfs/sicherung.png");
-                ImageIcon otherBackgroundIcon = new ImageIcon("img/playground/spdfs/rausgeflogene_sicherung.png");
+                ImageIcon backgroundIcon = new ImageIcon("img/playground/althenator/sicherung.png");
+                ImageIcon otherBackgroundIcon = new ImageIcon("img/playground/althenator/rausgeflogene_sicherung.png");
                 Image backgroundImage = backgroundIcon.getImage();
 
                 for (int i = 0; i < rows; i++) {
@@ -133,15 +136,20 @@ public class MoleGame extends JFrame {
             int response = JOptionPane.showConfirmDialog(this, "Gewonnen! Noch eine Runde?", "Spiel zuende", JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
                 showSettingsDialog();
+                this.dispose();
             } else {
-                System.exit(0);
+                mainGUI.setVisible(true);
+                this.dispose();
             }
         } else if (timeLeft <= 0) {
             int response = JOptionPane.showConfirmDialog(this, "Verloren! Nochmal versuchen?", "Spiel zuende", JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
+
                 showSettingsDialog();
+                this.dispose();
             } else {
-                System.exit(0);
+                mainGUI.setVisible(true);
+                this.dispose();
             }
         }
     }
@@ -176,7 +184,8 @@ public class MoleGame extends JFrame {
         gamePanel.repaint();
     }
 
-    public static void main(String[] args) {
+    public static void create(MainGUI givenMainGUI) {
+        mainGUI = givenMainGUI;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -230,7 +239,7 @@ public class MoleGame extends JFrame {
             double moleSpawnProbability = Double.parseDouble(moleSpawnProbabilityField.getText());
             new MoleGame(rows, cols, gameTime, minInterval, maxInterval, moleSpawnProbability).setVisible(true);
         } else {
-            System.exit(0);
+            mainGUI.setVisible(true);
         }
     }
 

@@ -1,4 +1,4 @@
-package de.ben.playground.spdfs;
+package de.ben.playground.althenator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +10,8 @@ public class Mole {
     private JButton button;
     private Random random;
     private MoleGame game;
-    private static final Image MOLE_IMAGE = new ImageIcon("img/playground/spdfs/rausgeflogene_sicherung.png").getImage();
-    private static final Image NO_MOLE_IMAGE = new ImageIcon("img/playground/spdfs/sicherung.png").getImage();
+    private static final Image MOLE_IMAGE = new ImageIcon("img/playground/althenator/rausgeflogene_sicherung.png").getImage();
+    private static final Image NO_MOLE_IMAGE = new ImageIcon("img/playground/althenator/sicherung.png").getImage();
     public Image usedImage = NO_MOLE_IMAGE;
 
     public Mole(MoleGame game) {

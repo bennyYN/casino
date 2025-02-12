@@ -1,6 +1,7 @@
 package de.ben;
 
 import de.ben.blackjack.*;
+import de.ben.playground.althenator.MoleGame;
 import de.ben.playground.althenpong.PongGUI;
 import de.ben.poker.*;
 import de.ben.poker.SettingsGUI;
@@ -27,6 +28,8 @@ public class MainGUI extends JFrame implements ActionListener {
     JButton exitButton;
     JButton blackjackButton;
     JButton pongButton;
+    JButton flappyButton;
+    JButton althenatorButton;
     JPanel panel;
     private Clip backgroundMusic;
     private FloatControl volumeControl;
@@ -109,9 +112,19 @@ public class MainGUI extends JFrame implements ActionListener {
         panel.add(blackjackButton, gbc);
 
         // Pong Button
-        pongButton = new JButton("Althenpong");
+        pongButton = new JButton("Althen-Pong");
         styleButton(pongButton);
         panel.add(pongButton, gbc);
+
+        // Flappy Button
+        flappyButton = new JButton("Flappy-Schmandt");
+        styleButton(flappyButton);
+        panel.add(flappyButton, gbc);
+
+        // Althenator Button
+        althenatorButton = new JButton("Althenator II");
+        styleButton(althenatorButton);
+        panel.add(althenatorButton, gbc);
 
         // Settings Button
         settingsButton = new JButton("Settings");
@@ -400,6 +413,14 @@ public class MainGUI extends JFrame implements ActionListener {
         }  else if (sourceButton == pongButton) {
             // Verstecke das MainGUI-Fenster und zeige den Ladescreen
             new PongGUI(this);
+            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+        }   else if (sourceButton == flappyButton) {
+            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+            new de.ben.playground.flappyschmandt.FlappySchmandtGUI();
+            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+        }   else if (sourceButton == althenatorButton) {
+            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+            MoleGame.create(this);
             this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
         }
     }
