@@ -5,13 +5,16 @@ import java.awt.*;
 
 public class Schmandt {
 
-    public double jumpHeight = 5, velocity = 0, gravity = 0.25;
+    public double jumpHeight = 10, velocity = 0, gravity = 0.85;
     public boolean isAlive = true;
     public static int score = 0;
     public int cooldown = 0;
     public Rectangle hitbox1, hitbox2, scoreBox;
-    private Image player = new ImageIcon("img/playground/flappyschmandt/player.png").getImage();
+    private Image player1 = new ImageIcon("img/playground/flappyschmandt/player1.png").getImage();
+    private Image player2 = new ImageIcon("img/playground/flappyschmandt/player2.png").getImage();
+    private Image currentPlayerTexture = player1;
     public int x, y, width, height;
+    int switches = 0;
 
     public Schmandt(int x, int y, int width, int height) {
         this.x = x;
@@ -39,19 +42,41 @@ public class Schmandt {
     public void jump() {
         if (cooldown == 0) {
             velocity = -jumpHeight;
-            cooldown = 10;
+            cooldown = 3;
+            triggerJumpAnimation();
+        }
+    }
+
+    private void triggerJumpAnimation() {
+        //neue synchroner thread zum kurzen flackern der textur
+        new Thread(() -> {
+
+            while(switches < 3) {
+                currentPlayerTexture = player2;
+                try {
+                    Thread.sleep(75);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                currentPlayerTexture = player1;
+                try {
+                    Thread.sleep(75);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                switches++;
+            }
+            switches = 0;
+        }).start();
+        if (currentPlayerTexture == player1) {
+            currentPlayerTexture = player2;
+        } else {
+            currentPlayerTexture = player1;
         }
     }
 
     public void render(Graphics g) {
-        g.drawImage(player, x, y, width, height+5, null);
-        // Draw hitboxes
-        /*g.setColor(Color.RED);
-        g.drawRect(hitbox1.x, hitbox1.y, hitbox1.width, hitbox1.height);
-        g.drawRect(hitbox2.x, hitbox2.y, hitbox2.width, hitbox2.height);
-        // Draw scoreBox (for debugging purposes, can be removed later)
-        g.setColor(Color.BLUE);
-        g.drawRect(scoreBox.x, scoreBox.y, scoreBox.width, scoreBox.height);*/
+        g.drawImage(currentPlayerTexture, x, y, width, height+5, null);
     }
 
     public boolean intersects(Rectangle r) {

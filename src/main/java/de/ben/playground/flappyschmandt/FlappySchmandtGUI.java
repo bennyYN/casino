@@ -20,6 +20,7 @@ public class FlappySchmandtGUI extends JFrame {
     Timer timer;
     int obstacleSpeed = 5;
     Random random = new Random();
+    boolean isPaused = false;
 
     public FlappySchmandtGUI() {
         this.setTitle("Flappy Schmandt");
@@ -43,9 +44,6 @@ public class FlappySchmandtGUI extends JFrame {
                 for (int i = 0; i < getWidth() / background.getWidth(null) + 2; i++) {
                     g.drawImage(background, (int) xOffset + background.getWidth(null) * i, -20, null);
                 }
-                // Floor
-                /*g.setColor(Color.RED);
-                g.drawRect(floor.x, floor.y, floor.width, floor.height);*/
 
                 player.render(g);
                 for (Hindernis obstacle : obstacles) {
@@ -58,6 +56,15 @@ public class FlappySchmandtGUI extends JFrame {
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
                 g.drawString("Score: " + Schmandt.score, 10, 30); // Display the score from Schmandt class
+
+                //Abtönungsschicht für Pausenmenü
+                if(isPaused) {
+                    g.setColor(new Color(0, 0, 0, 100));
+                    g.fillRect(0, 0, 1920, 1080);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Arial", Font.BOLD, 50));
+                    g.drawString("PAUSED", 1920/2 - 100, 1080/2);
+                }
             }
         };
         gamePanel.setPreferredSize(new Dimension(1920, 1080));
@@ -91,7 +98,7 @@ public class FlappySchmandtGUI extends JFrame {
     private void generateType1(int lastX) {
         int height1 = 200 + random.nextInt(300); // Random height between 200 and 500
         int height2 = 400 + random.nextInt(300); // Random height between 200 and 500
-        int yGap = 350 + random.nextInt(120); // Random y-gap between 200 and 280
+        int yGap = 250 + random.nextInt(120); // Random y-gap between 200 and 280
         if (random.nextDouble() < 0.975) { // 95% chance to connect to the floor
             height2 = 1080 - (height1 + yGap);
         }
@@ -102,11 +109,11 @@ public class FlappySchmandtGUI extends JFrame {
     private void generateType2(int lastX) {
         int height1 = 200 + random.nextInt(300); // Random height between 200 and 500
         int height2 = 200 + random.nextInt(300); // Random height between 200 and 500
-        int yGap = 250 + random.nextInt(80); // Random y-gap between 200 and 280
+        int yGap = 200 + random.nextInt(80); // Random y-gap between 200 and 280
         if (random.nextDouble() < 0.95) { // 95% chance to connect to the floor
             height2 = 1080 - (height1 + yGap);
         }
-        obstacles.add(new Hindernis(lastX, 0, 100, height1));
+        obstacles.add(new Hindernis(lastX, 0, 130, height1));
         obstacles.add(new Hindernis(lastX + 370, height1 + yGap, 100, height2));
     }
 
@@ -123,9 +130,9 @@ public class FlappySchmandtGUI extends JFrame {
 
     private void generateType4(int lastX) {
         int height1 = 200 + random.nextInt(300); // Random height between 200 and 500
-        int yGap = 300 + random.nextInt(80); // Random y-gap between 200 and 280
+        int yGap = 270 + random.nextInt(80); // Random y-gap between 200 and 280
         if (random.nextDouble() < 0.95) { // 95% chance to connect to the floor
-            obstacles.add(new Hindernis(lastX, 0, 100, height1));
+            obstacles.add(new Hindernis(lastX, 0, 130, height1));
             obstacles.add(new Hindernis(lastX, height1 + yGap, 100, 1080 - (height1 + yGap)));
         } else {
             obstacles.add(new Hindernis(lastX, 0, 100, height1));
@@ -135,65 +142,69 @@ public class FlappySchmandtGUI extends JFrame {
 
     private void generateType5(int lastX) {
         int height1 = 200 + random.nextInt(300); // Random height between 200 and 500
-        int yGap = 500 + random.nextInt(80); // Random y-gap between 200 and 280
+        int yGap = 300 + random.nextInt(80); // Random y-gap between 200 and 280
         if (random.nextDouble() < 0.95) { // 95% chance to connect to the floor
-            obstacles.add(new Hindernis(lastX, 0, 100, height1));
+            obstacles.add(new Hindernis(lastX, 0, 130, height1));
             obstacles.add(new Hindernis(lastX, 1080 - height1 - yGap, 100, height1));
         } else {
-            obstacles.add(new Hindernis(lastX, 0, 100, height1));
+            obstacles.add(new Hindernis(lastX, 0, 130, height1));
             obstacles.add(new Hindernis(lastX, 1080 - height1 - yGap, 100, 200 + random.nextInt(300)));
         }
     }
 
     private void update() {
-        if (!player.isAlive) {
-            return;
-        }
 
-        long startTime = System.currentTimeMillis();
+        if(!isPaused) {
 
-        player.update();
-        xOffset -= 2;
-        if (xOffset <= -background.getWidth(null)) {
-            xOffset = 0;
-        }
-        if (player.intersects(floor) || player.y <= 0) {
-            player.isAlive = false;
-            timer.stop();
-        }
-
-        List<Hindernis> toRemove = new ArrayList<>();
-        for (Hindernis obstacle : obstacles) {
-            obstacle.update(obstacleSpeed);
-            if (obstacle.x + obstacle.width < 0) {
-                toRemove.add(obstacle);
+            if (!player.isAlive) {
+                return;
             }
-            if (player.intersects(obstacle.getBox())) {
+
+            long startTime = System.currentTimeMillis();
+
+            player.update();
+            xOffset -= 2;
+            if (xOffset <= -background.getWidth(null)) {
+                xOffset = 0;
+            }
+            if (player.intersects(floor) || player.y <= 0) {
                 player.isAlive = false;
                 timer.stop();
             }
-            // Increase score when player passes an obstacle
-            if (!obstacle.isScored && player.x > obstacle.x + obstacle.width) {
-                Schmandt.score++;
-                obstacle.isScored = true;
+
+            List<Hindernis> toRemove = new ArrayList<>();
+            for (Hindernis obstacle : obstacles) {
+                obstacle.update(obstacleSpeed);
+                if (obstacle.x + obstacle.width < 0) {
+                    toRemove.add(obstacle);
+                }
+                if (player.intersects(obstacle.getBox())) {
+                    player.isAlive = false;
+                    timer.stop();
+                }
+                // Increase score when player passes an obstacle
+                if (!obstacle.isScored && player.x > obstacle.x + obstacle.width) {
+                    Schmandt.score++;
+                    obstacle.isScored = true;
+                }
             }
-        }
-        obstacles.removeAll(toRemove);
+            obstacles.removeAll(toRemove);
 
-        // Ensure new obstacles are generated with the correct gap
-        if (obstacles.isEmpty() || obstacles.get(obstacles.size() - 1).x + obstacles.get(obstacles.size() - 1).width + 450 < 1920) {
-            generateObstacles();
-        }
+            // Ensure new obstacles are generated with the correct gap
+            if (obstacles.isEmpty() || obstacles.get(obstacles.size() - 1).x + obstacles.get(obstacles.size() - 1).width + 450 < 1920) {
+                generateObstacles();
+            }
 
-        gamePanel.repaint();
+            gamePanel.repaint();
 
-        long endTime = System.currentTimeMillis();
-        long sleepTime = 10 - (endTime - startTime); // 20 ms for 50 FPS
-        if (sleepTime > 0) {
-            try {
-                Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            long endTime = System.currentTimeMillis();
+            long sleepTime = 5 - (endTime - startTime); // 20 ms for 50 FPS
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
