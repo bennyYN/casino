@@ -1,9 +1,14 @@
 package de.ben.playground.flappyschmandt;
 
+import com.sun.tools.javac.Main;
+import de.ben.MainGUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,8 +26,11 @@ public class FlappySchmandtGUI extends JFrame {
     int obstacleSpeed = 5;
     Random random = new Random();
     boolean isPaused = false;
+    private JButton resumeButton;
+    private JButton restartButton;
+    private JButton exitButton;
 
-    public FlappySchmandtGUI() {
+    public FlappySchmandtGUI(MainGUI mainGUI) {
         this.setTitle("Flappy Schmandt");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1920, 1080);
@@ -50,12 +58,31 @@ public class FlappySchmandtGUI extends JFrame {
                     obstacle.render(g);
                 }
 
+                if (isPaused) {
+                    resumeButton.setVisible(true);
+                    restartButton.setVisible(true);
+                    exitButton.setVisible(true);
+                } else {
+                    resumeButton.setVisible(false);
+                    restartButton.setVisible(false);
+                    exitButton.setVisible(false);
+                }
+
                 // Abtönungsschicht um den Score anzuzeigen
                 g.setColor(new Color(0, 0, 0, 100));
                 g.fillRect(0, 0, 200, 50);
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
                 g.drawString("Score: " + Schmandt.score, 10, 30); // Display the score from Schmandt class
+
+                //Abtönungsschicht für Tod
+                if(!player.isAlive) {
+                    g.setColor(new Color(142, 28, 28, 111));
+                    g.fillRect(0, 0, 1920, 1080);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Arial", Font.BOLD, 50));
+                    g.drawString("GAME OVER!", 1920/2 - 200, 1080/2);
+                }
 
                 //Abtönungsschicht für Pausenmenü
                 if(isPaused) {
@@ -70,11 +97,58 @@ public class FlappySchmandtGUI extends JFrame {
         gamePanel.setPreferredSize(new Dimension(1920, 1080));
         this.add(gamePanel, BorderLayout.CENTER);
 
+        // Initialize buttons
+        resumeButton = new JButton("Resume");
+        restartButton = new JButton("Restart");
+        exitButton = new JButton("Exit");
+
+        //do not make the buttons focusable
+        resumeButton.setFocusable(false);
+        restartButton.setFocusable(false);
+        exitButton.setFocusable(false);
+
+        //Style Buttons
+        mainGUI.styleButton(resumeButton);
+        mainGUI.styleButton(restartButton);
+        mainGUI.styleButton(exitButton);
+
+        // Add buttons to the game panel
+        gamePanel.setLayout(null);
+        resumeButton.setBounds(860, 400, 200, 50);
+        restartButton.setBounds(860, 460, 200, 50);
+        exitButton.setBounds(860, 520, 200, 50);
+
+        gamePanel.add(resumeButton);
+        gamePanel.add(restartButton);
+        gamePanel.add(exitButton);
+
+        // Initially hide buttons
+        resumeButton.setVisible(false);
+        restartButton.setVisible(false);
+        exitButton.setVisible(false);
+
+        // Actionlisteners for Buttons
+        resumeButton.addActionListener(e -> {
+            isPaused = false;
+            gamePanel.requestFocusInWindow();
+        });
+        restartButton.addActionListener(e -> {
+            new FlappySchmandtGUI(mainGUI);
+            this.dispose();
+        });
+        exitButton.addActionListener(e -> {
+            mainGUI.setVisible(true);
+            this.dispose();
+        });
+
         gamePanel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP) {
+                if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP) && !isPaused) {
                     player.jump();
+                }
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    isPaused = !isPaused;
                 }
             }
         });
@@ -153,10 +227,18 @@ public class FlappySchmandtGUI extends JFrame {
     }
 
     private void update() {
-
-        if(!isPaused) {
-
+        if (isPaused) {
+            resumeButton.setVisible(true);
+            restartButton.setVisible(true);
+            exitButton.setVisible(true);
+        } else {
+            resumeButton.setVisible(false);
+            restartButton.setVisible(false);
+            exitButton.setVisible(false);
+        }
+        if (!isPaused) {
             if (!player.isAlive) {
+                repaint();
                 return;
             }
 
@@ -206,6 +288,8 @@ public class FlappySchmandtGUI extends JFrame {
                     e.printStackTrace();
                 }
             }
+        } else {
+            gamePanel.repaint();
         }
     }
 

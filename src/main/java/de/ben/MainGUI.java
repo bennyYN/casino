@@ -175,7 +175,7 @@ public class MainGUI extends JFrame implements ActionListener {
     }
 
     // Methode, um den Button zu stylen
-    private void styleButton(JButton button) {
+    public void styleButton(JButton button) {
         button.setBackground(new Color(78, 136, 174, 255));
         button.setForeground(Color.WHITE);
         button.setPreferredSize(new Dimension(150, 40)); // Größe setzen
@@ -416,7 +416,7 @@ public class MainGUI extends JFrame implements ActionListener {
             this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
         }   else if (sourceButton == flappyButton) {
             // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-            new de.ben.playground.flappyschmandt.FlappySchmandtGUI();
+            new de.ben.playground.flappyschmandt.FlappySchmandtGUI(this);
             this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
         }   else if (sourceButton == althenatorButton) {
             // Verstecke das MainGUI-Fenster und zeige den Ladescreen
