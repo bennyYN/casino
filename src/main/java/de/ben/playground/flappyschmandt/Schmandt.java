@@ -44,7 +44,7 @@ public class Schmandt {
     }
 
     public void render(Graphics g) {
-        g.drawImage(player, x, y, width, height, null);
+        g.drawImage(player, x, y, width, height+5, null);
         // Draw hitboxes
         /*g.setColor(Color.RED);
         g.drawRect(hitbox1.x, hitbox1.y, hitbox1.width, hitbox1.height);
