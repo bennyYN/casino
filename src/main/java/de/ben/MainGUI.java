@@ -18,18 +18,12 @@ import java.net.URL;
 import javax.swing.border.Border;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class MainGUI extends JFrame implements ActionListener {
 
     // Attribute
-    JButton startButton;
-    JButton multiplayerButton;
-    JButton settingsButton;
-    JButton exitButton;
-    JButton blackjackButton;
-    JButton pongButton;
-    JButton flappyButton;
-    JButton althenatorButton;
+    JButton startButton, settingsButton;
     JPanel panel;
     private Clip backgroundMusic;
     private FloatControl volumeControl;
@@ -45,12 +39,22 @@ public class MainGUI extends JFrame implements ActionListener {
     Color darkblueTheme = new Color(62, 103, 147, 255), transparentDarkblueTheme = new Color(78, 136, 174, 255);
     Color scarletTheme = new Color(172, 41, 66, 255), transparentScarletTheme = new Color(197, 0, 0, 136);
     public int playerIndex = -1;
+    private String selectedGame = "blackjack";
+    private ArrayList<String> games = new ArrayList<String>();
     private int z=0;
 
     // Konstruktor
     public MainGUI() {
         //Laden des Bilderarchivs
         new ImageArchive();
+
+        //Verfügbare Spiele in Liste speichern
+        games.add("blackjack");
+        games.add("poker1");
+        games.add("poker2");
+        games.add("althenpong");
+        games.add("flappyschmandt");
+        games.add("althenator");
 
         // Laden des gespeicherten Themes und der Lautstärken
         loadSelectedTheme();
@@ -77,12 +81,13 @@ public class MainGUI extends JFrame implements ActionListener {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(ImageArchive.getImage("background:"+selectedTheme), 0, 0, null);
+
                 //Button Farbe regelmäßig updaten um ausgewähltem Theme zu matchen
                 updateButtonColor(startButton, false);
                 updateButtonColor(settingsButton, false);
-                updateButtonColor(exitButton, false);
-                updateButtonColor(multiplayerButton, false);
-                updateButtonColor(blackjackButton, false);
+
+                //Display logo of selected game
+                g.drawImage(ImageArchive.getImage(selectedGame), 300, 100, null);
             }
         };
 
@@ -92,49 +97,21 @@ public class MainGUI extends JFrame implements ActionListener {
         // GridBagConstraints für die Zentrierung der Buttons
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.gridy = 4;
         gbc.insets = new Insets(10, 0, 10, 0); // Abstand zwischen den Buttons
         gbc.anchor = GridBagConstraints.CENTER;
 
+
         // Start Button
-        startButton = new JButton("Poker (Groupgame)");
+        startButton = new JButton("Start");
         styleButton(startButton);
         panel.add(startButton, gbc);
 
-        // Multiplayer Button
-        multiplayerButton = new JButton("Poker (Multiplayer)");
-        styleButton(multiplayerButton);
-        panel.add(multiplayerButton, gbc);
-
-        // Blackjack Button
-        blackjackButton = new JButton("Blackjack");
-        styleButton(blackjackButton);
-        panel.add(blackjackButton, gbc);
-
-        // Pong Button
-        pongButton = new JButton("Althen-Pong");
-        styleButton(pongButton);
-        panel.add(pongButton, gbc);
-
-        // Flappy Button
-        flappyButton = new JButton("Flappy-Schmandt");
-        styleButton(flappyButton);
-        panel.add(flappyButton, gbc);
-
-        // Althenator Button
-        althenatorButton = new JButton("Althenator II");
-        styleButton(althenatorButton);
-        panel.add(althenatorButton, gbc);
-
         // Settings Button
         settingsButton = new JButton("Settings");
+        gbc.gridy = 7;
         styleButton(settingsButton);
         panel.add(settingsButton, gbc);
-
-        // Exit Button
-        exitButton = new JButton("Exit");
-        styleButton(exitButton);
-        panel.add(exitButton, gbc);
 
         this.setVisible(true);
     }
@@ -370,58 +347,52 @@ public class MainGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JButton sourceButton = (JButton) e.getSource();
         if (sourceButton == startButton) {
-            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-
-            if(showLoadingScreen){
-                // Ladebildschirm anzeigen und PokerGUI nach dem Laden öffnen
-                LoadingScreen.showLoadingScreen(this, () -> {
-                    // PokerGUI öffnen, wenn der Ladevorgang abgeschlossen ist
+            switch(selectedGame){
+                case "blackjack":
+                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                    new GameSettings(this);
+                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                    break;
+                case "poker1":
+                    // PokerGUI direkt öffnen
                     new PlayerSelection(this);
-                    this.dispose(); // Schließe MainGUI, wenn der Ladevorgang abgeschlossen ist
-                });
-            }else{
-                // PokerGUI direkt öffnen
-                new PlayerSelection(this);
-                this.dispose(); // Schließe MainGUI
-            }
-
-        }else if(sourceButton == multiplayerButton){
-            boolean isRunning = true;
-            while(isRunning){
-                MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben (1-12 Zeichen)", JOptionPane.PLAIN_MESSAGE);
-                if(MultiplayerName == null){
-                    isRunning = false;
+                    this.dispose(); // Schließe MainGUI
                     break;
-                }else if(!MultiplayerName.isEmpty() && !MultiplayerName.contains(",") && MultiplayerName.length()<=12){
-                    new MultiplayerGUI(this);
-                    this.setVisible(false);
-                    isRunning = false;
+                case "poker2":
+                    boolean isRunning = true;
+                    while(isRunning){
+                        MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben (1-12 Zeichen)", JOptionPane.PLAIN_MESSAGE);
+                        if(MultiplayerName == null){
+                            isRunning = false;
+                            break;
+                        }else if(!MultiplayerName.isEmpty() && !MultiplayerName.contains(",") && MultiplayerName.length()<=12){
+                            new MultiplayerGUI(this);
+                            this.setVisible(false);
+                            isRunning = false;
+                            break;
+                        }
+                        JOptionPane.showMessageDialog(this, "1-12 Zeichen & Keine \",\"", "Ungültiger Name", JOptionPane.ERROR_MESSAGE);
+                    }
                     break;
-                }
-                JOptionPane.showMessageDialog(this, "1-12 Zeichen & Keine \",\"", "Ungültiger Name", JOptionPane.ERROR_MESSAGE);
+                case "althenpong":
+                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                    new PongGUI(this);
+                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                    break;
+                case "flappyschmandt":
+                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                    new de.ben.playground.flappyschmandt.FlappySchmandtGUI(this);
+                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                    break;
+                case "althenator":
+                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                    MoleGame.create(this);
+                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                    break;
             }
         } else if (sourceButton == settingsButton) {
             new SettingsGUI(this, true); // Öffne SettingsGUI und übergebe MainGUI für Lautstärkeanpassung
             this.setVisible(false); // Verstecke MainGUI statt es zu schließen
-        } else if (sourceButton == exitButton) {
-            System.exit(0); // Beende das Programm
-        } else if (sourceButton == blackjackButton) {
-            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-            new GameSettings(this);
-            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-        }  else if (sourceButton == pongButton) {
-            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-            new PongGUI(this);
-            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-        }   else if (sourceButton == flappyButton) {
-            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-            new de.ben.playground.flappyschmandt.FlappySchmandtGUI(this);
-            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-        }   else if (sourceButton == althenatorButton) {
-            // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-            MoleGame.create(this);
-            this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
         }
     }
 
