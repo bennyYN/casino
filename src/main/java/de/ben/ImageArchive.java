@@ -14,8 +14,8 @@ public class ImageArchive {
     private static BufferedImage chipsImg, bigBlindImg, smallBlindImg, iconImg, cardsImg;
     private static Image scaledChipsImg, scaledBigBlindImg, scaledSmallBlindImg, scaledIconImg, scaledCardsImg;
     //Menu Assets
-    private static BufferedImage poker1Logo, poker2Logo, blackjackLogo, althenpongLogo, flappyschmandtLogo, althenatorLogo, settingsIcon;
-    private static Image scaledPoker1Logo, scaledPoker2Logo, scaledBlackjackLogo, scaledAlthenpongLogo, scaledFlappyschmandtLogo, scaledAlthenatorLogo, scaledSettingsIcon;
+    private static BufferedImage poker1Logo, poker2Logo, blackjackLogo, althenpongLogo, flappyschmandtLogo, althenatorLogo;
+    private static Image scaledPoker1Logo, scaledPoker2Logo, scaledBlackjackLogo, scaledAlthenpongLogo, scaledFlappyschmandtLogo, scaledAlthenatorLogo;
     //Playerslots
     private static BufferedImage playerslot, emptyPlayerslot, activePlayerslot, winningPlayerslot, inactivePlayerslot, zeroPlayerslot, youPlayerslot, youActivePlayerslot, youWinningPlayerslot, youInactivePlayerslot, youZeroPlayerslot;
     private static Image scaledPlayerslot, scaledEmptyPlayerslot, scaledActivePlayerslot, scaledWinningPlayerslot, scaledInactivePlayerslot, scaledZeroPlayerslot, scaledYouPlayerslot, scaledYouActivePlayerslot, scaledYouInactivePlayerslot, scaledYouWinningPlayerslot, scaledYouZeroPlayerslot;
@@ -57,7 +57,6 @@ public class ImageArchive {
             althenpongLogo = ImageIO.read(new File("img/menu/althenpong.png"));
             flappyschmandtLogo = ImageIO.read(new File("img/menu/flappyschmandt.png"));
             althenatorLogo = ImageIO.read(new File("img/menu/althenator.png"));
-            settingsIcon = ImageIO.read(new File("img/menu/settings.png"));
             //Playerslots
             playerslot = ImageIO.read(new File("img/playerslots/playerslot.png"));
             emptyPlayerslot = ImageIO.read(new File("img/playerslots/empty_playerslot.png"));
@@ -166,7 +165,6 @@ public class ImageArchive {
         scaledAlthenpongLogo = althenpongLogo.getScaledInstance((int)(althenpongLogo.getWidth()*xScale), (int)(althenpongLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledFlappyschmandtLogo = flappyschmandtLogo.getScaledInstance((int)(flappyschmandtLogo.getWidth()*xScale), (int)(flappyschmandtLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledAlthenatorLogo = althenatorLogo.getScaledInstance((int)(althenatorLogo.getWidth()*xScale), (int)(althenatorLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
-        scaledSettingsIcon = settingsIcon.getScaledInstance((int)(settingsIcon.getWidth()*xScale), (int)(settingsIcon.getHeight()*yScale), Image.SCALE_SMOOTH);
         //Playerslots
         scaledPlayerslot = playerslot.getScaledInstance((int)(playerslot.getWidth()*xScale), (int)(playerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledEmptyPlayerslot = emptyPlayerslot.getScaledInstance((int)(emptyPlayerslot.getWidth()*xScale), (int)(emptyPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
@@ -403,8 +401,6 @@ public class ImageArchive {
                     return scaledFlappyschmandtLogo;
                 case "althenator":
                     return scaledAlthenatorLogo;
-                case "settings":
-                    return scaledSettingsIcon;
                 //Playerslots
                 case "playerslot":
                     return scaledPlayerslot;

@@ -9,10 +9,7 @@ import de.ben.poker.SettingsGUI;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
 import javax.swing.border.Border;
@@ -20,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class MainGUI extends JFrame implements ActionListener {
+public class MainGUI extends JFrame implements ActionListener, MouseWheelListener {
 
     // Attribute
     JButton startButton, settingsButton;
@@ -39,9 +36,9 @@ public class MainGUI extends JFrame implements ActionListener {
     Color darkblueTheme = new Color(62, 103, 147, 255), transparentDarkblueTheme = new Color(78, 136, 174, 255);
     Color scarletTheme = new Color(172, 41, 66, 255), transparentScarletTheme = new Color(197, 0, 0, 136);
     public int playerIndex = -1;
-    private String selectedGame = "blackjack";
+    private int selectedGameIndex = 0;
     private ArrayList<String> games = new ArrayList<String>();
-    private int z=0;
+    private int z = 0;
 
     // Konstruktor
     public MainGUI() {
@@ -86,34 +83,136 @@ public class MainGUI extends JFrame implements ActionListener {
                 updateButtonColor(startButton, false);
                 updateButtonColor(settingsButton, false);
 
-                //Display logo of selected game
-                g.drawImage(ImageArchive.getImage(selectedGame), 300, 100, null);
+                //Rendering hints for smoother and more precise rendering
+                ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+                //Abtönungsschicht
+                g.setColor(new Color(0, 0, 0, 100));
+                g.fillRect(0, 475, 800, 125);
+
+                //Empty Progressbar using circles to represent a game
+                g.setColor(new Color(255, 255, 255, 100));
+                z=0;
+                for(int i = 0; i < games.size(); i++){
+                    if(i == selectedGameIndex){
+                        g.setColor(new Color(255, 255, 255, 255));
+                    }else{
+                        g.setColor(new Color(255, 255, 255, 100));
+                    }
+                    g.fillOval(366+z, 492, 8, 8);
+                    z+=12;
+                }
+
+                //Display logo of selected game including white shadow to highlight
+                g.setColor(new Color(255, 255, 255, 178));
+                g.fillRect(273, 158, 254, 304);
+                g.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)), 275, 160, null);
+
+                //Display logo of game with 50% transparency to the left and right of selected game
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 50, 185, null);
+                g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 550, 185, null);
+                g2d.dispose();
             }
         };
 
-        panel.setLayout(new GridBagLayout()); // Setze Layout nach dem Laden des Bildes oder dem Default
+        panel.setLayout(null); // Setze Layout nach dem Laden des Bildes oder dem Default
         this.add(panel);
 
-        // GridBagConstraints für die Zentrierung der Buttons
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.insets = new Insets(10, 0, 10, 0); // Abstand zwischen den Buttons
-        gbc.anchor = GridBagConstraints.CENTER;
 
+        // Add MouseWheelListener to the panel
+        panel.addMouseWheelListener(this);
 
         // Start Button
         startButton = new JButton("Start");
+        startButton.setFocusable(false);
+        startButton.setBounds(325, 510, 150, 40);
         styleButton(startButton);
-        panel.add(startButton, gbc);
+        panel.add(startButton);
 
         // Settings Button
-        settingsButton = new JButton("Settings");
-        gbc.gridy = 7;
-        styleButton(settingsButton);
-        panel.add(settingsButton, gbc);
+        settingsButton = new JButton();
+        settingsButton.setFocusable(false);
+        settingsButton.setBounds(730, 505, 50, 50);
+
+// Load and scale the images
+        ImageIcon defaultIcon = new ImageIcon("img/menu/settings1.png");
+        ImageIcon hoverIcon = new ImageIcon("img/menu/settings2.png");
+        ImageIcon clickIcon = new ImageIcon("img/menu/settings3.png");
+
+// Set the default icon
+        settingsButton.setIcon(defaultIcon);
+        settingsButton.setContentAreaFilled(false);
+        settingsButton.setBorderPainted(false);
+        settingsButton.setFocusPainted(false);
+
+// Add action listener for click event
+        settingsButton.addActionListener(e -> {
+            playSound("click");
+            new SettingsGUI(this, true); // Open SettingsGUI and pass MainGUI for volume adjustment
+            this.setVisible(false); // Hide MainGUI instead of closing it
+        });
+
+// Add mouse listener for hover and click events
+        settingsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                settingsButton.setIcon(hoverIcon);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                settingsButton.setIcon(defaultIcon);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                settingsButton.setIcon(clickIcon);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                settingsButton.setIcon(hoverIcon);
+            }
+        });
+
+        panel.add(settingsButton);
 
         this.setVisible(true);
+    }
+
+    private void rotateGame(int direction){
+        if(direction == -1){
+            if(selectedGameIndex == games.size()-1){
+                selectedGameIndex = 0;
+            }else{
+                selectedGameIndex++;
+            }
+        }else if (direction == 1){
+            if(selectedGameIndex == 0){
+                selectedGameIndex = games.size()-1;
+            }else{
+                selectedGameIndex--;
+            }
+        }
+    }
+
+    private int getGameToLeft(){
+        if(selectedGameIndex == 0){
+            return games.size()-1;
+        }else{
+            return selectedGameIndex-1;
+        }
+    }
+
+    private int getGameToRight(){
+        if(selectedGameIndex == games.size()-1){
+            return 0;
+        }else{
+            return selectedGameIndex+1;
+        }
     }
 
     public void updateButtonColor(JButton button, boolean isTransparent){
@@ -148,7 +247,6 @@ public class MainGUI extends JFrame implements ActionListener {
                     break;
             }
         }
-
     }
 
     // Methode, um den Button zu stylen
@@ -347,7 +445,7 @@ public class MainGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JButton sourceButton = (JButton) e.getSource();
         if (sourceButton == startButton) {
-            switch(selectedGame){
+            switch(games.get(selectedGameIndex)){
                 case "blackjack":
                     // Verstecke das MainGUI-Fenster und zeige den Ladescreen
                     new GameSettings(this);
@@ -390,9 +488,6 @@ public class MainGUI extends JFrame implements ActionListener {
                     this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
                     break;
             }
-        } else if (sourceButton == settingsButton) {
-            new SettingsGUI(this, true); // Öffne SettingsGUI und übergebe MainGUI für Lautstärkeanpassung
-            this.setVisible(false); // Verstecke MainGUI statt es zu schließen
         }
     }
 
@@ -448,5 +543,14 @@ public class MainGUI extends JFrame implements ActionListener {
         saveGameSoundsVolume(volume); // Save game sounds volume
     }
 
-
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        int notches = e.getWheelRotation();
+        if(notches < 0){
+            rotateGame(-1);
+        }else{
+            rotateGame(1);
+        }
+        panel.repaint();
+    }
 }
