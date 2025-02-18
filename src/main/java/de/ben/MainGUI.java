@@ -120,12 +120,12 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                     g.setFont(new Font("Arial", Font.BOLD, 25));
                     FontMetrics fm = g.getFontMetrics();
                     int x = (500 - fm.stringWidth(getGameTitle())) / 2 + 150;
-                    int y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)-30;
+                    int y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)-25;
                     g.drawString(getGameTitle(), x, y);
                     g.setFont(new Font("Arial", Font.PLAIN, 16));
                     fm = g.getFontMetrics();
                     x = (500 - fm.stringWidth(getGameDescription())) / 2 + 150;
-                    y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)+10;
+                    y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)+17;
                     g.drawString(getGameDescription(), x, y);
                 }
 
