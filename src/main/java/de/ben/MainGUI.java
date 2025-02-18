@@ -3,6 +3,7 @@ package de.ben;
 import de.ben.blackjack.*;
 import de.ben.playground.althenator.MoleGame;
 import de.ben.playground.althenpong.PongGUI;
+import de.ben.playground.escape_the_althen.MenuFrame;
 import de.ben.poker.*;
 import de.ben.poker.SettingsGUI;
 
@@ -42,6 +43,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     private int z = 0;
     private int animationFrame = 0, direction = 0;
     private final int ANIMATION_SPEED = 10, ANIMATION_DELAY = 1;
+    private boolean showGameInfo = false;
 
     // Konstruktor
     public MainGUI() {
@@ -55,6 +57,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         games.add("althenpong");
         games.add("flappyschmandt");
         games.add("althenator");
+        games.add("escapethealthen");
 
         // Laden des gespeicherten Themes und der Lautstärken
         loadSelectedTheme();
@@ -63,9 +66,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
         this.setTitle("Game Library");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800, 600);
+        this.setSize(815, 600);
         this.setLocationRelativeTo(null);
-        //this.setResizable(false);
+        this.setResizable(false);
 
         //Titlebar-Icon mit Skalierung setzen
         ImageIcon icon = new ImageIcon("img/icon.png");
@@ -103,8 +106,27 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                     }else{
                         g.setColor(new Color(255, 255, 255, 100));
                     }
-                    g.fillOval(366+z, 492, 8, 8);
+                    g.fillOval(360+z, 492, 8, 8);
                     z+=12;
+                }
+
+                //Game Infos
+                if(showGameInfo){
+                    //OBERER Bevel für tooltips
+                    g.setColor(new Color(0, 0, 0, 100));
+                    g.fillRoundRect(100, 25, 600, 100, 10, 10);
+                    g.setColor(new Color(255, 255, 255, 255));
+                    //draw text which is centered on the bevel with taking the font size into account
+                    g.setFont(new Font("Arial", Font.BOLD, 25));
+                    FontMetrics fm = g.getFontMetrics();
+                    int x = (500 - fm.stringWidth(getGameTitle())) / 2 + 150;
+                    int y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)-30;
+                    g.drawString(getGameTitle(), x, y);
+                    g.setFont(new Font("Arial", Font.PLAIN, 16));
+                    fm = g.getFontMetrics();
+                    x = (500 - fm.stringWidth(getGameDescription())) / 2 + 150;
+                    y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)+10;
+                    g.drawString(getGameDescription(), x, y);
                 }
 
                 //Rotation Animation
@@ -214,7 +236,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         // Settings Button
         settingsButton = new JButton();
         settingsButton.setFocusable(false);
-        settingsButton.setBounds(730, 505, 50, 50);
+        settingsButton.setBounds(10, 505, 50, 50);
 
 // Load and scale the images
         ImageIcon defaultIcon = new ImageIcon("img/menu/settings1.png");
@@ -258,6 +280,67 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         });
 
         panel.add(settingsButton);
+
+        // Load and scale the images for the info button
+        ImageIcon infoDefaultIcon = new ImageIcon(new ImageIcon("img/menu/info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoHoverIcon = new ImageIcon(new ImageIcon("img/menu/hover_info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoDefaultIconFalse = new ImageIcon(new ImageIcon("img/menu/info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoHoverIconFalse = new ImageIcon(new ImageIcon("img/menu/hover_info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoClickIcon = new ImageIcon(new ImageIcon("img/menu/info3.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+
+// Create the info button
+        JButton infoButton = new JButton();
+        infoButton.setFocusable(false);
+        infoButton.setBounds(75, 510, 40, 40); // Position it next to the settings button
+        infoButton.setIcon(showGameInfo ? infoDefaultIcon : infoDefaultIconFalse);
+        infoButton.setContentAreaFilled(false);
+        infoButton.setBorderPainted(false);
+        infoButton.setFocusPainted(false);
+
+// Add action listener for click event
+        infoButton.addActionListener(e -> {
+            showGameInfo = !showGameInfo;
+            infoButton.setIcon(showGameInfo ? infoDefaultIcon : infoDefaultIconFalse);
+            playSound("click");
+        });
+
+// Add mouse listener for hover and click events
+        infoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!showGameInfo) {
+                    infoButton.setIcon(infoHoverIconFalse);
+                } else {
+                    infoButton.setIcon(infoHoverIcon);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!showGameInfo) {
+                    infoButton.setIcon(infoDefaultIconFalse);
+                } else {
+                    infoButton.setIcon(infoDefaultIcon);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                infoButton.setIcon(infoClickIcon);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!showGameInfo) {
+                    infoButton.setIcon(infoHoverIconFalse);
+                } else {
+                    infoButton.setIcon(infoHoverIcon);
+                }
+            }
+        });
+
+// Add the info button to the panel
+        panel.add(infoButton);
 
 // Right Arrow Button
         JButton rightArrowButton = new JButton();
@@ -310,7 +393,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 // Left Arrow Button
         JButton leftArrowButton = new JButton();
         leftArrowButton.setFocusable(false);
-        leftArrowButton.setBounds(0, 0, 30, 50); // Double the button size
+        leftArrowButton.setBounds(5, 0, 30, 50); // Double the button size
 
 // Load and scale the images for the left arrow button
         ImageIcon leftDefaultIcon = new ImageIcon(new ImageIcon("img/menu/left1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
@@ -360,8 +443,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
             @Override
             public void componentResized(ComponentEvent e) {
                 int centerY = (panel.getHeight() - 50) / 2; // Adjust for the new button height
-                leftArrowButton.setLocation(0, centerY); // Adjust for the new button width
-                rightArrowButton.setLocation(panel.getWidth() - 30, centerY); // Adjust for the new button width
+                leftArrowButton.setLocation(5, centerY); // Adjust for the new button width
+                rightArrowButton.setLocation(panel.getWidth() - 35, centerY); // Adjust for the new button width
+                infoButton.setLocation(settingsButton.getX() + 60, settingsButton.getY()+5);
             }
         });
 
@@ -369,6 +453,27 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         rightArrowButton.setVisible(true);
 
         this.setVisible(true);
+    }
+
+    private String getGameDescription() {
+        switch(games.get(selectedGameIndex)){
+            case "blackjack":
+                return "Spiele Blackjack gegen einen Bot-Dealer.";
+            case "poker1":
+                return "Gruppenversion von Poker, die an einem Rechner gespielt wird.";
+            case "poker2":
+                return "Multiplayerversion von Poker, die online mit anderen gespielt wird.";
+            case "althenpong":
+                return "Das klassische Pong mit BG-Star Andreas Althen.";
+            case "flappyschmandt":
+                return "Begleite und helfe Flappy-Schmandt auf ihrer Reise in die Ferne.";
+            case "althenator":
+                return "Die Sicherungen fliegen nacheinander raus und nur der Althenator kann nun helfen.";
+            case "escapethealthen":
+                return "Keiner entkam jemals dem Althen. Kannst du es schaffen?";
+            default:
+                return "No Game Selected";
+        }
     }
 
     private int interpolate(int preValue, int postValue){
@@ -380,25 +485,26 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     }
 
     private void rotateGame(int direction){
+        animationFrame = 50;
         isAnimating = false;
-        //if(!isAnimating) {
-            if (direction == -1) {
-                this.direction = -1;
-                if (selectedGameIndex == games.size() - 1) {
-                    selectedGameIndex = 0;
-                } else {
-                    selectedGameIndex++;
-                }
-            } else if (direction == 1) {
-                this.direction = 1;
-                if (selectedGameIndex == 0) {
-                    selectedGameIndex = games.size() - 1;
-                } else {
-                    selectedGameIndex--;
-                }
+        if (direction == -1) {
+            this.direction = -1;
+            if (selectedGameIndex == games.size() - 1) {
+                selectedGameIndex = 0;
+            } else {
+                selectedGameIndex++;
             }
-            isAnimating = true;
-        //}
+        } else if (direction == 1) {
+            this.direction = 1;
+            if (selectedGameIndex == 0) {
+                selectedGameIndex = games.size() - 1;
+            } else {
+                selectedGameIndex--;
+            }
+        }
+        animationFrame = 0;
+        isAnimating = true;
+
     }
 
     private int getGameToLeft(){
@@ -434,6 +540,27 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
             return 0;
         }else{
             return selectedGameIndex+2;
+        }
+    }
+
+    private String getGameTitle(){
+        switch(games.get(selectedGameIndex)){
+            case "blackjack":
+                return "Blackjack";
+            case "poker1":
+                return "Poker (Group Game)";
+            case "poker2":
+                return "Poker (Multiplayer)";
+            case "althenpong":
+                return "Althen-Pong";
+            case "flappyschmandt":
+                return "Flappy-Schmandt";
+            case "althenator":
+                return "Althenator II";
+            case "escapethealthen":
+                return "Escape the Althen!";
+            default:
+                return "No Game Selected";
         }
     }
 
@@ -707,6 +834,11 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                 case "althenator":
                     // Verstecke das MainGUI-Fenster und zeige den Ladescreen
                     MoleGame.create(this);
+                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                    break;
+                case "escapethealthen":
+                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                    MenuFrame mf = new MenuFrame(this);
                     this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
                     break;
             }

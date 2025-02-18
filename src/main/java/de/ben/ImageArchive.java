@@ -14,8 +14,8 @@ public class ImageArchive {
     private static BufferedImage chipsImg, bigBlindImg, smallBlindImg, iconImg, cardsImg;
     private static Image scaledChipsImg, scaledBigBlindImg, scaledSmallBlindImg, scaledIconImg, scaledCardsImg;
     //Menu Assets
-    private static BufferedImage poker1Logo, poker2Logo, blackjackLogo, althenpongLogo, flappyschmandtLogo, althenatorLogo;
-    private static Image scaledPoker1Logo, scaledPoker2Logo, scaledBlackjackLogo, scaledAlthenpongLogo, scaledFlappyschmandtLogo, scaledAlthenatorLogo;
+    private static BufferedImage poker1Logo, poker2Logo, blackjackLogo, althenpongLogo, flappyschmandtLogo, althenatorLogo, escapeTheAlthenLogo;
+    private static Image scaledPoker1Logo, scaledPoker2Logo, scaledBlackjackLogo, scaledAlthenpongLogo, scaledFlappyschmandtLogo, scaledAlthenatorLogo, scaledEscapeTheAlthenLogo;
     //Playerslots
     private static BufferedImage playerslot, emptyPlayerslot, activePlayerslot, winningPlayerslot, inactivePlayerslot, zeroPlayerslot, youPlayerslot, youActivePlayerslot, youWinningPlayerslot, youInactivePlayerslot, youZeroPlayerslot;
     private static Image scaledPlayerslot, scaledEmptyPlayerslot, scaledActivePlayerslot, scaledWinningPlayerslot, scaledInactivePlayerslot, scaledZeroPlayerslot, scaledYouPlayerslot, scaledYouActivePlayerslot, scaledYouInactivePlayerslot, scaledYouWinningPlayerslot, scaledYouZeroPlayerslot;
@@ -57,6 +57,7 @@ public class ImageArchive {
             althenpongLogo = ImageIO.read(new File("img/menu/althenpong.png"));
             flappyschmandtLogo = ImageIO.read(new File("img/menu/flappyschmandt.png"));
             althenatorLogo = ImageIO.read(new File("img/menu/althenator.png"));
+            escapeTheAlthenLogo = ImageIO.read(new File("img/menu/escapethealthen.png"));
             //Playerslots
             playerslot = ImageIO.read(new File("img/playerslots/playerslot.png"));
             emptyPlayerslot = ImageIO.read(new File("img/playerslots/empty_playerslot.png"));
@@ -165,6 +166,7 @@ public class ImageArchive {
         scaledAlthenpongLogo = althenpongLogo.getScaledInstance((int)(althenpongLogo.getWidth()*xScale), (int)(althenpongLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledFlappyschmandtLogo = flappyschmandtLogo.getScaledInstance((int)(flappyschmandtLogo.getWidth()*xScale), (int)(flappyschmandtLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledAlthenatorLogo = althenatorLogo.getScaledInstance((int)(althenatorLogo.getWidth()*xScale), (int)(althenatorLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledEscapeTheAlthenLogo = escapeTheAlthenLogo.getScaledInstance((int)(escapeTheAlthenLogo.getWidth()*xScale), (int)(escapeTheAlthenLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         //Playerslots
         scaledPlayerslot = playerslot.getScaledInstance((int)(playerslot.getWidth()*xScale), (int)(playerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledEmptyPlayerslot = emptyPlayerslot.getScaledInstance((int)(emptyPlayerslot.getWidth()*xScale), (int)(emptyPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
@@ -401,6 +403,8 @@ public class ImageArchive {
                     return scaledFlappyschmandtLogo;
                 case "althenator":
                     return scaledAlthenatorLogo;
+                case "escapethealthen":
+                    return scaledEscapeTheAlthenLogo;
                 //Playerslots
                 case "playerslot":
                     return scaledPlayerslot;
@@ -457,175 +461,5 @@ public class ImageArchive {
             }
         }
 
-    }
-
-    public static BufferedImage getUnprocessedImage(String imageName){
-        if(imageName.contains("card:")) {
-            //Cards
-            switch (imageName) {
-                //Backside
-                case "card:back":
-                    return cardBackImg;
-                //Clubs
-                case "card:CLUBS 2":
-                    return clubs2;
-                case "card:CLUBS 3":
-                    return clubs3;
-                case "card:CLUBS 4":
-                    return clubs4;
-                case "card:CLUBS 5":
-                    return clubs5;
-                case "card:CLUBS 6":
-                    return clubs6;
-                case "card:CLUBS 7":
-                    return clubs7;
-                case "card:CLUBS 8":
-                    return clubs8;
-                case "card:CLUBS 9":
-                    return clubs9;
-                case "card:CLUBS 10":
-                    return clubs10;
-                case "card:CLUBS J":
-                    return clubsJ;
-                case "card:CLUBS Q":
-                    return clubsQ;
-                case "card:CLUBS K":
-                    return clubsK;
-                case "card:CLUBS A":
-                    return clubsA;
-                //Diamonds
-                case "card:DIAMONDS 2":
-                    return diamonds2;
-                case "card:DIAMONDS 3":
-                    return diamonds3;
-                case "card:DIAMONDS 4":
-                    return diamonds4;
-                case "card:DIAMONDS 5":
-                    return diamonds5;
-                case "card:DIAMONDS 6":
-                    return diamonds6;
-                case "card:DIAMONDS 7":
-                    return diamonds7;
-                case "card:DIAMONDS 8":
-                    return diamonds8;
-                case "card:DIAMONDS 9":
-                    return diamonds9;
-                case "card:DIAMONDS 10":
-                    return diamonds10;
-                case "card:DIAMONDS J":
-                    return diamondsJ;
-                case "card:DIAMONDS Q":
-                    return diamondsQ;
-                case "card:DIAMONDS K":
-                    return diamondsK;
-                case "card:DIAMONDS A":
-                    return diamondsA;
-                //Hearts
-                case "card:HEARTS 2":
-                    return hearts2;
-                case "card:HEARTS 3":
-                    return hearts3;
-                case "card:HEARTS 4":
-                    return hearts4;
-                case "card:HEARTS 5":
-                    return hearts5;
-                case "card:HEARTS 6":
-                    return hearts6;
-                case "card:HEARTS 7":
-                    return hearts7;
-                case "card:HEARTS 8":
-                    return hearts8;
-                case "card:HEARTS 9":
-                    return hearts9;
-                case "card:HEARTS 10":
-                    return hearts10;
-                case "card:HEARTS J":
-                    return heartsJ;
-                case "card:HEARTS Q":
-                    return heartsQ;
-                case "card:HEARTS K":
-                    return heartsK;
-                case "card:HEARTS A":
-                    return heartsA;
-                //Spades
-                case "card:SPADES 2":
-                    return spades2;
-                case "card:SPADES 3":
-                    return spades3;
-                case "card:SPADES 4":
-                    return spades4;
-                case "card:SPADES 5":
-                    return spades5;
-                case "card:SPADES 6":
-                    return spades6;
-                case "card:SPADES 7":
-                    return spades7;
-                case "card:SPADES 8":
-                    return spades8;
-                case "card:SPADES 9":
-                    return spades9;
-                case "card:SPADES 10":
-                    return spades10;
-                case "card:SPADES J":
-                    return spadesJ;
-                case "card:SPADES Q":
-                    return spadesQ;
-                case "card:SPADES K":
-                    return spadesK;
-                case "card:SPADES A":
-                    return spadesA;
-                default:
-                    return null;
-            }
-        }else{
-                switch (imageName) {
-                    //Icons
-                    case "chips":
-                        return chipsImg;
-                    case "bigblind":
-                        return bigBlindImg;
-                    case "smallblind":
-                        return smallBlindImg;
-                    case "icon":
-                        return iconImg;
-                    case "cards":
-                        return cardsImg;
-                    //Playerslots
-                    case "playerslot":
-                        return playerslot;
-                    case "empty_playerslot":
-                        return emptyPlayerslot;
-                    case "active_playerslot":
-                        return activePlayerslot;
-                    case "winning_playerslot":
-                        return winningPlayerslot;
-                    case "inactive_playerslot":
-                        return inactivePlayerslot;
-                    case "zero_playerslot":
-                        return zeroPlayerslot;
-                    //Misc
-                    case "background:Original":
-                        return originalBackgroundImg;
-                    case "background:Dark":
-                        return darkBackgroundImg;
-                    case "background:Darkblue":
-                        return darkblueBackgroundImg;
-                    case "background:Light":
-                        return lightBackgroundImg;
-                    case "background:Scarlet":
-                        return scarletBackgroundImg;
-                    case "table":
-                        return tableImg;
-                    case "pot", "pot:", "pot:Original", "pot:Scarlet", "pot:Dark", "pot:Darkblue":
-                        return potImg;
-                    case "pot:Light":
-                        return darkPotImg;
-                    //Cards
-                    case "card:back":
-                        return cardBackImg;
-                    default:
-                        return null;
-                }
-        }
     }
 }
