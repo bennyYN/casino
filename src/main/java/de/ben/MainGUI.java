@@ -37,8 +37,11 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     Color scarletTheme = new Color(172, 41, 66, 255), transparentScarletTheme = new Color(197, 0, 0, 136);
     public int playerIndex = -1;
     private int selectedGameIndex = 0;
+    private boolean isAnimating = false;
     private ArrayList<String> games = new ArrayList<String>();
     private int z = 0;
+    private int animationFrame = 0, direction = 0;
+    private final int ANIMATION_SPEED = 10, ANIMATION_DELAY = 1;
 
     // Konstruktor
     public MainGUI() {
@@ -62,7 +65,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(800, 600);
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        //this.setResizable(false);
 
         //Titlebar-Icon mit Skalierung setzen
         ImageIcon icon = new ImageIcon("img/icon.png");
@@ -91,7 +94,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                 g.setColor(new Color(0, 0, 0, 100));
                 g.fillRect(0, 475, 800, 125);
 
-                //Empty Progressbar using circles to represent a game
+                //Progressbar using circles to represent a game
                 g.setColor(new Color(255, 255, 255, 100));
                 z=0;
                 for(int i = 0; i < games.size(); i++){
@@ -104,19 +107,95 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                     z+=12;
                 }
 
-                //Display logo of selected game including white shadow to highlight
-                g.setColor(new Color(255, 255, 255, 178));
-                g.fillRect(273, 158, 254, 304);
-                g.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)), 275, 160, null);
+                //Rotation Animation
+                if(isAnimating){
+                    if(animationFrame < 100){
+                        if(direction == 1) {
 
-                //Display logo of game with 50% transparency to the left and right of selected game
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-                g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 50, 185, null);
-                g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 550, 185, null);
-                g2d.dispose();
+                            //RIGHT ROTATION ANIMATION
+
+                            Graphics2D g2d = (Graphics2D) g.create();
+
+                            //middle game to right
+                            g.setColor(new Color(255, 255, 255, (interpolate(178, 0))));
+                            g.fillRect(interpolate(273, 549), interpolate(158, 184), interpolate(254, (int)(252*0.8)), interpolate(304, (int)(302*0.8)));
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(1, 0.5f)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance(interpolate(250, (int)(250*0.8)), interpolate(300, (int)(300*0.8)), Image.SCALE_SMOOTH), interpolate(275, 550), interpolate(160, 185), null);
+
+                            //right to selection fade out to right
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, -0.5f)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGame2ToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(550, 775), 185, null);
+
+                            //left to selection morph to selection
+                            g.setColor(new Color(255, 255, 255, interpolate(0, 178)));
+                            g.fillRect(interpolate(49, 273), interpolate(184, 158), interpolate((int)(252*0.8), 254), interpolate((int)(302*0.8), 304)); //TODO MORPH ANIMATION
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, 1)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)).getScaledInstance(interpolate((int)(250*0.8), 250), interpolate((int)(300*0.8), 300), Image.SCALE_SMOOTH), interpolate(50, 275), interpolate(185, 160), null);
+
+                            //fade in left selection from the left
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(-0.5f, 0.5f)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(-175, 50), 185, null);
+
+                            g2d.dispose();
+
+                            animationFrame = animationFrame + ANIMATION_SPEED;
+                        }else{
+
+                            //LEFT ROTATION ANIMATION
+
+                            Graphics2D g2d = (Graphics2D) g.create();
+
+                            //middle game to left
+                            g.setColor(new Color(255, 255, 255, (interpolate(178, 0))));
+                            g.fillRect(interpolate(273, 49), interpolate(158, 184), interpolate(254, (int)(252*0.8)), interpolate(304, (int)(302*0.8)));
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(1, 0.5f)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance(interpolate(250, (int)(250*0.8)), interpolate(300, (int)(300*0.8)), Image.SCALE_SMOOTH), interpolate(275, 50), interpolate(160, 185), null);
+
+                            //left to selection fade out to left
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, -0.5f)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGame2ToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(50, -175), 185, null);
+
+                            //right to selection morph to selection
+                            g.setColor(new Color(255, 255, 255, interpolate(0, 178)));
+                            g.fillRect(interpolate(549, 273), interpolate(184, 158), interpolate((int)(252*0.8), 254), interpolate((int)(302*0.8), 304)); //TODO MORPH ANIMATION
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, 1)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)).getScaledInstance(interpolate((int)(250*0.8), 250), interpolate((int)(300*0.8), 300), Image.SCALE_SMOOTH), interpolate(550, 275), interpolate(185, 160), null);
+
+                            //fade in right selection from the right
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(-0.5f, 0.5f)));
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(775, 550), 185, null);
+
+                            g2d.dispose();
+
+                            animationFrame = animationFrame + ANIMATION_SPEED;
+                        }
+                    }else{
+                        animationFrame = 0;
+                        isAnimating = false;
+                    }
+                }
+                if(!isAnimating){
+
+                    animationFrame = 0;
+                    //Display logo of selected game including white shadow to highlight
+                    g.setColor(new Color(255, 255, 255, 178));
+                    g.fillRect(273, 158, 254, 304);
+                    g.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)), 275, 160, null);
+
+                    //Display logo of game with 50% transparency to the left and right of selected game
+                    Graphics2D g2d = (Graphics2D) g.create();
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                    g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 50, 185, null);
+                    g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 550, 185, null);
+
+                    g2d.dispose();
+                }
             }
         };
+
+        // Inside the MainGUI constructor, after initializing the panel
+        Timer timer = new Timer(ANIMATION_DELAY, e -> panel.repaint());
+        timer.start();
 
         panel.setLayout(null); // Setze Layout nach dem Laden des Bildes oder dem Default
         this.add(panel);
@@ -180,23 +259,146 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
         panel.add(settingsButton);
 
+// Right Arrow Button
+        JButton rightArrowButton = new JButton();
+        rightArrowButton.setFocusable(false);
+        rightArrowButton.setBounds(0, 0, 30, 50); // Double the button size
+
+// Load and scale the images for the right arrow button
+        ImageIcon rightDefaultIcon = new ImageIcon(new ImageIcon("img/menu/right1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightHoverIcon = new ImageIcon(new ImageIcon("img/menu/right2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightClickIcon = new ImageIcon(new ImageIcon("img/menu/right3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+
+// Set the default icon
+        rightArrowButton.setIcon(rightDefaultIcon);
+        rightArrowButton.setContentAreaFilled(false);
+        rightArrowButton.setBorderPainted(false);
+        rightArrowButton.setFocusPainted(false);
+
+// Add action listener for click event
+        rightArrowButton.addActionListener(e -> {
+            playSound("click");
+            rotateGame(-1);
+            panel.repaint();
+        });
+
+// Add mouse listener for hover and click events
+        rightArrowButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                rightArrowButton.setIcon(rightHoverIcon);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                rightArrowButton.setIcon(rightDefaultIcon);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                rightArrowButton.setIcon(rightClickIcon);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                rightArrowButton.setIcon(rightHoverIcon);
+            }
+        });
+
+        panel.add(rightArrowButton);
+
+// Left Arrow Button
+        JButton leftArrowButton = new JButton();
+        leftArrowButton.setFocusable(false);
+        leftArrowButton.setBounds(0, 0, 30, 50); // Double the button size
+
+// Load and scale the images for the left arrow button
+        ImageIcon leftDefaultIcon = new ImageIcon(new ImageIcon("img/menu/left1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftHoverIcon = new ImageIcon(new ImageIcon("img/menu/left2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftClickIcon = new ImageIcon(new ImageIcon("img/menu/left3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+
+// Set the default icon
+        leftArrowButton.setIcon(leftDefaultIcon);
+        leftArrowButton.setContentAreaFilled(false);
+        leftArrowButton.setBorderPainted(false);
+        leftArrowButton.setFocusPainted(false);
+
+// Add action listener for click event
+        leftArrowButton.addActionListener(e -> {
+            playSound("click");
+            rotateGame(1);
+            panel.repaint();
+        });
+
+// Add mouse listener for hover and click events
+        leftArrowButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                leftArrowButton.setIcon(leftHoverIcon);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                leftArrowButton.setIcon(leftDefaultIcon);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                leftArrowButton.setIcon(leftClickIcon);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                leftArrowButton.setIcon(leftHoverIcon);
+            }
+        });
+
+        panel.add(leftArrowButton);
+
+// Adjust button positions when the panel is resized
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int centerY = (panel.getHeight() - 50) / 2; // Adjust for the new button height
+                leftArrowButton.setLocation(0, centerY); // Adjust for the new button width
+                rightArrowButton.setLocation(panel.getWidth() - 30, centerY); // Adjust for the new button width
+            }
+        });
+
+        leftArrowButton.setVisible(true);
+        rightArrowButton.setVisible(true);
+
         this.setVisible(true);
     }
 
+    private int interpolate(int preValue, int postValue){
+        return preValue + (postValue - preValue) * animationFrame / 100;
+    }
+
+    private float interpolate(float preValue, float postValue){
+        return Math.max(0, preValue + (postValue - preValue) * animationFrame / 100);
+    }
+
     private void rotateGame(int direction){
-        if(direction == -1){
-            if(selectedGameIndex == games.size()-1){
-                selectedGameIndex = 0;
-            }else{
-                selectedGameIndex++;
+        isAnimating = false;
+        //if(!isAnimating) {
+            if (direction == -1) {
+                this.direction = -1;
+                if (selectedGameIndex == games.size() - 1) {
+                    selectedGameIndex = 0;
+                } else {
+                    selectedGameIndex++;
+                }
+            } else if (direction == 1) {
+                this.direction = 1;
+                if (selectedGameIndex == 0) {
+                    selectedGameIndex = games.size() - 1;
+                } else {
+                    selectedGameIndex--;
+                }
             }
-        }else if (direction == 1){
-            if(selectedGameIndex == 0){
-                selectedGameIndex = games.size()-1;
-            }else{
-                selectedGameIndex--;
-            }
-        }
+            isAnimating = true;
+        //}
     }
 
     private int getGameToLeft(){
@@ -212,6 +414,26 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
             return 0;
         }else{
             return selectedGameIndex+1;
+        }
+    }
+
+    private int getGame2ToLeft(){
+        if(selectedGameIndex == 0){
+            return games.size()-2;
+        }else if(selectedGameIndex == 1){
+            return games.size()-1;
+        }else{
+            return selectedGameIndex-2;
+        }
+    }
+
+    private int getGame2ToRight(){
+        if(selectedGameIndex == games.size()-1){
+            return 1;
+        }else if(selectedGameIndex == games.size()-2){
+            return 0;
+        }else{
+            return selectedGameIndex+2;
         }
     }
 
@@ -551,6 +773,6 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         }else{
             rotateGame(1);
         }
-        panel.repaint();
+
     }
 }
