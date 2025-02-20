@@ -16,7 +16,7 @@ public class MenuPanel extends JPanel implements ActionListener{
 	JButton b = new JButton();
 	JButton b2 = new JButton();
 	MenuFrame mf;
-	public boolean alreadyOpened = false;
+	public static boolean alreadyOpened = false, opening = false;
 	MainGUI mainGUI;
 	
 	//KONSTRUKTOR
@@ -25,7 +25,14 @@ public class MenuPanel extends JPanel implements ActionListener{
 		this.mainGUI = mainGUI;
 		b.addActionListener(this);
 		b2.addActionListener(this);
-		b.setText("Spielen");
+		if(!alreadyOpened) {
+			b.setEnabled(true);
+			b.setText("Spielen");
+		}else {
+			b.setEnabled(false);
+			b.setText("Nicht verfügbar");
+		}
+
 		b2.setText("Hauptmenü");
 		b.setBounds(785, 500, 350, 70);
 		this.setLayout(null);
@@ -46,8 +53,46 @@ public class MenuPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == b && !alreadyOpened) {
-			GameFrame gf = new GameFrame(1, mf);
-			mf.setVisible(false);
+			b.setEnabled(false);
+			alreadyOpened = true;
+			new Thread() {
+				public void run() {
+					while(alreadyOpened){
+						b.setText("Spiel wird geladen.");
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						b.setText("Spiel wird geladen..");
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						b.setText("Spiel wird geladen...");
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						b.setText("Spiel wird geladen....");
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}.start();
+			//neuer thread zum spiel öffnen
+			new Thread() {
+				public void run() {
+					GameFrame gf = new GameFrame(1, mf);
+					mf.setVisible(false);
+					alreadyOpened = false;
+				}
+			}.start();
 		}
 		if(e.getSource() == b2) {
 			mainGUI.setVisible(true);

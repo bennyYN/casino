@@ -26,12 +26,16 @@ public class GamePanel extends JPanel implements ActionListener{
 
 	//KONTRUKTOR
 		public GamePanel(GameFrame gf, int level) {
+
+			//reset creatures
+			Creature.reset();
+
 			this.setSize(1920, 1080);
 			this.setOpaque(true);
 			player = new Player((0)*16*gameScale, (0)*16*gameScale, 0.3, gameScale, 1.65, (this.getWidth()/2)-((16*gameScale)/2), (this.getHeight()/2)-((16*gameScale)/2));
 			world = new World(gameScale, player, this);
 			gm = new GenerationManager(level, world);
-			einweiser = new Einweiser(11, 7, 0.4, gameScale, 0, player);
+			einweiser = new Einweiser(2.3, 0, 0.4, gameScale, 10, player);
 			einweiser2 = new Einweiser(9, 12, 0.4, gameScale, 10, player);
 			hud = new HUD(this, (int)(this.getWidth()/2), (int)this.getHeight());
 			this.setVisible(true);
@@ -48,8 +52,6 @@ public class GamePanel extends JPanel implements ActionListener{
 			currentLevel = level;
 			//Load Level Generation File
 			gm.generate();
-
-			
 		}
 
 	//TEMPORÄRE METHODE ZUM ERSETZEN VON TILES
@@ -128,8 +130,10 @@ public class GamePanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == b) {
-			gf.mf.setVisible(true);
+			gf.mf.mainGUI.setVisible(true);
+			gf.mf.dispose();
 			gf.dispose();
+
 		}
 	}
 }

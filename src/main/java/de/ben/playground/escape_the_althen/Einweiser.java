@@ -47,8 +47,15 @@ public class Einweiser extends Creature{
 				//WENN DER VEKTOR VON DER KREATUR ZUM SPIELER NICHT BLOCKIERT IST:
 				if(los.playerInSight()) {
 					//SETZEN VON GESCHWINDIGKEIT FÜR X & Y
-					velocity[0] = ((los.lineVectorSegment[0]/55)*walkingSpeed);
-					velocity[1] = ((los.lineVectorSegment[1]/55)*walkingSpeed);
+					if(los.getVectorLength()>0.5){
+						isWalking = true;
+						velocity[0] = (((los.lineVectorSegment[0]/los.getVectorLength())*4.5)*walkingSpeed);
+						velocity[1] = (((los.lineVectorSegment[1]/los.getVectorLength())*4.5)*walkingSpeed);
+					}else{
+						isWalking = false;
+						velocity[0] = ((los.lineVectorSegment[0]/70)*walkingSpeed);
+						velocity[1] = ((los.lineVectorSegment[1]/70)*walkingSpeed);
+					}
 				}else {
 					//GESCHWINDIGKEIT AUF 0 SETZEN, WENN EIN OBJEKT DEN VEKTOR UNTERBRICHT
 					velocity[0] = 0;
@@ -71,6 +78,11 @@ public class Einweiser extends Creature{
 	//METHODE UM DIESE EINZELNE KREATUR ZU AKTUALISIEREN
 	@Override
 	public void updateIndividual(GamePanel gp) {
+		//DEN SPIELER SCHADEN MACHEN
+		if(los.getVectorLength()<=65){
+			player.health -= 0.025*(1+los.getVectorLength()/(10*scale));
+		}
+
 		//AKTUALISIERUNG DER BLICKRICHTUNG ANHAND DER WERTE DER VEKTOREN
 		if(Math.abs(los.lineVector[1])>Math.abs(los.lineVector[0]) && velocity[1]<0) {
 			moveDirection = "up";

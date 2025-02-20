@@ -1,5 +1,7 @@
 package de.ben.playground.escape_the_althen;
 
+import de.ben.MainGUI;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -146,6 +148,7 @@ public class Object extends Placeable{
 				iBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)(((yTilePosition)*16*scale)-((int)playerPos[1])), 38, 8, scale, -3, 44);
 				if(type.equals("door22") && playerInEventBox()) {
 					world.p.levelCompleted = true;
+					MainGUI.playSound("level_completed");
 				}
 
 			}else {
@@ -157,6 +160,7 @@ public class Object extends Placeable{
 			case "pot1": 
 				if(isPlayerInRange() && player.hitEvent) {
 					player.hitEvent = false;
+					MainGUI.playSound("pot_breaking");
 					changeType("pot2");
 					
 				}
@@ -207,6 +211,7 @@ public class Object extends Placeable{
 			case "chest1": 
 				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")) {
 					//player.interactionEvent = false;
+					MainGUI.playSound("toggle2");
 					changeType("chest2");
 					world.p.inv.removeSelectedItem();
 					Item droppedItem = new Item(world, xTilePosition, yTilePosition, "immortality_potion");
@@ -304,6 +309,7 @@ public class Object extends Placeable{
 				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")) {
 					//player.interactionEvent = false;
 					changeType("door2");
+					MainGUI.playSound("door_opening");
 					world.p.inv.removeSelectedItem();
 				}
 				break;

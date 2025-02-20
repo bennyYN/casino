@@ -28,7 +28,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     private final String VOLUME_FILE = "volume.txt"; // Datei zum Speichern der Lautstärke
     private final String THEME_FILE = "theme.txt"; // Datei zum Speichern des Themes
     private final String GAME_SOUNDS_FILE = "gamesounds.txt"; // Datei zum Speichern der Soundeinstellungen
-    private final boolean showLoadingScreen = false;
+    private boolean startingGame = false;
     private String selectedTheme;
     private static float gameSoundsVolume = 50; // Default game sounds volume
     private String MultiplayerName;
@@ -41,7 +41,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     private boolean isAnimating = false;
     private ArrayList<String> games = new ArrayList<String>();
     private int z = 0;
-    private int animationFrame = 0, direction = 0;
+    private int animationFrame = 0, direction = 0, startAnimationFrame = 1;
     private final int ANIMATION_SPEED = 10, ANIMATION_DELAY = 1;
     private boolean showGameInfo = true;
 
@@ -58,6 +58,10 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         games.add("flappyschmandt");
         games.add("althenator");
         games.add("escapethealthen");
+
+        // Erstellen des JLayeredPane
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(815, 600));
 
         // Laden des gespeicherten Themes und der Lautstärken
         loadSelectedTheme();
@@ -221,8 +225,35 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         timer.start();
 
         panel.setLayout(null); // Setze Layout nach dem Laden des Bildes oder dem Default
-        this.add(panel);
 
+        // Erstellen des Overlay-Panels mit direkter überschreibung der paint-methode
+        JPanel overlayPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if(startingGame){
+                    //GSA - Game Start Animation
+                    //Display logo of selected game including white shadow to highlight
+                    g.setColor(new Color(255, 255, 255, 178));
+                    startAnimationFrame *= 2;
+                    g.fillRect(273, 158, 254, 304);
+                    g.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)), 275-startAnimationFrame, 160-startAnimationFrame, 250+(startAnimationFrame*2), 300+(startAnimationFrame*2),  null);
+                }else{
+                    startAnimationFrame = 1;
+                }
+                System.out.println("JAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                repaint();
+            }
+        };
+        overlayPanel.setOpaque(false); // Transparentes Overlay
+        overlayPanel.setFocusable(false);
+        overlayPanel.setBounds(0, 0, 815, 600);
+
+        // Beispielinhalt für das Overlay-Panel
+        overlayPanel.add(new JLabel("Overlay Content"));
+
+        // Hinzufügen des Overlay-Panels
+        layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
 
         // Add MouseWheelListener to the panel
         panel.addMouseWheelListener(this);
@@ -305,6 +336,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
         panel.add(leftInvisibleButton);
         panel.add(rightInvisibleButton);
+        add(layeredPane);
 
         // Load and scale the images for the info button
         ImageIcon infoDefaultIcon = new ImageIcon(new ImageIcon("img/menu/info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
@@ -476,6 +508,10 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
         leftArrowButton.setVisible(true);
         rightArrowButton.setVisible(true);
+
+        // Hinzufügen des bestehenden Panels
+        panel.setBounds(0, 0, 815, 600);
+        layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
 
         this.setVisible(true);
     }
@@ -819,54 +855,58 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     public void actionPerformed(ActionEvent e) {
         JButton sourceButton = (JButton) e.getSource();
         if (sourceButton == startButton) {
-            switch(games.get(selectedGameIndex)){
-                case "blackjack":
-                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-                    new GameSettings(this);
-                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-                    break;
-                case "poker1":
-                    // PokerGUI direkt öffnen
-                    new PlayerSelection(this);
-                    this.dispose(); // Schließe MainGUI
-                    break;
-                case "poker2":
-                    boolean isRunning = true;
-                    while(isRunning){
-                        MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben (1-12 Zeichen)", JOptionPane.PLAIN_MESSAGE);
-                        if(MultiplayerName == null){
-                            isRunning = false;
-                            break;
-                        }else if(!MultiplayerName.isEmpty() && !MultiplayerName.contains(",") && MultiplayerName.length()<=12){
-                            new MultiplayerGUI(this);
-                            this.setVisible(false);
-                            isRunning = false;
-                            break;
+            startAnimationFrame = 2;
+            //new thread with overridden run method
+            new Thread(() -> {
+                switch(games.get(selectedGameIndex)){
+                    case "blackjack":
+                        // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                        new GameSettings(this);
+                        this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                        break;
+                    case "poker1":
+                        // PokerGUI direkt öffnen
+                        new PlayerSelection(this);
+                        this.dispose(); // Schließe MainGUI
+                        break;
+                    case "poker2":
+                        boolean isRunning = true;
+                        while(isRunning){
+                            MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben (1-12 Zeichen)", JOptionPane.PLAIN_MESSAGE);
+                            if(MultiplayerName == null){
+                                isRunning = false;
+                                break;
+                            }else if(!MultiplayerName.isEmpty() && !MultiplayerName.contains(",") && MultiplayerName.length()<=12){
+                                new MultiplayerGUI(this);
+                                this.setVisible(false);
+                                isRunning = false;
+                                break;
+                            }
+                            JOptionPane.showMessageDialog(this, "1-12 Zeichen & Keine \",\"", "Ungültiger Name", JOptionPane.ERROR_MESSAGE);
                         }
-                        JOptionPane.showMessageDialog(this, "1-12 Zeichen & Keine \",\"", "Ungültiger Name", JOptionPane.ERROR_MESSAGE);
-                    }
-                    break;
-                case "althenpong":
-                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-                    new PongGUI(this);
-                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-                    break;
-                case "flappyschmandt":
-                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-                    new de.ben.playground.flappyschmandt.FlappySchmandtGUI(this);
-                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-                    break;
-                case "althenator":
-                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-                    new AlthenatorGUI(this);
-                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-                    break;
-                case "escapethealthen":
-                    // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-                    MenuFrame mf = new MenuFrame(this);
-                    this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
-                    break;
-            }
+                        break;
+                    case "althenpong":
+                        // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                        new PongGUI(this);
+                        this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                        break;
+                    case "flappyschmandt":
+                        // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                        new de.ben.playground.flappyschmandt.FlappySchmandtGUI(this);
+                        this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                        break;
+                    case "althenator":
+                        // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                        new AlthenatorGUI(this);
+                        this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                        break;
+                    case "escapethealthen":
+                        // Verstecke das MainGUI-Fenster und zeige den Ladescreen
+                        MenuFrame mf = new MenuFrame(this);
+                        this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
+                        break;
+                }
+            }).start();
         }
     }
 

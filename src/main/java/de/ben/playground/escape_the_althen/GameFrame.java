@@ -21,8 +21,8 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 	Timer timer;
 	public int selectedLevel;
 	CollisionManager cm = new CollisionManager();
-	public double delayer1 = 0, delayer2 = 0, delayer3 = 0;
-	ImageIcon frameIcon = new ImageIcon("img/playground/escapethealthen/graphics/gui/icon.png");
+	public double delayer1 = 0, delayer2 = 0, delayer3 = 0, delayer4 = 0;
+	ImageIcon frameIcon = new ImageIcon("img/playground/althenpong/althenos.png");
 	
 	//KONSTRUKTOR
 	public GameFrame(int selectedLevel, MenuFrame mf) {
@@ -154,7 +154,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 					p.player.isWalking = false;
 			}
 			
-			//AKTUALISIERUNG DES ANIMATIONSWERT DES SPIELERS FÜR LAUFANIMATION
+			//AKTUALISIERUNG DES ANIMATIONSWERT DES SPIELERS & DES ALTHENS FÜR LAUFANIMATION
 			//LINKS/RECHTS:
 			if(delayer1 >= 8 || (p.player.isSprinting && delayer1 >= 3 && p.player.isWalking)) {
 				if(p.player.textureVariation1 == 8) {
@@ -189,6 +189,17 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 				delayer3++;
 			}
 
+			// New texture variation
+			if (delayer4 >= 8 || (p.player.isSprinting && delayer4 >= 3 && p.player.isWalking)) {
+				if (p.player.textureVariation4 == 8) {
+					p.player.textureVariation4 = 1;
+				} else {
+					p.player.textureVariation4++;
+				}
+				delayer4 = 0;
+			} else {
+				delayer4++;
+			}
 	//WENN DER SPIELER AM LEBEN IST:
 		if(p.player.isAlive) {
 			try {

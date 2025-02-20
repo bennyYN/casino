@@ -13,7 +13,7 @@ public abstract class Creature {
 		public static int creatureCount = 0;
 		public static ArrayList<Creature> Creatures= new ArrayList<Creature>();
 		public static ArrayList<Creature> sortedCreatures= new ArrayList<Creature>();
-		public static byte textureVariation1 = 1, textureVariation2 = 1, textureVariation3 = 1;
+		public static byte textureVariation1 = 1, textureVariation2 = 1, textureVariation3 = 1, textureVariation4 = 1;
 		Random random;
 		LOS los;
 	
@@ -76,20 +76,27 @@ public abstract class Creature {
 	
 		//METHODE UM ALLE KREATUREN ZU UPDATEN
 		//(RUFT 'updateIndividual()' FÜR JEDE KREATUR AUF)
-		public void update(GamePanel gp){
-			//ZÄHLERSCHLEIFE UM ALLE KREATUREN EINZELN ZU UPDATEN
-			for(int i = 0; i < Creatures.size(); i++) {
+		public void update(GamePanel gp) {
+			// ZÄHLERSCHLEIFE UM ALLE KREATUREN EINZELN ZU UPDATEN
+			for (int i = 0; i < sortedCreatures.size(); i++) {
 				sortedCreatures.get(i).updateIndividual(gp);
 			}
-			//AKTUALISIERUNG DES "PAUSE-ATTRIBUTS"
+			// AKTUALISIERUNG DES "PAUSE-ATTRIBUTS"
 			gamePaused = gp.paused;
-			//SORTIEREN NACH Y POSITION (FÜRS RENDERING)
-			Collections.sort(sortedCreatures, new Comparator<Creature>() {
-				public int compare(Creature c1, Creature c2) {
-					double c1Pos = (c1.position[1]-c1.height);
-					double c2Pos = (c2.position[1]-c2.height);
-					return Double.compare(c1Pos, c2Pos);
-				}
-			});
+			// SORTIEREN NACH Y POSITION (FÜRS RENDERING)
+			sortedCreatures.sort(new Comparator<Creature>() {
+                public int compare(Creature c1, Creature c2) {
+                    double c1Pos = c1.getY();
+                    double c2Pos = c2.getY();
+                    return Double.compare(c1Pos, c2Pos);
+                }
+            });
+		}
+
+		//Methode um alles für einen neustart zu resetten
+		public static void reset() {
+			creatureCount = 0;
+			Creatures.clear();
+			sortedCreatures.clear();
 		}
 }

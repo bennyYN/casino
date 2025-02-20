@@ -1,5 +1,7 @@
 package de.ben.playground.escape_the_althen;
 
+import de.ben.MainGUI;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -90,11 +92,13 @@ public class Inventory {
 			}
 		}
 		items.set(emptySlotIndex, pickedUpItemType);
+		MainGUI.playSound("view2");
 	}
 	
 	public void throwItem(GamePanel p) {
 		if(!items.get(selected).equals("void")) {
 			Item thrownItem = new Item(p.world, (int)((player.position[0]/16/player.scale)+12), (int)((player.position[1]/16/player.scale)+9), items.get(selected));
+			MainGUI.playSound("view1");
 			items.set(selected, "void");
 		}
 	}

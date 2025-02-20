@@ -11,14 +11,16 @@ import javax.swing.JFrame;
 
 public class MenuFrame extends JFrame{
 
+	public MainGUI mainGUI;
 	//ATTRIBUTE
 	MenuPanel mp;
-	ImageIcon frameIcon = new ImageIcon("img/playground/escapethealthen/graphics/gui/icon.png");
+	ImageIcon frameIcon = new ImageIcon("img/playground/althenpong/althenos.png");
 	
 	//KONSTRUKTOR
 	public MenuFrame(MainGUI mainGUI) {
 		mp = new MenuPanel(this, mainGUI);
 		this.add(mp);
+		this.mainGUI = mainGUI;
 		this.setIconImage(frameIcon.getImage());
 		this.setSize(1920, 1080);
 		this.setTitle("Escape The Althen!");
