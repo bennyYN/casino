@@ -1,7 +1,7 @@
 package de.ben;
 
 import de.ben.blackjack.*;
-import de.ben.playground.althenator.MoleGame;
+import de.ben.playground.althenator.AlthenatorGUI;
 import de.ben.playground.althenpong.PongGUI;
 import de.ben.playground.escape_the_althen.MenuFrame;
 import de.ben.poker.*;
@@ -18,10 +18,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class MainGUI extends JFrame implements ActionListener, MouseWheelListener {
+public class MainGUI extends JFrame implements ActionListener, MouseWheelListener, KeyListener {
 
     // Attribute
-    JButton startButton, settingsButton;
+    JButton startButton, settingsButton, infoButton;
     JPanel panel;
     private Clip backgroundMusic;
     private FloatControl volumeControl;
@@ -43,7 +43,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     private int z = 0;
     private int animationFrame = 0, direction = 0;
     private final int ANIMATION_SPEED = 10, ANIMATION_DELAY = 1;
-    private boolean showGameInfo = false;
+    private boolean showGameInfo = true;
 
     // Konstruktor
     public MainGUI() {
@@ -69,6 +69,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         this.setSize(815, 600);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        this.addKeyListener(this);
 
         //Titlebar-Icon mit Skalierung setzen
         ImageIcon icon = new ImageIcon("img/icon.png");
@@ -281,6 +282,30 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
         panel.add(settingsButton);
 
+        // Inside the MainGUI constructor, after initializing the panel
+        JButton leftInvisibleButton = new JButton();
+        leftInvisibleButton.setFocusable(false);
+        leftInvisibleButton.setBounds(50, 185, (int)(250*0.8), (int)(300*0.8)); // Position and size the button
+        leftInvisibleButton.setContentAreaFilled(false);
+        leftInvisibleButton.setBorderPainted(false);
+        leftInvisibleButton.setFocusPainted(false);
+        leftInvisibleButton.addActionListener(e -> {
+            rotateGame(1);
+        });
+
+        JButton rightInvisibleButton = new JButton();
+        rightInvisibleButton.setFocusable(false);
+        rightInvisibleButton.setBounds(550, 185, (int)(250*0.8), (int)(300*0.8)); // Position and size the button
+        rightInvisibleButton.setContentAreaFilled(false);
+        rightInvisibleButton.setBorderPainted(false);
+        rightInvisibleButton.setFocusPainted(false);
+        rightInvisibleButton.addActionListener(e -> {
+            rotateGame(-1);
+        });
+
+        panel.add(leftInvisibleButton);
+        panel.add(rightInvisibleButton);
+
         // Load and scale the images for the info button
         ImageIcon infoDefaultIcon = new ImageIcon(new ImageIcon("img/menu/info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         ImageIcon infoHoverIcon = new ImageIcon(new ImageIcon("img/menu/hover_info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
@@ -289,7 +314,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         ImageIcon infoClickIcon = new ImageIcon(new ImageIcon("img/menu/info3.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 
 // Create the info button
-        JButton infoButton = new JButton();
+        infoButton = new JButton();
         infoButton.setFocusable(false);
         infoButton.setBounds(75, 510, 40, 40); // Position it next to the settings button
         infoButton.setIcon(showGameInfo ? infoDefaultIcon : infoDefaultIconFalse);
@@ -833,7 +858,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                     break;
                 case "althenator":
                     // Verstecke das MainGUI-Fenster und zeige den Ladescreen
-                    MoleGame.create(this);
+                    new AlthenatorGUI(this);
                     this.setVisible(false); // Verstecke das Fenster, anstatt es zu schließen
                     break;
                 case "escapethealthen":
@@ -906,5 +931,38 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
             rotateGame(1);
         }
 
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // Not used
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        switch (keyCode) {
+            case 37:
+                rotateGame(1);
+                break;
+            case 39:
+                rotateGame(-1);
+                break;
+            case 73:
+                infoButton.doClick();
+                break;
+            case 10, 32:
+                startButton.doClick();
+                break;
+            case 83:
+                settingsButton.doClick();
+                break;
+
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // Not used
     }
 }
