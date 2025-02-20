@@ -157,7 +157,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 			//AKTUALISIERUNG DES ANIMATIONSWERT DES SPIELERS FÜR LAUFANIMATION
 			//LINKS/RECHTS:
 			if(delayer1 >= 8 || (p.player.isSprinting && delayer1 >= 3 && p.player.isWalking)) {
-				if(p.player.textureVariation1 == 10) {
+				if(p.player.textureVariation1 == 8) {
 					p.player.textureVariation1 = 1;
 				}else {
 					p.player.textureVariation1++;
@@ -168,7 +168,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 			}
 			//HOCH/RUNTER:
 			if(delayer2 >= 8 || (p.player.isSprinting && delayer2 >= 3 && p.player.isWalking)) {
-				if(p.player.textureVariation2 == 8) {
+				if(p.player.textureVariation2 == 10) {
 					p.player.textureVariation2 = 1;
 				}else {
 					p.player.textureVariation2++;

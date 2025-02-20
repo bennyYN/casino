@@ -26,15 +26,14 @@ public class Einweiser extends Creature{
 		//KREATUR NUR RENDERN WENN AM LEBEN
 		if(isAlive) {
 			//WENN DIE KREATUR AM LAUFEN IST, SOLL EINE LAUFANIMATION GESPIELT WERDEN
-			//(AUFGRUND VON ZEITMANGEL BESTEHEN DAFÜR KEINE BILDDATEIEN, DEMNACH IST DIESER BLOCK AUSKOMMENTIERT!)
 			if(isWalking) {
-				/*if(moveDirection == "up" || moveDirection == "down") {
-					g.drawImage(new ImageIcon("assets/creatures/player/walking/"+moveDirection+textureVariation2+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+				if(moveDirection == "up" || moveDirection == "down") {
+					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/einweiser/walking/"+moveDirection+textureVariation2+".png").getImage(),  (int)((position[0]*16*scale)-((int)player.position[0])), (int)((position[1]*16*scale)-((int)player.position[1])), (int)(16*scale), (int)(32*scale), null);
 				}else {
-					g.drawImage(new ImageIcon("assets/creatures/player/walking/"+moveDirection+textureVariation1+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-				}*/
+					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/einweiser/walking/"+moveDirection+textureVariation1+".png").getImage(),  (int)((position[0]*16*scale)-((int)player.position[0])), (int)((position[1]*16*scale)-((int)player.position[1])), (int)(16*scale), (int)(32*scale), null);
+				}
 			}else {
-			//STEHENDER PLAYER
+			//STEHENDER EINWEISER
 			g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/einweiser/idle/"+moveDirection+".png").getImage(),  (int)((position[0]*16*scale)-((int)player.position[0])), (int)((position[1]*16*scale)-((int)player.position[1])), (int)(16*scale), (int)(32*scale), null);
 			}
 		}
@@ -48,8 +47,8 @@ public class Einweiser extends Creature{
 				//WENN DER VEKTOR VON DER KREATUR ZUM SPIELER NICHT BLOCKIERT IST:
 				if(los.playerInSight()) {
 					//SETZEN VON GESCHWINDIGKEIT FÜR X & Y
-					velocity[0] = ((los.lineVectorSegment[0]/70)*walkingSpeed);
-					velocity[1] = ((los.lineVectorSegment[1]/70)*walkingSpeed);
+					velocity[0] = ((los.lineVectorSegment[0]/55)*walkingSpeed);
+					velocity[1] = ((los.lineVectorSegment[1]/55)*walkingSpeed);
 				}else {
 					//GESCHWINDIGKEIT AUF 0 SETZEN, WENN EIN OBJEKT DEN VEKTOR UNTERBRICHT
 					velocity[0] = 0;
@@ -75,15 +74,23 @@ public class Einweiser extends Creature{
 		//AKTUALISIERUNG DER BLICKRICHTUNG ANHAND DER WERTE DER VEKTOREN
 		if(Math.abs(los.lineVector[1])>Math.abs(los.lineVector[0]) && velocity[1]<0) {
 			moveDirection = "up";
+			isWalking = true;
 		}
 		if(Math.abs(los.lineVector[0])>Math.abs(los.lineVector[1]) && velocity[0]<0) {
 			moveDirection = "left";
+			isWalking = true;
 		}
 		if(Math.abs(los.lineVector[0])>Math.abs(los.lineVector[1]) && velocity[0]>0) {
 			moveDirection = "right";
+			isWalking = true;
 		}
 		if(Math.abs(los.lineVector[1])>Math.abs(los.lineVector[0]) && velocity[1]>0) {
 			moveDirection = "down";
+			isWalking = true;
+		}
+		//clear walking flag if no movement was done at all
+		if(velocity[0] == 0 && velocity[1] == 0) {
+			isWalking = false;
 		}
 		
 		//AKTUALISIERUNG DER HITBOX (KOLLISIONSBOX) UND EINEN SCHRITT RICHTUNG SPIELER

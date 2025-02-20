@@ -32,6 +32,7 @@ public class Player extends Creature{
 	//ZU IMPLEMENTIERENDEN METHODEN
 		public void renderCreature(Graphics g) {
 			if(isAlive) {
+
 			//FLAMES (IF BURNING)
 				if(burning) {
 					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/effects/burning/tall_flames"+textureVariation3+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);

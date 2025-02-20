@@ -9,6 +9,9 @@ import java.awt.event.*;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 
 import static de.ben.MainGUI.playSound;
@@ -31,6 +34,8 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
     private Random random = new Random();
     private Timer gameTimer;
     private int timeRemaining = 60; // 1 minute in seconds
+    private ScheduledExecutorService scheduler;
+    private ScheduledFuture<?> gameTimerFuture;
 
     public AlthenatorGUI(MainGUI mainGUI) {
         setTitle("Althenator II - Der Schirmherr der fliegenden Sicherungen");
@@ -151,13 +156,10 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
         styleButton(backButton);
         styleButton(menuButton);
         styleButton(restartButton);
-        int xoffset = 95;
-        backButton.setBounds(((1820 - 450) / 3) * 1 + 290 - xoffset, (int) (830 / 1.5) - 400, 150, 50);
-        menuButton.setBounds(((1820 - 450) / 3) * 2 - xoffset, (int) (830 / 1.5) - 400, 150, 50);
-        restartButton.setBounds(((1820 - 450) / 3) * 3 - 290 - xoffset, (int) (830 / 1.5) - 400, 150, 50);
-        gamePanel.add(backButton);
-        gamePanel.add(menuButton);
-        gamePanel.add(restartButton);
+        int xoffset = 18;
+        backButton.setBounds(((1820 - 450) / 3) * 1 + 290 - xoffset, (int) (830 / 1.5) , 150, 50);
+        menuButton.setBounds(((1820 - 450) / 3) * 2 - xoffset, (int) (830 / 1.5) , 150, 50);
+        restartButton.setBounds(((1820 - 450) / 3) * 3 - 290 - xoffset, (int) (830 / 1.5) , 150, 50);
         backButton.setFocusable(false);
         menuButton.setFocusable(false);
         restartButton.setFocusable(false);
@@ -191,6 +193,12 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
         transparentPanel = new TransparentPanel();
         transparentPanel.setBounds(0, 0, 1920, 1080);
         layeredPane.add(transparentPanel, JLayeredPane.DRAG_LAYER);
+
+        transparentPanel.add(backButton);
+        transparentPanel.add(menuButton);
+        transparentPanel.add(restartButton);
+
+        scheduler = Executors.newScheduledThreadPool(1);
 
         setVisible(true);
     }
@@ -329,6 +337,7 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
     private class TransparentPanel extends JPanel {
         public TransparentPanel() {
             setOpaque(false); // Make the panel transparent
+            setLayout(null);
         }
 
         @Override
@@ -360,7 +369,16 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.PLAIN, 100));
                 g.drawString("Game Over", 1920 / 2 - 250, 830 / 2 + 25);
+            }else if(paused){
+                g.setColor(new Color(28, 35, 41, 187));
+                g.fillRect(0, 0, 1920, 1080);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.PLAIN, 100));
+                g.drawString("Game paused", (1920 - g.getFontMetrics().stringWidth("Game paused")) / 2, 830 / 2 + 25);
+
             }
+
+            repaint();
         }
     }
 }

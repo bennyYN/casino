@@ -34,7 +34,7 @@ public class Althenator {
             currentImage = ELECTRIFIED_ALTHENATOR;
             new Thread(() -> {
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(350);
                     health--;
                     if(health <= 0){
                         currentImage = DEAD_ALTHENATOR;
