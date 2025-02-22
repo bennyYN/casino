@@ -14,8 +14,8 @@ public class ImageArchive {
     private static BufferedImage chipsImg, bigBlindImg, smallBlindImg, iconImg, cardsImg;
     private static Image scaledChipsImg, scaledBigBlindImg, scaledSmallBlindImg, scaledIconImg, scaledCardsImg;
     //Menu Assets
-    private static BufferedImage poker1Logo, poker2Logo, blackjackLogo, althenpongLogo, flappyschmandtLogo, althenatorLogo, escapeTheAlthenLogo;
-    private static Image scaledPoker1Logo, scaledPoker2Logo, scaledBlackjackLogo, scaledAlthenpongLogo, scaledFlappyschmandtLogo, scaledAlthenatorLogo, scaledEscapeTheAlthenLogo;
+    private static BufferedImage poker1Logo, poker2Logo, blackjackLogo, althenpongLogo, flappyschmandtLogo, althenatorLogo, escapeTheAlthenLogo, gtaLogo;
+    private static Image scaledPoker1Logo, scaledPoker2Logo, scaledBlackjackLogo, scaledAlthenpongLogo, scaledFlappyschmandtLogo, scaledAlthenatorLogo, scaledEscapeTheAlthenLogo, scaledGtaLogo;
     //Playerslots
     private static BufferedImage playerslot, emptyPlayerslot, activePlayerslot, winningPlayerslot, inactivePlayerslot, zeroPlayerslot, youPlayerslot, youActivePlayerslot, youWinningPlayerslot, youInactivePlayerslot, youZeroPlayerslot;
     private static Image scaledPlayerslot, scaledEmptyPlayerslot, scaledActivePlayerslot, scaledWinningPlayerslot, scaledInactivePlayerslot, scaledZeroPlayerslot, scaledYouPlayerslot, scaledYouActivePlayerslot, scaledYouInactivePlayerslot, scaledYouWinningPlayerslot, scaledYouZeroPlayerslot;
@@ -58,6 +58,7 @@ public class ImageArchive {
             flappyschmandtLogo = ImageIO.read(new File("img/menu/flappyschmandt.png"));
             althenatorLogo = ImageIO.read(new File("img/menu/althenator.png"));
             escapeTheAlthenLogo = ImageIO.read(new File("img/menu/escapethealthen.png"));
+            gtaLogo = ImageIO.read(new File("img/menu/gta.png"));
             //Playerslots
             playerslot = ImageIO.read(new File("img/playerslots/playerslot.png"));
             emptyPlayerslot = ImageIO.read(new File("img/playerslots/empty_playerslot.png"));
@@ -167,6 +168,7 @@ public class ImageArchive {
         scaledFlappyschmandtLogo = flappyschmandtLogo.getScaledInstance((int)(flappyschmandtLogo.getWidth()*xScale), (int)(flappyschmandtLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledAlthenatorLogo = althenatorLogo.getScaledInstance((int)(althenatorLogo.getWidth()*xScale), (int)(althenatorLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledEscapeTheAlthenLogo = escapeTheAlthenLogo.getScaledInstance((int)(escapeTheAlthenLogo.getWidth()*xScale), (int)(escapeTheAlthenLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
+        scaledGtaLogo = gtaLogo.getScaledInstance((int)(gtaLogo.getWidth()*xScale), (int)(gtaLogo.getHeight()*yScale), Image.SCALE_SMOOTH);
         //Playerslots
         scaledPlayerslot = playerslot.getScaledInstance((int)(playerslot.getWidth()*xScale), (int)(playerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
         scaledEmptyPlayerslot = emptyPlayerslot.getScaledInstance((int)(emptyPlayerslot.getWidth()*xScale), (int)(emptyPlayerslot.getHeight()*yScale), Image.SCALE_SMOOTH);
@@ -405,6 +407,8 @@ public class ImageArchive {
                     return scaledAlthenatorLogo;
                 case "escapethealthen":
                     return scaledEscapeTheAlthenLogo;
+                case "gta":
+                    return scaledGtaLogo;
                 //Playerslots
                 case "playerslot":
                     return scaledPlayerslot;
