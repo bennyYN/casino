@@ -41,6 +41,8 @@ public class Player extends Creature{
 				if(isWalking) {
 					if(moveDirection == "up" || moveDirection == "down") {
 						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
 					}else {
 						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation1+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
 					}

@@ -58,6 +58,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         games.add("flappyschmandt");
         games.add("althenator");
         games.add("escapethealthen");
+        games.add("gta");
 
         // Erstellen des JLayeredPane
         JLayeredPane layeredPane = new JLayeredPane();
@@ -241,16 +242,12 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                 }else{
                     startAnimationFrame = 1;
                 }
-                System.out.println("JAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 repaint();
             }
         };
         overlayPanel.setOpaque(false); // Transparentes Overlay
         overlayPanel.setFocusable(false);
         overlayPanel.setBounds(0, 0, 815, 600);
-
-        // Beispielinhalt für das Overlay-Panel
-        overlayPanel.add(new JLabel("Overlay Content"));
 
         // Hinzufügen des Overlay-Panels
         layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
@@ -532,6 +529,8 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                 return "Die Sicherungen fliegen nacheinander raus und nur der Althenator kann nun helfen.";
             case "escapethealthen":
                 return "Keiner entkam jemals dem Althen. Kannst du es schaffen?";
+            case "gta":
+                return "Überfalle Internetprovider, stehle Daten und tauche als Techniklehrer unter.";
             default:
                 return "No Game Selected";
         }
@@ -620,6 +619,8 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                 return "Althenator II";
             case "escapethealthen":
                 return "Escape the Althen!";
+            case "gta":
+                return "Grand Theft Althen: San Andreas";
             default:
                 return "No Game Selected";
         }

@@ -1,6 +1,7 @@
 package de.ben.playground.escape_the_althen;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class World {
 
@@ -13,8 +14,9 @@ public class World {
 	RenderManager rm;
 	Player player;
 	GamePanel p;
-	
-	
+	ArrayList<Object> placedObjects = new ArrayList<Object>();
+
+
 	public World(double scale, Player player, GamePanel p) {
 		//VARIABLEN
 		chunks = new Chunk[worldSize][worldSize][5];

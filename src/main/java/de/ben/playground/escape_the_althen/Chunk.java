@@ -105,9 +105,11 @@ public class Chunk {
 			if(objects[x][y] == null) {
 				//NEUE KACHEL MACHEN WENN KEINE DA IST
 				objects[x][y] = new Object(x+(xChunkCoord*16), y+(yChunkCoord*16), gameScale, playerPosition, type, 3, player, world);
+				world.p.gf.addMouseMotionListener(objects[x][y]);
 			}else {
 				//WENN DIE KACHEL DA EXISTIERT WIRD NUR IHR TYP GEÄNDERT
 				objects[x][y].changeType(type);
+				world.p.gf.addMouseMotionListener(objects[x][y]);
 			}
 		}
 	}
@@ -119,9 +121,11 @@ public class Chunk {
 			if(objects[x][y] == null) {
 				//NEUE KACHEL MACHEN WENN KEINE DA IST
 				objects[x][y] = new Object(x+(xChunkCoord*16), y+(yChunkCoord*16), gameScale, playerPosition, type, 3, player, world, item);
+				world.p.gf.addMouseMotionListener(objects[x][y]);
 			}else {
 				//WENN DIE KACHEL DA EXISTIERT WIRD NUR IHR TYP GEÄNDERT
 				objects[x][y].changeType(type, item);
+				world.p.gf.addMouseMotionListener(objects[x][y]);
 			}
 		}
 	}

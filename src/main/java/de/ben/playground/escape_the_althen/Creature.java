@@ -15,12 +15,13 @@ public abstract class Creature {
 		public static ArrayList<Creature> sortedCreatures= new ArrayList<Creature>();
 		public static byte textureVariation1 = 1, textureVariation2 = 1, textureVariation3 = 1, textureVariation4 = 1;
 		Random random;
+		public static Graphics g;
 		LOS los;
 	
 	//GENERELLE ATTRIBUTE
 		public boolean isAlive, isWalking, isHostile;
 		public static boolean gamePaused;
-		public double health;
+		public double health, maxHealth;
 		CollisionBox hitbox;
 		CollisionBox iBox;
 		public double[] position = new double[2];
@@ -38,6 +39,7 @@ public abstract class Creature {
 		
 			random = new Random();
 			
+			this.maxHealth = maxHealth;
 			health = maxHealth;
 			this.xSp = xSp;
 			this.ySp = ySp;
@@ -65,7 +67,6 @@ public abstract class Creature {
 		public void triggerDeathEvent() {
 			isAlive = false;
 			creatureCount--;
-			sortedCreatures.remove(this);
 			Creatures.remove(this);
 		}
 	

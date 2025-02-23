@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
+import java.awt.event.MouseMotionListener;
+import java.lang.Object;
 
 public class GamePanel extends JPanel implements ActionListener{
 	
@@ -15,8 +16,8 @@ public class GamePanel extends JPanel implements ActionListener{
 		Graphics g;
 		World world;
 		Player player;
-		Einweiser einweiser;
-		Einweiser einweiser2;
+		Althen althen;
+		Althen althen2;
 		HUD hud;
 		RenderManager rm;
 		JButton b;
@@ -35,8 +36,10 @@ public class GamePanel extends JPanel implements ActionListener{
 			player = new Player((0)*16*gameScale, (0)*16*gameScale, 0.3, gameScale, 1.65, (this.getWidth()/2)-((16*gameScale)/2), (this.getHeight()/2)-((16*gameScale)/2));
 			world = new World(gameScale, player, this);
 			gm = new GenerationManager(level, world);
-			einweiser = new Einweiser(2.3, 0, 0.4, gameScale, 10, player);
-			einweiser2 = new Einweiser(9, 12, 0.4, gameScale, 10, player);
+
+			this.gf = gf;
+			gf.addMouseMotionListener(althen = new Althen(2.3, 0, 0.4, gameScale, 10, player, world));
+			gf.addMouseMotionListener(althen2 = new Althen(9, 12, 0.4, gameScale, 10, player, world));
 			hud = new HUD(this, (int)(this.getWidth()/2), (int)this.getHeight());
 			this.setVisible(true);
 			rm = new RenderManager(world, player);
@@ -47,7 +50,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			b.addActionListener(this);
 			b.setVisible(false);
 			this.add(b);
-			this.gf = gf;
+
 			inv = new Inventory(player, hud);
 			currentLevel = level;
 			//Load Level Generation File

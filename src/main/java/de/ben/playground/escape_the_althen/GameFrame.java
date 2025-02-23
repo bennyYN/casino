@@ -1,7 +1,6 @@
 package de.ben.playground.escape_the_althen;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -146,6 +145,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 	//METHODE DES ACTIONLISTENERS, WELCHE ZUSÄTZLICH VOM TIMER AUSGELÖST WIRD
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		//WENN DAS SPIEL NICHT PAUSIERT IST:
 		if(!p.paused) {
 		
@@ -231,7 +231,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 			}
 		
 				//JEDE KREATUR UND DEN VEKTOR DER KREATUR "EINWEISER" AKTUALISIEREN
-				p.einweiser.los.update();
+				p.althen.los.update();
 				p.player.update(p);
 				//AKTUALISIERUNG JEDES ITEMS
 				if(p.inv != null) {

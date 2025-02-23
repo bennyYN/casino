@@ -10,7 +10,7 @@ public class GenerationManager {
 	//ATTRIBUTE
 	BufferedReader reader;
 	World world;
-	
+
 	//KONSTRUKTOR
 	public GenerationManager(int level, World world) {
 		this.world = world;

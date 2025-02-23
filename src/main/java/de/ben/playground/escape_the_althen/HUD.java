@@ -140,9 +140,9 @@ public class HUD {
 			//PLAYER-COLLISIONBOX
 				spieler.hitbox.render(g, Color.CYAN);
 			//EINWEISER COLLISIONS BOX (TEMP)
-				for(int i = 1; i < p.einweiser.Creatures.size(); i++) {
-					p.einweiser.Creatures.get(i).getCollisionBox().render(g, Color.BLUE);
-					p.einweiser.Creatures.get(i).los.render(g);
+				for(int i = 1; i < p.althen.Creatures.size(); i++) {
+					p.althen.Creatures.get(i).getCollisionBox().render(g, Color.BLUE);
+					p.althen.Creatures.get(i).los.render(g);
 				}
 			//CHUNK-BORDERS
 				g.setColor(Color.MAGENTA);

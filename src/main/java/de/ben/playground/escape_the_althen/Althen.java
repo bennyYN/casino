@@ -1,44 +1,77 @@
 package de.ben.playground.escape_the_althen;
 
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.ImageIcon;
 
-public class Einweiser extends Creature{
+public class Althen extends Creature implements MouseMotionListener {
 
 	//ATTRIBUTE
 	Player player;
 	CollisionManager cm;
-	
-	//KONSTRUKTOR
-	public Einweiser(double xSp, double ySp, double walkingSpeed, double gameScale, int MaxHealth, Player player) {
+	World world;
+	private boolean mouseOver = false;
+	private Polygon outlinePolygon;
+
+	// KONSTRUKTOR
+	public Althen(double xSp, double ySp, double walkingSpeed, double gameScale, int MaxHealth, Player player, World world) {
 		super(xSp, ySp, walkingSpeed, gameScale, MaxHealth);
-		name = "Einweiser";
+		name = "Althen";
 		this.player = player;
-		los = new LOS(this, player, 7);	
+		los = new LOS(this, player, 7);
 		cm = new CollisionManager();
-		height = 32*scale;	
+		height = 32 * scale;
+		this.world = world;
 	}
 
 	//METHODE UM DIE KREATUR ZU RENDERN
 	@Override
 	public void renderCreature(Graphics g) {
-		//KREATUR NUR RENDERN WENN AM LEBEN
-		if(isAlive) {
-			//WENN DIE KREATUR AM LAUFEN IST, SOLL EINE LAUFANIMATION GESPIELT WERDEN
-			if(isWalking) {
-				if(moveDirection == "up" || moveDirection == "down") {
-					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/einweiser/walking/"+moveDirection+textureVariation2+".png").getImage(),  (int)((position[0]*16*scale)-((int)player.position[0])), (int)((position[1]*16*scale)-((int)player.position[1])), (int)(16*scale), (int)(32*scale), null);
-				}else {
-					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/einweiser/walking/"+moveDirection+textureVariation1+".png").getImage(),  (int)((position[0]*16*scale)-((int)player.position[0])), (int)((position[1]*16*scale)-((int)player.position[1])), (int)(16*scale), (int)(32*scale), null);
+		this.g = g;
+		Graphics2D g2d = (Graphics2D) g;
+		int x = (int) ((position[0] * 16 * scale) - ((int) player.position[0]));
+		int y = (int) ((position[1] * 16 * scale) - ((int) player.position[1]));
+		int width = (int) (16 * scale);
+		int height = (int) (32 * scale);
+
+		if (isAlive) {
+			if (isWalking) {
+				if (moveDirection.equals("up") || moveDirection.equals("down")) {
+					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/walking/" + moveDirection + textureVariation2 + ".png").getImage(), x, y, width, height, null);
+				} else {
+					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/walking/" + moveDirection + textureVariation1 + ".png").getImage(), x, y, width, height, null);
 				}
-			}else {
-			//STEHENDER EINWEISER
-			g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/einweiser/idle/"+moveDirection+".png").getImage(),  (int)((position[0]*16*scale)-((int)player.position[0])), (int)((position[1]*16*scale)-((int)player.position[1])), (int)(16*scale), (int)(32*scale), null);
+			} else {
+				g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/idle/" + moveDirection + ".png").getImage(), x, y, width, height, null);
 			}
+
+			// Define the polygon points for the visible part of the image
+			int[] xPoints = {x, x + width, x + width, x};
+			int[] yPoints = {y, y, y + height, y + height};
+			outlinePolygon = new Polygon(xPoints, yPoints, xPoints.length);
+
+			if (mouseOver) {
+				if(los.getVectorLength()>120){
+					g2d.setColor(Color.WHITE);
+				}else if(los.getVectorLength()>65){
+					g2d.setColor(Color.ORANGE);
+				}else{
+					g2d.setColor(Color.RED);
+				}
+				g2d.draw(outlinePolygon);
+			}
+
+			g.setColor(Color.BLACK);
+			g.drawRect(x, y - 10, width, 5);
+			g.setColor(Color.RED);
+			g.fillRect(x + 1, y - 9, (int) (width * (health / this.maxHealth)) - 1, 4);
+		} else {
+			g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/dead.png").getImage(), x, y + (int) (14 * scale), (int) (30 * scale), (int) (18 * scale), null);
 		}
 	}
-	
+
 	//METHODE UM IN DIE RICHTUNG DES SPIELERS ZU LAUFEN
 	public void moveTowardsPlayer() {
 		//WIRD NUR AUSGEFÜHRT WENN DAS SPIEL NICHT PAUSIERT IST UND DIE KREATUR LEBT
@@ -78,9 +111,16 @@ public class Einweiser extends Creature{
 	//METHODE UM DIESE EINZELNE KREATUR ZU AKTUALISIEREN
 	@Override
 	public void updateIndividual(GamePanel gp) {
-		//DEN SPIELER SCHADEN MACHEN
-		if(los.getVectorLength()<=65){
-			player.health -= 0.025*(1+los.getVectorLength()/(10*scale));
+		if(isAlive){
+			//DEN SPIELER SCHADEN MACHEN
+			if(los.getVectorLength()<=65){
+				player.health -= 0.025*(1+los.getVectorLength()/(10*scale));
+			}
+			//SCHADEN DURCH DEN SPIELER KRIEGEN
+			if(los.getVectorLength()<=120 && player.hitEvent && world.p.inv.getSelectedItemType().equals("sword") && mouseOver){
+				player.hitEvent = false;
+				health -= 1.5;
+			}
 		}
 
 		//AKTUALISIERUNG DER BLICKRICHTUNG ANHAND DER WERTE DER VEKTOREN
@@ -127,4 +167,26 @@ public class Einweiser extends Creature{
 	public double getY() {
 		return (0.5*scale*16+(position[1]*16*scale));
 	}
+
+	@Override
+	public void triggerDeathEvent() {
+		super.triggerDeathEvent();
+		//new Thread to render the death texture
+		new Thread() {
+			public void run() {
+				renderCreature(g);
+			}
+		}.start();
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		if (outlinePolygon != null) {
+			mouseOver = outlinePolygon.contains(e.getPoint());
+		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {}
+
 }

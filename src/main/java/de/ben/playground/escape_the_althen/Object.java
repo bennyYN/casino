@@ -2,13 +2,13 @@ package de.ben.playground.escape_the_althen;
 
 import de.ben.MainGUI;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.ImageIcon;
 
-public class Object extends Placeable{
+public class Object extends Placeable implements MouseMotionListener {
 
 		//ATTRIBUTE & OBJEKTE
 			public String model = "default", lootItemType = "void";
@@ -29,6 +29,8 @@ public class Object extends Placeable{
 			Player player;
 			World world;
 			public boolean dynamicRendering = true;
+			private Rectangle highlightBox;
+			private boolean mouseOver = false;
 	
 	//KONSTRUKTOR
 		public Object(int xTilePos, int yTilePos, double scale, double[] playerPos, String type, int layer, Player player, World world) {
@@ -42,7 +44,7 @@ public class Object extends Placeable{
 				this.type = type;
 			//TEXTUR ANHAND DES TILE-TYPS ALS BILD DATEI SPEICHERN
 				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/objects/"+type+".png").getImage();
-				
+				highlightBox = new Rectangle((int)((xTilePosition * 16 * scale) - ((int)playerPos[0])), (int)((yTilePosition * 16 * scale) - ((int)playerPos[1])), (int)(16 * scale), (int)(16 * scale));
 				if(layer == 3 && type != "void") {
 					thin = true;
 				}
@@ -108,7 +110,13 @@ public class Object extends Placeable{
 			}else {
 				cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 16, 16, scale, 0, 0);
 			}
-			
+
+			// Update the position of the highlightBox based on the current position of the object and the player's position
+			highlightBox.setLocation(
+					(int)((xTilePosition * 16 * scale) - ((int)playerPos[0])),
+					(int)((yTilePosition * 16 * scale) - ((int)playerPos[1]))
+			);
+
 			switch(model) {
 				case "pot": cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 8, 4, scale, 4, 12);
 				break;
@@ -158,11 +166,10 @@ public class Object extends Placeable{
 			//TODO -> KLASSE "AnimationManager" FÜR EINFACHEREN CODE FÜR ANIMATIONEN UND GENERELL LESBAREREN CODE!! (WENN ZEIT)
 			switch(type) {
 			case "pot1": 
-				if(isPlayerInRange() && player.hitEvent) {
+				if(isPlayerInRange() && player.hitEvent && mouseOver) {
+					changeType("pot2");
 					player.hitEvent = false;
 					MainGUI.playSound("pot_breaking");
-					changeType("pot2");
-					
 				}
 				break;
 			case "pot2": 
@@ -209,7 +216,7 @@ public class Object extends Placeable{
 				}
 				break;
 			case "chest1": 
-				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")) {
+				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")  && mouseOver) {
 					//player.interactionEvent = false;
 					MainGUI.playSound("toggle2");
 					changeType("chest2");
@@ -306,7 +313,7 @@ public class Object extends Placeable{
 				}
 				break;
 			case "door1": 
-				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")) {
+				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")  && mouseOver) {
 					//player.interactionEvent = false;
 					changeType("door2");
 					MainGUI.playSound("door_opening");
@@ -474,9 +481,10 @@ public class Object extends Placeable{
 				}
 				break;
 			}
-			
-			
-			
+			if (mouseOver) {
+				g.setColor(Color.YELLOW);
+				g.drawRect(highlightBox.x, highlightBox.y, highlightBox.width, highlightBox.height);
+			}
 		}
 	
 	//"SOLID" EIGENSCHAFT ANHAND DES ÜBERGEBENEN TILE-TYPS ÜBERPRÜFEN
@@ -612,4 +620,15 @@ public class Object extends Placeable{
 				return false;
 			}
 		}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// Check if the mouse is over the object
+		if (highlightBox != null) {
+			mouseOver = highlightBox.contains(e.getPoint());
+		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {}
 }
