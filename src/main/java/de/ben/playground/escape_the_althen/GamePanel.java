@@ -38,8 +38,8 @@ public class GamePanel extends JPanel implements ActionListener{
 			gm = new GenerationManager(level, world);
 
 			this.gf = gf;
-			gf.addMouseMotionListener(althen = new Althen(2.3, 0, 0.4, gameScale, 10, player, world));
-			gf.addMouseMotionListener(althen2 = new Althen(9, 12, 0.4, gameScale, 10, player, world));
+			gf.addMouseMotionListener(althen = new Althen(2.3, 0, 0.4, gameScale, 10, player, world, "diamond_key"));
+			gf.addMouseMotionListener(althen2 = new Althen(9, 12, 0.4, gameScale, 10, player, world, "void"));
 			hud = new HUD(this, (int)(this.getWidth()/2), (int)this.getHeight());
 			this.setVisible(true);
 			rm = new RenderManager(world, player);

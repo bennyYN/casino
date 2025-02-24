@@ -14,9 +14,11 @@ public class Althen extends Creature implements MouseMotionListener {
 	World world;
 	private boolean mouseOver = false;
 	private Polygon outlinePolygon;
+	String droppedItem;
+	private boolean droppedItemUponDeath = false;
 
 	// KONSTRUKTOR
-	public Althen(double xSp, double ySp, double walkingSpeed, double gameScale, int MaxHealth, Player player, World world) {
+	public Althen(double xSp, double ySp, double walkingSpeed, double gameScale, int MaxHealth, Player player, World world, String droppedItem) {
 		super(xSp, ySp, walkingSpeed, gameScale, MaxHealth);
 		name = "Althen";
 		this.player = player;
@@ -24,6 +26,7 @@ public class Althen extends Creature implements MouseMotionListener {
 		cm = new CollisionManager();
 		height = 32 * scale;
 		this.world = world;
+		this.droppedItem = droppedItem;
 	}
 
 	//METHODE UM DIE KREATUR ZU RENDERN
@@ -171,6 +174,10 @@ public class Althen extends Creature implements MouseMotionListener {
 	@Override
 	public void triggerDeathEvent() {
 		super.triggerDeathEvent();
+		if(!droppedItem.equals("void") && !droppedItemUponDeath) {
+			droppedItemUponDeath = true;
+			new Item(world, (int)position[0], (int)position[1], droppedItem);
+		}
 		//new Thread to render the death texture
 		new Thread() {
 			public void run() {

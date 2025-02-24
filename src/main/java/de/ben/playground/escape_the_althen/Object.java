@@ -166,7 +166,7 @@ public class Object extends Placeable implements MouseMotionListener {
 			//TODO -> KLASSE "AnimationManager" FÜR EINFACHEREN CODE FÜR ANIMATIONEN UND GENERELL LESBAREREN CODE!! (WENN ZEIT)
 			switch(type) {
 			case "pot1": 
-				if(isPlayerInRange() && player.hitEvent && mouseOver) {
+				if(isPlayerInRange() && player.hitEvent && mouseOver && world.p.inv.getSelectedItemType().equals("hammer")) {
 					changeType("pot2");
 					player.hitEvent = false;
 					MainGUI.playSound("pot_breaking");
@@ -215,15 +215,42 @@ public class Object extends Placeable implements MouseMotionListener {
 					potCounter++;
 				}
 				break;
-			case "chest1": 
-				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")  && mouseOver) {
-					//player.interactionEvent = false;
+				case "bronze_chest1":
+				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("bronze_key")  && mouseOver) {
+					player.interactionEvent = false;
 					MainGUI.playSound("toggle2");
-					changeType("chest2");
+					changeType("bronze_chest2");
 					world.p.inv.removeSelectedItem();
-					Item droppedItem = new Item(world, xTilePosition, yTilePosition, "immortality_potion");
+					Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
 				}
 				break;
+				case "iron_chest1":
+					if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("iron_key")  && mouseOver) {
+						player.interactionEvent = false;
+						MainGUI.playSound("toggle2");
+						changeType("iron_chest2");
+						world.p.inv.removeSelectedItem();
+						Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
+					}
+					break;
+				case "golden_chest1":
+					if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("golden_key")  && mouseOver) {
+						player.interactionEvent = false;
+						MainGUI.playSound("toggle2");
+						changeType("golden_chest2");
+						world.p.inv.removeSelectedItem();
+						Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
+					}
+					break;
+				case "diamond_chest1":
+					if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("diamond_key")  && mouseOver) {
+						player.interactionEvent = false;
+						MainGUI.playSound("toggle2");
+						changeType("diamond_chest2");
+						world.p.inv.removeSelectedItem();
+						Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
+					}
+					break;
 			case "fire1": 
 				if(isPlayerInRange()) {
 					player.burning = true;
@@ -313,7 +340,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				}
 				break;
 			case "door1": 
-				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("key")  && mouseOver) {
+				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("golden_key")  && mouseOver) {
 					//player.interactionEvent = false;
 					changeType("door2");
 					MainGUI.playSound("door_opening");
@@ -498,8 +525,14 @@ public class Object extends Placeable implements MouseMotionListener {
 					"pot2",
 					"pot3",
 					"pot4",
-					"chest1",
-					"chest2",
+					"bronze_chest1",
+					"bronze_chest2",
+					 "iron_chest1",
+					 "iron_chest2",
+					 "golden_chest1",
+					 "golden_chest2",
+					 "diamond_chest1",
+					 "diamond_chest2",
 					"door1",
 					"door2",
 					"door3",
@@ -534,7 +567,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				"pot6",
 				"pot7"
 				: model = "pot"; break;
-			case "chest1", "chest2": model = "chest"; break;
+			case "bronze_chest1", "bronze_chest2", "iron_chest1", "iron_chest2", "golden_chest1", "golden_chest2", "diamond_chest1", "diamond_chest2": model = "chest"; break;
 			case "door1",
 			"door2",
 			"door3",

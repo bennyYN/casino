@@ -39,7 +39,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 		this.addMouseWheelListener(this);
 		this.addMouseListener(this);
 		//TIMER-THREAD DER IDEALERWEISE ALLE 5MS EIN ACTIONEVENT AUSLÖST
-		timer = new Timer(5, (ActionListener) this);
+		timer = new Timer(1, (ActionListener) this);
 		timer.start();
 	}
 
