@@ -35,6 +35,10 @@ setT 7 9 bottom_stairs 1
 # Pre-dropped Items:
 setI 10 13 bronze_key
 
+# Decorations
+setO 4 10 tree2
+setO 15 11 tree1
+
 # Misc Objects:
 setOi 1 3 pot1 speed_potion
 setOi 3 4 pot1 iron_key

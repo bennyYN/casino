@@ -28,8 +28,9 @@ public class GamePanel extends JPanel implements ActionListener{
 	//KONTRUKTOR
 		public GamePanel(GameFrame gf, int level) {
 
-			//reset creatures
+			//reset
 			Creature.reset();
+			Inventory.reset();
 
 			this.setSize(1920, 1080);
 			this.setOpaque(true);

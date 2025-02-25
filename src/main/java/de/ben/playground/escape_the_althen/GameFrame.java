@@ -146,6 +146,8 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+
+
 		//WENN DAS SPIEL NICHT PAUSIERT IST:
 		if(!p.paused) {
 		
@@ -280,7 +282,16 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 
 	//WEITERE UNGENUTZTE ABER ZU IMPLEMENTIERENDE METHODEN DES MOUSELISTENERS
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+		//BEIM RECHTSKLICK SOLL BEIM SPIELER EIN "INTERAKTIONS-EVENT" AUSGELÖST WERDEN
+		if(e.getButton() == 1) {
+			p.player.hitEvent = false;
+		}
+		//BEIM LINKSKLICK SOLL BEIM SPIELER EIN "ANGRIFFS-EVENT" AUSGELÖST WERDEN
+		if(e.getButton() == 3) {
+			p.player.interactionEvent = false;
+		}
+	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {}

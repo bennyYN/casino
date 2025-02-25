@@ -99,10 +99,16 @@ public class Object extends Placeable implements MouseMotionListener {
 		public void render(Graphics g, boolean renderCollisionBox) {
 			//TILE RENDERN
 			if(model.equals("door")){
-					g.drawImage(texture, (int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), (int)(32*scale), (int)(48*scale), null);
-				}else {
-					g.drawImage(texture, (int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), (int)(16*scale), (int)(16*scale), null);
-				}
+				g.drawImage(texture, (int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), (int)(32*scale), (int)(48*scale), null);
+			}else if(type.equals("tree1")){
+				model = "chest";
+				g.drawImage(texture, (int)((((xTilePosition-2)*16*scale))-((int)playerPos[0])), (int)(((yTilePosition-6)*16*scale)-((int)playerPos[1])), (int)(96*scale), (int)(112*scale), null);
+			}else if(type.equals("tree2")) {
+				model = "pot";
+				g.drawImage(texture, (int) (((xTilePosition-2) * 16 * scale +(5*scale)) - ((int) playerPos[0])), (int) (((yTilePosition-5) * 16 * scale) - ((int) playerPos[1])), (int) (70 * scale), (int) (96 * scale), null);
+			}else{
+				g.drawImage(texture, (int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), (int)(16*scale), (int)(16*scale), null);
+			}
 			//KOLLISIONSBOX AKTUALISIEREN
 			if(thin) {
 				cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 16, 1, scale, 0, 15);
@@ -525,6 +531,8 @@ public class Object extends Placeable implements MouseMotionListener {
 					"pot2",
 					"pot3",
 					"pot4",
+					 "tree1",
+					 "tree2",
 					"bronze_chest1",
 					"bronze_chest2",
 					 "iron_chest1",

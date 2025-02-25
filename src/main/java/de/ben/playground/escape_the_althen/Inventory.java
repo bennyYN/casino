@@ -24,7 +24,11 @@ public class Inventory {
 		}
 	}
 
-	public void render(Graphics g) {
+    public static void reset() {
+		items.clear();
+    }
+
+    public void render(Graphics g) {
 		//SLOTS
 			for(int i = 0; i <= 7; i++) {
 				g.drawImage(unselectedBox, xInv+(90*i), h.wHeight-160, 80, 80, null);

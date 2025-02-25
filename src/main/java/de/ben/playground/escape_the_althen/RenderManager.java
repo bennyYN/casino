@@ -1,6 +1,7 @@
 package de.ben.playground.escape_the_althen;
 
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class RenderManager {
@@ -13,6 +14,7 @@ public class RenderManager {
 	static ArrayList<Placeable> dynamicTiles = new ArrayList<Placeable>(); // <-- LISTE MIT KACHELN DIE AUFS RENDERING ÜBERPRÜFT WERDEN
 	static ArrayList<ArrayList<Placeable>> validTiles = new ArrayList<ArrayList<Placeable>>(); // <-- LISTE MIT KACHELN DIE ÜBERPRÜFT WURDEN
 	static ArrayList<Placeable> delayedRender = new ArrayList<Placeable>(); // <-- LISTE MIT KACHELN DIE NACH SPIELER VERZÖGERT GERENDERT WERDFEN
+	Image baked_shading = new ImageIcon("img/playground/escapethealthen/graphics/shading/baked_shading.png").getImage();
 	
 	public RenderManager(World world, Creature creature) {
 		this.world = world;
@@ -21,16 +23,6 @@ public class RenderManager {
 
 	private void updateNearTiles() {
 		validTiles.clear();
-		/*if((Creature.sortedCreatures.size() > 0) && (dynamicTiles.size() > 0)) {
-			for(int currentCreature = 0; currentCreature < Creature.sortedCreatures.size(); currentCreature++) {
-				validTiles.add(currentCreature, new ArrayList<Tile>());
-				for(int tile = 0; tile < dynamicTiles.size(); tile++) {
-					if(dynamicTiles.get(tile).isPotentialOrientationPoint(Creature.sortedCreatures.get(currentCreature))) {
-						validTiles.get(currentCreature).add(dynamicTiles.get(tile));
-					}
-				}
-			}
-		}*/
 	}
 	
 	public void render(Graphics g, boolean renderCollisionBox) {
@@ -39,6 +31,8 @@ public class RenderManager {
 			
 		//BACKGROUND, MAIN & FOLIAGE LAYER
 			world.renderChunks(g, 0, 2);
+		//BAKED SHADING
+			g.drawImage(baked_shading, (int)(0-world.player.position[0]), (int)(0-world.player.position[1]), (int)(baked_shading.getWidth(null)*world.p.gameScale),(int)(baked_shading.getHeight(null)*world.p.gameScale), null);
 		//CREATURES & DYNAMIC LAYER
 			dynamicTiles.clear();
 			delayedRender.clear();
