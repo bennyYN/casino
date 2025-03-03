@@ -13,12 +13,14 @@ public class World {
 	CollisionManager cm = new CollisionManager();
 	RenderManager rm;
 	Player player;
+	int selectedLevel;
 	GamePanel p;
 	ArrayList<Object> placedObjects = new ArrayList<Object>();
 
 
 	public World(double scale, Player player, GamePanel p) {
 		//VARIABLEN
+		selectedLevel = p.currentLevel;
 		chunks = new Chunk[worldSize][worldSize][5];
 		
 		this.p = p;

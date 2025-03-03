@@ -20,11 +20,12 @@ public class Item extends Placeable{
 	Player player;
 	boolean pickedUp = false;
 	static Inventory inv;
-	RenderManager rm = new RenderManager(world, player);
+	RenderManager rm;
 	static ArrayList<Item> Items = new ArrayList<Item>();
 	
 	//KONSTRUKTOR
 	public Item(World world, int x, int y, String type) {
+
 		if(!type.equals("void")) {
 			Items.add(this);
 		}
@@ -33,6 +34,7 @@ public class Item extends Placeable{
 		this.world = world;
 		this.type = type;
 		player = this.world.player;
+		rm = new RenderManager(world, player);
 		denullInv();
 		matchBoxToItem();
 		updateTexture();

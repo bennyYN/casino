@@ -2,6 +2,7 @@ package de.ben.playground.escape_the_althen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.Object;
 import java.util.ArrayList;
 
 public class RenderManager {
@@ -14,10 +15,12 @@ public class RenderManager {
 	static ArrayList<Placeable> dynamicTiles = new ArrayList<Placeable>(); // <-- LISTE MIT KACHELN DIE AUFS RENDERING ÜBERPRÜFT WERDEN
 	static ArrayList<ArrayList<Placeable>> validTiles = new ArrayList<ArrayList<Placeable>>(); // <-- LISTE MIT KACHELN DIE ÜBERPRÜFT WURDEN
 	static ArrayList<Placeable> delayedRender = new ArrayList<Placeable>(); // <-- LISTE MIT KACHELN DIE NACH SPIELER VERZÖGERT GERENDERT WERDFEN
-	Image baked_shading = new ImageIcon("img/playground/escapethealthen/graphics/shading/baked_shading.png").getImage();
+	private int selectedLevel;
+	Image baked_shading;
 	
 	public RenderManager(World world, Creature creature) {
 		this.world = world;
+		this.selectedLevel = world.selectedLevel;
 		this.creature = creature;
 	}
 
@@ -32,6 +35,7 @@ public class RenderManager {
 		//BACKGROUND, MAIN & FOLIAGE LAYER
 			world.renderChunks(g, 0, 2);
 		//BAKED SHADING
+			baked_shading = new ImageIcon("img/playground/escapethealthen/graphics/shading/baked_shading_"+selectedLevel+".png").getImage();
 			g.drawImage(baked_shading, (int)(0-world.player.position[0]), (int)(0-world.player.position[1]), (int)(baked_shading.getWidth(null)*world.p.gameScale),(int)(baked_shading.getHeight(null)*world.p.gameScale), null);
 		//CREATURES & DYNAMIC LAYER
 			dynamicTiles.clear();

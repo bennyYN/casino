@@ -22,6 +22,7 @@ public class Object extends Placeable implements MouseMotionListener {
 			public boolean topSolidBlock = false;
 			private CollisionBox cBox; //<-- CollisionBox
 			public CollisionBox iBox, eBox; //<-- Interaction Box
+			Rectangle listenerBox;
 			
 			private boolean thin = false;
 			public int layer;
@@ -30,6 +31,7 @@ public class Object extends Placeable implements MouseMotionListener {
 			World world;
 			public boolean dynamicRendering = true;
 			private Rectangle highlightBox;
+			private int xHighlightBoxOffset, yHighlightBoxOffset;
 			private boolean mouseOver = false;
 	
 	//KONSTRUKTOR
@@ -45,6 +47,7 @@ public class Object extends Placeable implements MouseMotionListener {
 			//TEXTUR ANHAND DES TILE-TYPS ALS BILD DATEI SPEICHERN
 				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/objects/"+type+".png").getImage();
 				highlightBox = new Rectangle((int)((xTilePosition * 16 * scale) - ((int)playerPos[0])), (int)((yTilePosition * 16 * scale) - ((int)playerPos[1])), (int)(16 * scale), (int)(16 * scale));
+				listenerBox = highlightBox;
 				if(layer == 3 && type != "void") {
 					thin = true;
 				}
@@ -64,6 +67,8 @@ public class Object extends Placeable implements MouseMotionListener {
 				this.scale = scale;
 				this.playerPos = playerPos;
 				this.type = type;
+				highlightBox = new Rectangle((int)((xTilePosition * 16 * scale) - ((int)playerPos[0])), (int)((yTilePosition * 16 * scale) - ((int)playerPos[1])), (int)(16 * scale), (int)(16 * scale));
+			listenerBox = highlightBox;
 			//TEXTUR ANHAND DES TILE-TYPS ALS BILD DATEI SPEICHERN
 				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/objects/"+type+".png").getImage();
 				
@@ -117,20 +122,29 @@ public class Object extends Placeable implements MouseMotionListener {
 				cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 16, 16, scale, 0, 0);
 			}
 
-			// Update the position of the highlightBox based on the current position of the object and the player's position
-			highlightBox.setLocation(
-					(int)((xTilePosition * 16 * scale) - ((int)playerPos[0])),
-					(int)((yTilePosition * 16 * scale) - ((int)playerPos[1]))
-			);
-
 			switch(model) {
-				case "pot": cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 8, 4, scale, 4, 12);
-				break;
-				case "chest": cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 14, 2, scale, 1, 12);
-				break;
-				case "door": cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 32, 48, scale, 0, 0);
-					
-				break;
+				case "pot":
+					xHighlightBoxOffset = 3;
+					yHighlightBoxOffset = 1;
+					highlightBox = new Rectangle((int)(((xTilePosition*16*scale)+xHighlightBoxOffset*scale)-player.position[0]), (int)(((yTilePosition*16*scale)+yHighlightBoxOffset*scale)-player.position[1]), (int)(10*scale), (int)(15*scale));
+					break;
+				case "chest":
+					cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 14, 2, scale, 1, 12);
+					xHighlightBoxOffset = 0;
+					yHighlightBoxOffset = 3;
+					highlightBox = new Rectangle((int)(((xTilePosition*16*scale)+xHighlightBoxOffset*scale)-player.position[0]), (int)(((yTilePosition*16*scale)+yHighlightBoxOffset*scale)-player.position[1]), (int)(16*scale), (int)(13*scale));
+					break;
+				case "door":
+					cBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)((yTilePosition*16*scale)-((int)playerPos[1])), 32, 48, scale, 0, 0);
+					xHighlightBoxOffset = 17;
+					yHighlightBoxOffset = 34;
+					highlightBox = new Rectangle((int)(((xTilePosition*16*scale)+xHighlightBoxOffset*scale)-player.position[0]), (int)(((yTilePosition*16*scale)+yHighlightBoxOffset*scale)-player.position[1]), (int)(5*scale), (int)(6*scale));
+					break;
+				default:
+					xHighlightBoxOffset = 0;
+					yHighlightBoxOffset = 0;
+					highlightBox = new Rectangle((int)(((xTilePosition*16*scale)+xHighlightBoxOffset*scale)-player.position[0]), (int)(((yTilePosition*16*scale)+yHighlightBoxOffset*scale)-player.position[1]), (int)(16*scale), (int)(16*scale));
+					break;
 			}	
 
 			if(isSolid) {
@@ -516,7 +530,7 @@ public class Object extends Placeable implements MouseMotionListener {
 			}
 			if (mouseOver) {
 				g.setColor(Color.YELLOW);
-				g.drawRect(highlightBox.x, highlightBox.y, highlightBox.width, highlightBox.height);
+				g.drawRect((int)((highlightBox.x)), (int)((highlightBox.y)), highlightBox.width, highlightBox.height);
 			}
 		}
 	
@@ -666,7 +680,8 @@ public class Object extends Placeable implements MouseMotionListener {
 	public void mouseMoved(MouseEvent e) {
 		// Check if the mouse is over the object
 		if (highlightBox != null) {
-			mouseOver = highlightBox.contains(e.getPoint());
+			listenerBox.setLocation(highlightBox.x, highlightBox.y + (int)(6*scale));
+			mouseOver = listenerBox.contains(e.getPoint());
 		}
 	}
 

@@ -32,6 +32,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			Creature.reset();
 			Inventory.reset();
 
+			currentLevel = level;
 			this.setSize(1920, 1080);
 			this.setOpaque(true);
 			player = new Player((0)*16*gameScale, (0)*16*gameScale, 0.3, gameScale, 1.65, (this.getWidth()/2)-((16*gameScale)/2), (this.getHeight()/2)-((16*gameScale)/2));
@@ -53,7 +54,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			this.add(b);
 
 			inv = new Inventory(player, hud);
-			currentLevel = level;
+
 			//Load Level Generation File
 			gm.generate();
 		}

@@ -33,12 +33,8 @@ public class Tile extends Placeable{
 				this.playerPos = playerPos;
 				this.type = type;
 			//TEXTUR ANHAND DES TILE-TYPS ALS BILD DATEI SPEICHERN
-				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
-				
-				if(layer == 3 && type != "void") {
-					thin = true;
-				}
-				this.layer = layer;
+				//change texture only with a 20% chance to make the grass look more natural
+				changeType(type);
 				
 				
 		
@@ -46,7 +42,23 @@ public class Tile extends Placeable{
 
 	//METHODE ZUM NACHTRÄGLICHEN ÄNDERN DES TILE-TYPS
 		public void changeType(String type) {
-			this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+			if(type.equals("grass")){
+				//change texture only with a 20% chance to make the grass look more natural
+				if(Math.random() > 0.92) {
+					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/flowering_grass.png").getImage();
+				}else{
+					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+				}
+			}else if(type.equals("path")){
+				//change texture only with a 20% chance to make the grass look more natural
+				if(Math.random() > 0.5) {
+					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/path_variation.png").getImage();
+				}else{
+					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+				}
+			}else{
+				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+			}
 			this.type = type;
 			if(layer == 3 && type != "void") {
 				thin = true;

@@ -65,4 +65,7 @@ setO 10 4 door1
 	setT 11 13 water7 1
 	setT 18 13 water9 1
 
+# Path
+secT 10 7 11 14 path 1
+
 exit

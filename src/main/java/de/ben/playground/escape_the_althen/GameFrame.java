@@ -30,7 +30,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 		this.selectedLevel = selectedLevel;
 		this.setTitle("Escape The Althen!");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		p = new GamePanel(this, 1);
+		p = new GamePanel(this, selectedLevel);
 		this.add(p);
 		this.setIconImage(frameIcon.getImage());
 		this.setSize(1920, 1080);
