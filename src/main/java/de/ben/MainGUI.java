@@ -58,7 +58,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         games.add("flappyschmandt");
         games.add("althenator");
         games.add("escapethealthen");
-        games.add("gta");
+        //games.add("gta");
 
         // Erstellen des JLayeredPane
         JLayeredPane layeredPane = new JLayeredPane();
