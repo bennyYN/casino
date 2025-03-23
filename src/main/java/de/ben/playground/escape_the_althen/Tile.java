@@ -3,6 +3,7 @@ package de.ben.playground.escape_the_althen;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.Objects;
 
 import javax.swing.ImageIcon;
 
@@ -35,7 +36,9 @@ public class Tile extends Placeable{
 			//TEXTUR ANHAND DES TILE-TYPS ALS BILD DATEI SPEICHERN
 				//change texture only with a 20% chance to make the grass look more natural
 				changeType(type);
-				
+			if(layer == 3 && !type.equals("void")) {
+				thin = true;
+			}
 				
 		
 	}
@@ -60,14 +63,49 @@ public class Tile extends Placeable{
 				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
 			}
 			this.type = type;
-			if(layer == 3 && type != "void") {
+			if(layer == 3 && !type.equals("void")) {
 				thin = true;
 			}
 			updateSolidState(type);
+			if(layer == 3 && !type.equals("void")) {
+				thin = true;
+			}
 		}
+
+	public void changeType(String type, int layer) {
+			this.layer = layer;
+		if(type.equals("grass")){
+			//change texture only with a 20% chance to make the grass look more natural
+			if(Math.random() > 0.92) {
+				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/flowering_grass.png").getImage();
+			}else{
+				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+			}
+		}else if(type.equals("path")){
+			//change texture only with a 20% chance to make the grass look more natural
+			if(Math.random() > 0.5) {
+				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/path_variation.png").getImage();
+			}else{
+				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+			}
+		}else{
+			this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+		}
+		this.type = type;
+		if(layer == 3 && !type.equals("void")) {
+			thin = true;
+		}
+		updateSolidState(type);
+		if(layer == 3 && !type.equals("void")) {
+			thin = true;
+		}
+	}
 
 	//METHODE UM DIE TILE ZU RENDERN
 		public void render(Graphics g, boolean renderCollisionBox) {
+			if(layer == 3 && !Objects.equals(type, "void")) {
+				thin = true;
+			}
 			//TILE RENDERN
 			if(type.equals("grass")) {
 				g.drawImage(texture, (int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)(((yTilePosition-1)*16*scale)-((int)playerPos[1])), (int)(16*scale), (int)(32*scale), null);
@@ -101,6 +139,9 @@ public class Tile extends Placeable{
 					cBox.render(g, Color.YELLOW);
 				}
 			}
+			if(layer == 3 && !Objects.equals(type, "void")) {
+				thin = true;
+			}
 		}
 	
 	//"SOLID" EIGENSCHAFT ANHAND DES ÜBERGEBENEN TILE-TYPS ÜBERPRÜFEN
@@ -118,7 +159,7 @@ public class Tile extends Placeable{
 					: isSolid = true; break;
 			}
 			//THIN EXCEPTIONS
-			if(type == "void") {
+			if(type.equals("void")) {
 				thin = false;
 			}
 		}
@@ -131,6 +172,9 @@ public class Tile extends Placeable{
 	
 	//ÜBERPRÜFUNG OB DIE TILE NAHE AM SPIELER GELEGEN IST
 		public boolean isNearPlayer(double xSpawn, double ySpawn) {
+			if(layer == 3 && !Objects.equals(type, "void")) {
+				thin = true;
+			}
 			if((((playerPos[1]+ySpawn)/16/scale >= (yTilePosition-8)) && ((playerPos[1]+ySpawn)/16/scale <= (yTilePosition+7))) && (((playerPos[0]+xSpawn)/16/scale <= (xTilePosition+8)) && ((playerPos[0]+xSpawn)/16/scale >= (xTilePosition-7)))) {
 				nearPlayer = true;
 				return true;
@@ -141,6 +185,9 @@ public class Tile extends Placeable{
 		}
 		
 		public boolean behindCreature(Creature creature) {
+			if(layer == 3 && !Objects.equals(type, "void")) {
+				thin = true;
+			}
 			if(((this.yTilePosition-(1-0.5))*scale*16) >= creature.getY()) {
 				
 				

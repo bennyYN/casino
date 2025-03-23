@@ -93,7 +93,7 @@ public class Chunk {
 				tiles[x][y] = new Tile(x+(xChunkCoord*16), y+(yChunkCoord*16), gameScale, playerPosition, type, layer);
 			}else {
 				//WENN DIE KACHEL DA EXISTIERT WIRD NUR IHR TYP GEÄNDERT
-				tiles[x][y].changeType(type);
+				tiles[x][y].changeType(type, layer);
 			}
 		}
 	}

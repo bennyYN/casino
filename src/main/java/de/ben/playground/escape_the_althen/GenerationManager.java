@@ -69,7 +69,7 @@ public class GenerationManager {
 				 case "setI":
 					 new Item(world, Integer.valueOf(instructions[1]), Integer.valueOf(instructions[2]), instructions[3]);
 					 break;
-				 default: System.out.println("LEVEL: Unknown Generation-Instruction -> " + instructions[0]);
+				 default: System.out.println("LEVEL: Unknown Generation-Instruction -> " + instructions);
 				 	 break;
 				 }
 			}
