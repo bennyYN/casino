@@ -42,12 +42,12 @@ public class Althen extends Creature implements MouseMotionListener {
 		if (isAlive) {
 			if (isWalking) {
 				if (moveDirection.equals("up") || moveDirection.equals("down")) {
-					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/walking/" + moveDirection + textureVariation2 + ".png").getImage(), x, y, width, height, null);
+					g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/althen/walking/" + moveDirection + textureVariation2 + ".png").getImage(), x, y, width, height, null);
 				} else {
-					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/walking/" + moveDirection + textureVariation1 + ".png").getImage(), x, y, width, height, null);
+					g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/althen/walking/" + moveDirection + textureVariation1 + ".png").getImage(), x, y, width, height, null);
 				}
 			} else {
-				g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/idle/" + moveDirection + ".png").getImage(), x, y, width, height, null);
+				g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/althen/idle/" + moveDirection + ".png").getImage(), x, y, width, height, null);
 			}
 
 			// Define the polygon points for the visible part of the image
@@ -71,7 +71,7 @@ public class Althen extends Creature implements MouseMotionListener {
 			g.setColor(Color.RED);
 			g.fillRect(x + 1, y - 9, (int) (width * (health / this.maxHealth)) - 1, 4);
 		} else {
-			g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/althen/dead.png").getImage(), x, y + (int) (14 * scale), (int) (30 * scale), (int) (18 * scale), null);
+			g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/althen/dead.png").getImage(), x, y + (int) (14 * scale), (int) (30 * scale), (int) (18 * scale), null);
 		}
 	}
 

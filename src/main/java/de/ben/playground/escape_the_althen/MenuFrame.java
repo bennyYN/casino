@@ -14,7 +14,7 @@ public class MenuFrame extends JFrame{
 	public MainGUI mainGUI;
 	//ATTRIBUTE
 	MenuPanel mp;
-	ImageIcon frameIcon = new ImageIcon("img/playground/althenpong/althenos.png");
+	ImageIcon frameIcon = new ImageIcon("src/main/resources/img/playground/althenpong/althenos.png");
 	
 	//KONSTRUKTOR
 	public MenuFrame(MainGUI mainGUI) {

@@ -10,8 +10,8 @@ public class Schmandt {
     public static int score = 0;
     public int cooldown = 0;
     public Rectangle hitbox1, hitbox2, scoreBox;
-    private Image player1 = new ImageIcon("img/playground/flappyschmandt/player1.png").getImage();
-    private Image player2 = new ImageIcon("img/playground/flappyschmandt/player2.png").getImage();
+    private Image player1 = new ImageIcon("src/main/resources/img/playground/flappyschmandt/player1.png").getImage();
+    private Image player2 = new ImageIcon("src/main/resources/img/playground/flappyschmandt/player2.png").getImage();
     private Image currentPlayerTexture = player1;
     public int x, y, width, height;
     int switches = 0;

@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Ball extends Rectangle {
 
-    private Image ballIcon = Toolkit.getDefaultToolkit().getImage("img/playground/althenpong/althenos.png");
+    private Image ballIcon = Toolkit.getDefaultToolkit().getImage("src/main/resources/img/playground/althenpong/althenos.png");
     public double speedMultiplier = 4.6, xVelocity = 1, yVelocity = 1, xPos = 1920/2, yPos = 1080/2;
     private int savedX, savedY;
 

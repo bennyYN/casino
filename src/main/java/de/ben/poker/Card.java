@@ -25,7 +25,7 @@ public class Card {
     }
 
     public ImageIcon getImageIcon(){
-        return (new ImageIcon("img/cards/" + this + ".png"));
+        return (new ImageIcon("src/img/cards/" + this + ".png"));
     }
 
     private String generateImageLink() {

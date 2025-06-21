@@ -35,23 +35,23 @@ public class Player extends Creature{
 
 			//FLAMES (IF BURNING)
 				if(burning) {
-					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/effects/burning/tall_flames"+textureVariation3+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+					g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/effects/burning/tall_flames"+textureVariation3+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
 				}
 			//WALKING PLAYER
 				if(isWalking) {
 					if(moveDirection == "up" || moveDirection == "down") {
-						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
 					}else {
-						g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation1+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation1+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
 					}
 			//IDLE PLAYER	
 				}else {
-					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/idle/"+moveDirection+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+					g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/idle/"+moveDirection+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
 				}
 			}else {
-				g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/death/dead_player.png").getImage(), (int)(xScreenPos-(8*scale)), (int)yScreenPos, (int)(32*scale), (int)(32*scale), null);
+				g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/death/dead_player.png").getImage(), (int)(xScreenPos-(8*scale)), (int)yScreenPos, (int)(32*scale), (int)(32*scale), null);
 			}
 		}
 

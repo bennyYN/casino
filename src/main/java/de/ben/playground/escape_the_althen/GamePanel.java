@@ -84,7 +84,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		hud.renderHUD(s, debugmode);
 		inv.render(g);
 		if(!player.isAlive && !levelCompleted) {
-			g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/creatures/player/death/dead_player.png").getImage(), (int)(player.xScreenPos-(8*player.scale)), (int)player.yScreenPos, (int)(32*player.scale), (int)(32*player.scale), null);
+			g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/death/dead_player.png").getImage(), (int)(player.xScreenPos-(8*player.scale)), (int)player.yScreenPos, (int)(32*player.scale), (int)(32*player.scale), null);
 			renderDeathscreen(g);
 		}
 		if(levelCompleted) {

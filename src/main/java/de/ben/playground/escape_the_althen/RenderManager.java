@@ -35,7 +35,7 @@ public class RenderManager {
 		//BACKGROUND, MAIN & FOLIAGE LAYER
 			world.renderChunks(g, 0, 2);
 		//BAKED SHADING
-			baked_shading = new ImageIcon("img/playground/escapethealthen/graphics/shading/baked_shading_"+selectedLevel+".png").getImage();
+			baked_shading = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/shading/baked_shading_"+selectedLevel+".png").getImage();
 			g.drawImage(baked_shading, (int)(0-world.player.position[0]), (int)(0-world.player.position[1]), (int)(baked_shading.getWidth(null)*world.p.gameScale),(int)(baked_shading.getHeight(null)*world.p.gameScale), null);
 		//CREATURES & DYNAMIC LAYER
 			dynamicTiles.clear();

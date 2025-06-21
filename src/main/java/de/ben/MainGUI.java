@@ -77,7 +77,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         this.addKeyListener(this);
 
         //Titlebar-Icon mit Skalierung setzen
-        ImageIcon icon = new ImageIcon("img/icon.png");
+        ImageIcon icon = new ImageIcon("src/main/resources/img/icon.png");
         Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
         setIconImage(scaledIcon);
 
@@ -268,9 +268,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         settingsButton.setBounds(10, 505, 50, 50);
 
 // Load and scale the images
-        ImageIcon defaultIcon = new ImageIcon("img/menu/settings1.png");
-        ImageIcon hoverIcon = new ImageIcon("img/menu/settings2.png");
-        ImageIcon clickIcon = new ImageIcon("img/menu/settings3.png");
+        ImageIcon defaultIcon = new ImageIcon("src/main/resources/img/menu/settings1.png");
+        ImageIcon hoverIcon = new ImageIcon("src/main/resources/img/menu/settings2.png");
+        ImageIcon clickIcon = new ImageIcon("src/main/resources/img/menu/settings3.png");
 
 // Set the default icon
         settingsButton.setIcon(defaultIcon);
@@ -336,11 +336,11 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         add(layeredPane);
 
         // Load and scale the images for the info button
-        ImageIcon infoDefaultIcon = new ImageIcon(new ImageIcon("img/menu/info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoHoverIcon = new ImageIcon(new ImageIcon("img/menu/hover_info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoDefaultIconFalse = new ImageIcon(new ImageIcon("img/menu/info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoHoverIconFalse = new ImageIcon(new ImageIcon("img/menu/hover_info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoClickIcon = new ImageIcon(new ImageIcon("img/menu/info3.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoDefaultIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoHoverIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/hover_info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoDefaultIconFalse = new ImageIcon(new ImageIcon("src/main/resources/img/menu/info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoHoverIconFalse = new ImageIcon(new ImageIcon("src/main/resources/img/menu/hover_info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoClickIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/info3.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 
 // Create the info button
         infoButton = new JButton();
@@ -402,9 +402,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         rightArrowButton.setBounds(0, 0, 30, 50); // Double the button size
 
 // Load and scale the images for the right arrow button
-        ImageIcon rightDefaultIcon = new ImageIcon(new ImageIcon("img/menu/right1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon rightHoverIcon = new ImageIcon(new ImageIcon("img/menu/right2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon rightClickIcon = new ImageIcon(new ImageIcon("img/menu/right3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightDefaultIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/right1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightHoverIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/right2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightClickIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/right3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
 
 // Set the default icon
         rightArrowButton.setIcon(rightDefaultIcon);
@@ -450,9 +450,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         leftArrowButton.setBounds(5, 0, 30, 50); // Double the button size
 
 // Load and scale the images for the left arrow button
-        ImageIcon leftDefaultIcon = new ImageIcon(new ImageIcon("img/menu/left1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon leftHoverIcon = new ImageIcon(new ImageIcon("img/menu/left2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon leftClickIcon = new ImageIcon(new ImageIcon("img/menu/left3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftDefaultIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/left1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftHoverIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/left2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftClickIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/left3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
 
 // Set the default icon
         leftArrowButton.setIcon(leftDefaultIcon);

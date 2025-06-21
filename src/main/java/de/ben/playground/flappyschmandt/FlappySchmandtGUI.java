@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FlappySchmandtGUI extends JFrame {
 
     JPanel gamePanel;
-    Image background = new ImageIcon("img/playground/flappyschmandt/background.png").getImage();
+    Image background = new ImageIcon("src/main/resources/img/playground/flappyschmandt/background.png").getImage();
     Rectangle floor = new Rectangle(0, 990, 1920, 100);
     public double xOffset = 0;
     Schmandt player;

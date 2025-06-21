@@ -4,10 +4,10 @@ import java.awt.*;
 
 public class Althenator {
 
-    private static final Image ACTIVE_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("img/playground/althenator/active_althenator.png");
-    private static final Image INACTIVE_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("img/playground/althenator/inactive_althenator.png");
-    private static final Image ELECTRIFIED_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("img/playground/althenator/electrified_althenator.png");
-    private static final Image DEAD_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("img/playground/althenator/dead_althenator.png");
+    private static final Image ACTIVE_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("src/main/resources/img/playground/althenator/active_althenator.png");
+    private static final Image INACTIVE_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("src/main/resources/img/playground/althenator/inactive_althenator.png");
+    private static final Image ELECTRIFIED_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("src/main/resources/img/playground/althenator/electrified_althenator.png");
+    private static final Image DEAD_ALTHENATOR = Toolkit.getDefaultToolkit().getImage("src/main/resources/img/playground/althenator/dead_althenator.png");
     public static final int WIDTH = ACTIVE_ALTHENATOR.getWidth(null), HEIGHT = ACTIVE_ALTHENATOR.getHeight(null);
 
     private Image currentImage;

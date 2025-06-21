@@ -16,7 +16,7 @@ public class Hindernis {
         this.height = height;
         //random obstacle image from 1-4
         int random = (int) (Math.random() * 4 + 1);
-        texture = new ImageIcon("img/playground/flappyschmandt/obstacle" + random + ".png").getImage();
+        texture = new ImageIcon("src/main/resources/img/playground/flappyschmandt/obstacle" + random + ".png").getImage();
         texture = texture.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 

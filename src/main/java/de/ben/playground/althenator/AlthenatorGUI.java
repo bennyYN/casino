@@ -20,7 +20,7 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
 
     private double difficultyIncrement = 0.7;
     private double timeDecrement = 0.8;
-    Image logo = new ImageIcon("img/playground/althenator/logo.png").getImage();
+    Image logo = new ImageIcon("src/main/resources/img/playground/althenator/logo.png").getImage();
     JPanel gamePanel;
     JPanel infoPanel;
     boolean paused = false, started = false, gameover = false;
@@ -54,7 +54,7 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
         althenator = new Althenator(1920 / 2 - 150, 830 / 2 - 264, this);
 
         // Set window icon
-        Image icon = new ImageIcon("img/playground/althenpong/althen_icon.png").getImage();
+        Image icon = new ImageIcon("src/main/resources/img/playground/althenpong/althen_icon.png").getImage();
         setIconImage(icon);
 
         // Infopanel

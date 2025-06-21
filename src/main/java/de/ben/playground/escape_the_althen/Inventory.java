@@ -13,8 +13,8 @@ public class Inventory {
 	Player player;
 	HUD h;
 	int xInv, selected;
-	static Image unselectedBox = new ImageIcon("img/playground/escapethealthen/graphics/gui/inventory/unselected_box.png").getImage();
-	static Image selectedBox = new ImageIcon("img/playground/escapethealthen/graphics/gui/inventory/selected_box.png").getImage();
+	static Image unselectedBox = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/gui/inventory/unselected_box.png").getImage();
+	static Image selectedBox = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/gui/inventory/selected_box.png").getImage();
 	public Inventory(Player player, HUD hud) {
 		this.player = player;
 		h = hud;
@@ -39,7 +39,7 @@ public class Inventory {
 		//ITEM ICONS
 			for(int i = 0; i <= 7; i++) {
 				try{
-					g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/items/"+items.get(i)+".png").getImage(), xInv+(90*i)+10, h.wHeight-150, 60, 60, null);
+					g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/items/"+items.get(i)+".png").getImage(), xInv+(90*i)+10, h.wHeight-150, 60, 60, null);
 				}catch(Exception e){}
 			}
 	}

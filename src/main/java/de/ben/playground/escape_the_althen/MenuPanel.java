@@ -45,7 +45,7 @@ public class MenuPanel extends JPanel implements ActionListener{
 	//METHODE ZUM "BEMAHLEN" DES JPANELS
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(new ImageIcon("img/playground/escapethealthen/graphics/gui/menu_background.png").getImage(), 0, 0, null);
+		g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/gui/menu_background.png").getImage(), 0, 0, null);
 		repaint();
 	}
 

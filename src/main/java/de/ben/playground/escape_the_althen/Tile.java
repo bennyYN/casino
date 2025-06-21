@@ -48,19 +48,19 @@ public class Tile extends Placeable{
 			if(type.equals("grass")){
 				//change texture only with a 20% chance to make the grass look more natural
 				if(Math.random() > 0.92) {
-					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/flowering_grass.png").getImage();
+					this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/flowering_grass.png").getImage();
 				}else{
-					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+					this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
 				}
 			}else if(type.equals("path")){
 				//change texture only with a 20% chance to make the grass look more natural
 				if(Math.random() > 0.5) {
-					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/path_variation.png").getImage();
+					this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/path_variation.png").getImage();
 				}else{
-					this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+					this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
 				}
 			}else{
-				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+				this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
 			}
 			this.type = type;
 			if(layer == 3 && !type.equals("void")) {
@@ -77,19 +77,19 @@ public class Tile extends Placeable{
 		if(type.equals("grass")){
 			//change texture only with a 20% chance to make the grass look more natural
 			if(Math.random() > 0.92) {
-				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/flowering_grass.png").getImage();
+				this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/flowering_grass.png").getImage();
 			}else{
-				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+				this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
 			}
 		}else if(type.equals("path")){
 			//change texture only with a 20% chance to make the grass look more natural
 			if(Math.random() > 0.5) {
-				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/path_variation.png").getImage();
+				this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/path_variation.png").getImage();
 			}else{
-				this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+				this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
 			}
 		}else{
-			this.texture = new ImageIcon("img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
+			this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/tiles/"+type+".png").getImage();
 		}
 		this.type = type;
 		if(layer == 3 && !type.equals("void")) {

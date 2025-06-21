@@ -21,7 +21,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener, Mo
 	public int selectedLevel;
 	CollisionManager cm = new CollisionManager();
 	public double delayer1 = 0, delayer2 = 0, delayer3 = 0, delayer4 = 0;
-	ImageIcon frameIcon = new ImageIcon("img/playground/althenpong/althenos.png");
+	ImageIcon frameIcon = new ImageIcon("src/main/resources/img/playground/althenpong/althenos.png");
 	
 	//KONSTRUKTOR
 	public GameFrame(int selectedLevel, MenuFrame mf) {

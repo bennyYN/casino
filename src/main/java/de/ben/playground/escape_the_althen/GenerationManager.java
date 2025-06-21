@@ -15,7 +15,7 @@ public class GenerationManager {
 	public GenerationManager(int level, World world) {
 		this.world = world;
 		try {
-			reader = new BufferedReader(new FileReader("img/playground/escapethealthen/levels/level_"+level+".lvl"));
+			reader = new BufferedReader(new FileReader("src/main/resources/img/playground/escapethealthen/levels/level_"+level+".lvl"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Level Datei nicht gefunden!");

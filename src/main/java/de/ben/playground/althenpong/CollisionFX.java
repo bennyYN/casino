@@ -18,8 +18,8 @@ public class CollisionFX {
     static {
         try {
             for (int i = 0; i < 8; i++) {
-                leftFrames[i] = ImageIO.read(new File("img/playground/althenpong/fx/leftcollision" + (i + 1) + ".png"));
-                rightFrames[i] = ImageIO.read(new File("img/playground/althenpong/fx/rightcollision" + (i + 1) + ".png"));
+                leftFrames[i] = ImageIO.read(new File("src/main/resources/img/playground/althenpong/fx/leftcollision" + (i + 1) + ".png"));
+                rightFrames[i] = ImageIO.read(new File("src/main/resources/img/playground/althenpong/fx/rightcollision" + (i + 1) + ".png"));
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -90,7 +90,7 @@ public class Item extends Placeable{
 
 	//METHODE UM DIE TEXTUR (DAS BILD/ICON) DES ITEMS ZU AKTUALISIEREN
 	private void updateTexture() {
-		texture = new ImageIcon("img/playground/escapethealthen/graphics/items/"+type+".png").getImage();
+		texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/items/"+type+".png").getImage();
 	}
 	
 	//METHODE, DAMIT SICH DAS ITEM AUF DEM BODEN LEICHT HOCH UND RUNTER BEWEGT (ALS INDIKATOR FÜRS ITEM)
