@@ -77,7 +77,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         this.addKeyListener(this);
 
         //Titlebar-Icon mit Skalierung setzen
-        ImageIcon icon = new ImageIcon("src/main/resources/img/icon.png");
+        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("img/icon.png"));
         Image scaledIcon = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH); // glatte Skalierung
         setIconImage(scaledIcon);
 
@@ -268,9 +268,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         settingsButton.setBounds(10, 505, 50, 50);
 
 // Load and scale the images
-        ImageIcon defaultIcon = new ImageIcon("src/main/resources/img/menu/settings1.png");
-        ImageIcon hoverIcon = new ImageIcon("src/main/resources/img/menu/settings2.png");
-        ImageIcon clickIcon = new ImageIcon("src/main/resources/img/menu/settings3.png");
+        ImageIcon defaultIcon = new ImageIcon(getClass().getClassLoader().getResource("img/menu/settings1.png"));
+        ImageIcon hoverIcon = new ImageIcon(getClass().getClassLoader().getResource("img/menu/settings2.png"));
+        ImageIcon clickIcon = new ImageIcon(getClass().getClassLoader().getResource("img/menu/settings3.png"));
 
 // Set the default icon
         settingsButton.setIcon(defaultIcon);
@@ -336,11 +336,11 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         add(layeredPane);
 
         // Load and scale the images for the info button
-        ImageIcon infoDefaultIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoHoverIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/hover_info1.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoDefaultIconFalse = new ImageIcon(new ImageIcon("src/main/resources/img/menu/info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoHoverIconFalse = new ImageIcon(new ImageIcon("src/main/resources/img/menu/hover_info2.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        ImageIcon infoClickIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/info3.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoDefaultIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/info1.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoHoverIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/hover_info1.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoDefaultIconFalse = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/info2.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoHoverIconFalse = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/hover_info2.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        ImageIcon infoClickIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/info3.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 
 // Create the info button
         infoButton = new JButton();
@@ -402,9 +402,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         rightArrowButton.setBounds(0, 0, 30, 50); // Double the button size
 
 // Load and scale the images for the right arrow button
-        ImageIcon rightDefaultIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/right1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon rightHoverIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/right2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon rightClickIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/right3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightDefaultIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/right1.png")).getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightHoverIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/right2.png")).getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon rightClickIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/right3.png")).getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
 
 // Set the default icon
         rightArrowButton.setIcon(rightDefaultIcon);
@@ -450,9 +450,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         leftArrowButton.setBounds(5, 0, 30, 50); // Double the button size
 
 // Load and scale the images for the left arrow button
-        ImageIcon leftDefaultIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/left1.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon leftHoverIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/left2.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
-        ImageIcon leftClickIcon = new ImageIcon(new ImageIcon("src/main/resources/img/menu/left3.png").getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftDefaultIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/left1.png")).getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftHoverIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/left2.png")).getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
+        ImageIcon leftClickIcon = new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("img/menu/left3.png")).getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH));
 
 // Set the default icon
         leftArrowButton.setIcon(leftDefaultIcon);
@@ -748,10 +748,39 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     }
 
     // Methode zum Speichern der Lautstärke in einer Textdatei
+    // Java
+    // Java
     private void saveVolume(float volume) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(VOLUME_FILE))) {
+        String externalPath = System.getProperty("user.home") + File.separator + "volume.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(externalPath))) {
             writer.write(String.valueOf(volume));
-            System.out.println("Lautstärke gespeichert: " + volume);
+            System.out.println("Volume saved: " + volume);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveGameSoundsVolume(float volume) {
+        try {
+            URL resourceUrl = getClass().getClassLoader().getResource("config/gamesounds.txt");
+            if (resourceUrl == null) {
+                throw new FileNotFoundException("Resource file not found: config/gamesounds.txt");
+            }
+            File file = new File(resourceUrl.toURI());
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(String.valueOf(volume));
+                System.out.println("Game Sounds volume saved: " + volume);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveSelectedTheme(String theme) {
+        this.selectedTheme = theme;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(getClass().getClassLoader().getResource("config/theme.txt").getFile()))) {
+            writer.write(theme);
+            System.out.println("Theme saved: " + theme);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -759,48 +788,34 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
     // Methode zum Laden der Lautstärke aus einer Textdatei
     private void loadVolume() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(VOLUME_FILE))) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/volume.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String volumeStr = reader.readLine();
             if (volumeStr != null) {
                 float volume = Float.parseFloat(volumeStr);
-                setVolume(volume); // Setze die geladene Lautstärke direkt vor dem Start der Musik
+                setVolume(volume); // Set the loaded volume
             } else {
-                setVolume(50); // Standardlautstärke verwenden, wenn nichts gefunden wird
+                setVolume(50); // Default volume
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Lautstärkedatei nicht gefunden. Verwende Standardlautstärke.");
-            setVolume(50); // Standardlautstärke verwenden, wenn Datei nicht vorhanden ist
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-            setVolume(50); // Falls ein Fehler auftritt, setze eine Standardlautstärke
-        }
-    }
-
-    // Methode zum Speichern der Game Sounds Lautstärke in einer Textdatei
-    private void saveGameSoundsVolume(float volume) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(GAME_SOUNDS_FILE))) {
-            writer.write(String.valueOf(volume));
-            System.out.println("Game Sounds Lautstärke gespeichert: " + volume);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Volume file not found or invalid. Using default volume.");
+            setVolume(50); // Default volume in case of error
         }
     }
 
     // Methode zum Laden der Game Sounds Lautstärke aus einer Textdatei
     private void loadGameSoundsVolume() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(GAME_SOUNDS_FILE))) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/gamesounds.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String volumeStr = reader.readLine();
             if (volumeStr != null) {
                 gameSoundsVolume = Float.parseFloat(volumeStr);
             } else {
-                gameSoundsVolume = 50; // Standardlautstärke verwenden, wenn nichts gefunden wird
+                gameSoundsVolume = 50; // Default game sounds volume
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Game Sounds Datei nicht gefunden. Verwende Standardlautstärke.");
-            gameSoundsVolume = 50; // Standardlautstärke verwenden, wenn Datei nicht vorhanden ist
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-            gameSoundsVolume = 50; // Falls ein Fehler auftritt, setze eine Standardlautstärke
+        } catch (Exception e) {
+            System.out.println("Game sounds file not found or invalid. Using default volume.");
+            gameSoundsVolume = 50; // Default volume in case of error
         }
     }
 
@@ -810,40 +825,36 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         triggerSound("sounds/"+sound+".wav");
     }
 
-    private static void triggerSound(String filePath) {
-        try {
-            // Lade die Sounddatei
-            File soundFile = new File(filePath);
-            if (!soundFile.exists()) {
-                throw new FileNotFoundException("Sound file not found: " + filePath);
+    private static void triggerSound(String soundFilePath) {
+        try (InputStream soundStream = MainGUI.class.getClassLoader().getResourceAsStream(soundFilePath)) {
+            if (soundStream == null) {
+                throw new IllegalArgumentException("Sound file not found: " + soundFilePath);
             }
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            File tempFile = File.createTempFile("tempSound", ".wav");
+            tempFile.deleteOnExit();
+            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                soundStream.transferTo(out);
+            }
+            AudioInputStream originalAudioStream = AudioSystem.getAudioInputStream(tempFile);
 
-            // Überprüfe das Audioformat und konvertiere es bei Bedarf
-            AudioFormat baseFormat = audioStream.getFormat();
-            AudioFormat decodedFormat = new AudioFormat(
+            // Convert the audio format to PCM_SIGNED if necessary
+            AudioFormat originalFormat = originalAudioStream.getFormat();
+            AudioFormat targetFormat = new AudioFormat(
                     AudioFormat.Encoding.PCM_SIGNED,
-                    baseFormat.getSampleRate(),
-                    16,
-                    baseFormat.getChannels(),
-                    baseFormat.getChannels() * 2,
-                    baseFormat.getSampleRate(),
-                    false
+                    originalFormat.getSampleRate(),
+                    16, // 16-bit sample size
+                    originalFormat.getChannels(),
+                    originalFormat.getChannels() * 2, // Frame size
+                    originalFormat.getSampleRate(),
+                    false // Big-endian
             );
-            AudioInputStream decodedAudioStream = AudioSystem.getAudioInputStream(decodedFormat, audioStream);
+
+            AudioInputStream convertedAudioStream = AudioSystem.getAudioInputStream(targetFormat, originalAudioStream);
 
             Clip clip = AudioSystem.getClip();
-            clip.open(decodedAudioStream);
-
-            // Lautstärkeregelung initialisieren
-            FloatControl soundVolumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float min = soundVolumeControl.getMinimum();
-            float max = soundVolumeControl.getMaximum();
-            float gain = min + (max - min) * (gameSoundsVolume / 100.0f); // Umwandlung des Volumens in den Bereich [min, max]
-            soundVolumeControl.setValue(gain);
-
-            clip.start(); // Sound abspielen
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            clip.open(convertedAudioStream);
+            clip.start();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -915,20 +926,18 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         new MainGUI(); // Starte die MainGUI
     }
 
-    public void saveSelectedTheme(String theme) {
-        this.selectedTheme = theme;
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("theme.txt"))) {
-            writer.write(theme);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void loadSelectedTheme() {
-        try {
-            selectedTheme = new String(Files.readAllBytes(Paths.get("theme.txt")));
-        } catch (IOException e) {
-            selectedTheme = "Original"; // Standard-Theme
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/theme.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String theme = reader.readLine();
+            if (theme != null) {
+                selectedTheme = theme;
+            } else {
+                selectedTheme = "Original"; // Default theme
+            }
+        } catch (Exception e) {
+            System.out.println("Theme file not found or invalid. Using default theme.");
+            selectedTheme = "Original"; // Default theme in case of error
         }
     }
 

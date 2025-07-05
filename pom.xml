@@ -30,6 +30,14 @@
 
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/resources/img/playground</directory>
+      </resource>
+    </resources>
     <plugins>
       <!-- Maven compiler plugin to specify Java version -->
       <plugin>

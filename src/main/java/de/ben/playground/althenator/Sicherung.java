@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 
 public class Sicherung extends JButton {
 
-    private static final Image DEFAULT_SICHERUNG = Toolkit.getDefaultToolkit().getImage("src/main/resources/img/playground/althenator/sicherung.png");
-    private static final Image RAUSGEFLOGENE_SICHERUNG = Toolkit.getDefaultToolkit().getImage("src/main/resources/img/playground/althenator/rausgeflogene_sicherung.png");
+    private static final Image DEFAULT_SICHERUNG = Toolkit.getDefaultToolkit().getImage(Sicherung.class.getClassLoader().getResource("img/playground/althenator/sicherung.png"));
+    private static final Image RAUSGEFLOGENE_SICHERUNG = Toolkit.getDefaultToolkit().getImage(Sicherung.class.getClassLoader().getResource("img/playground/althenator/rausgeflogene_sicherung.png"));
     private static final int WIDTH = 150, HEIGHT = 264;
 
     private boolean rausgeflogen = false;

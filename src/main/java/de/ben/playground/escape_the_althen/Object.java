@@ -5,7 +5,9 @@ import de.ben.MainGUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class Object extends Placeable implements MouseMotionListener {
@@ -45,8 +47,12 @@ public class Object extends Placeable implements MouseMotionListener {
 				this.playerPos = playerPos;
 				this.type = type;
 			//TEXTUR ANHAND DES TILE-TYPS ALS BILD DATEI SPEICHERN
-				this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/objects/"+type+".png").getImage();
-				highlightBox = new Rectangle((int)((xTilePosition * 16 * scale) - ((int)playerPos[0])), (int)((yTilePosition * 16 * scale) - ((int)playerPos[1])), (int)(16 * scale), (int)(16 * scale));
+            try {
+                this.texture = new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/objects/"+type+".png"))).getImage();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            highlightBox = new Rectangle((int)((xTilePosition * 16 * scale) - ((int)playerPos[0])), (int)((yTilePosition * 16 * scale) - ((int)playerPos[1])), (int)(16 * scale), (int)(16 * scale));
 				listenerBox = highlightBox;
 				if(layer == 3 && type != "void") {
 					thin = true;
@@ -70,9 +76,13 @@ public class Object extends Placeable implements MouseMotionListener {
 				highlightBox = new Rectangle((int)((xTilePosition * 16 * scale) - ((int)playerPos[0])), (int)((yTilePosition * 16 * scale) - ((int)playerPos[1])), (int)(16 * scale), (int)(16 * scale));
 			listenerBox = highlightBox;
 			//TEXTUR ANHAND DES TILE-TYPS ALS BILD DATEI SPEICHERN
-				this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/objects/"+type+".png").getImage();
-				
-				if(layer == 3 && type != "void") {
+            try {
+                this.texture = new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/objects/"+type+".png"))).getImage();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if(layer == 3 && type != "void") {
 					thin = true;
 				}
 				this.layer = layer;
@@ -83,16 +93,24 @@ public class Object extends Placeable implements MouseMotionListener {
 		
 	//METHODE ZUM NACHTRÄGLICHEN ÄNDERN DES TILE-TYPS
 		public void changeType(String type) {
-			this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/objects/"+type+".png").getImage();
-			this.type = type;
+            try {
+                this.texture = new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/objects/"+type+".png"))).getImage();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            this.type = type;
 			if(layer == 3 && type != "void") {
 				thin = true;
 			}
 			updateSolidState(type);
 		}
 		public void changeType(String type, String lootItem) {
-			this.texture = new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/objects/"+type+".png").getImage();
-			this.type = type;
+            try {
+                this.texture = new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/objects/"+type+".png"))).getImage();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            this.type = type;
 			if(layer == 3 && type != "void") {
 				thin = true;
 			}

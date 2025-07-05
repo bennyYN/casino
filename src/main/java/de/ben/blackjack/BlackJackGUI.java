@@ -89,7 +89,7 @@ public class BlackJackGUI extends JFrame implements KeyListener {
                 //if(state.equals("betting")||state.equals("active")){
                 if(!bj.hasSplit){
                     //Normaler Infobevel
-                    g.drawImage(new ImageIcon("src/main/resources/img/infobevel.png").getImage(), 10, 10, null);
+                    g.drawImage(new ImageIcon(getClass().getClassLoader().getResource("img/infobevel.png")).getImage(), 10, 10, null);
                     //Chips
                     if(state.equals("active")){
                         g2d.drawString("Chips: " + (bj.chips-(bj.bet)), 23, 40);
@@ -101,7 +101,7 @@ public class BlackJackGUI extends JFrame implements KeyListener {
                     g2d.drawString("Einsatz: " + (bj.bet), 23, 80);
                 }else{
                     //Erweiterter Infobevel
-                    g.drawImage(new ImageIcon("src/main/resources/img/extended_infobevel.png").getImage(), 10, 10, null);
+                    g.drawImage(new ImageIcon(getClass().getClassLoader().getResource("img/extended_infobevel.png")).getImage(), 10, 10, null);
                     //Chips
                     if(state.equals("active")){
                         g2d.drawString("Chips: " + (bj.chips-((bj.bet1)+(bj.bet2))), 23, 40);

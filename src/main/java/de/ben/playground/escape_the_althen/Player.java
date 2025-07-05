@@ -2,6 +2,8 @@ package de.ben.playground.escape_the_althen;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class Player extends Creature{
@@ -35,24 +37,45 @@ public class Player extends Creature{
 
 			//FLAMES (IF BURNING)
 				if(burning) {
-					g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/effects/burning/tall_flames"+textureVariation3+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-				}
+                    try {
+                        g.drawImage(new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/effects/burning/tall_flames"+textureVariation3+".png"))).getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 			//WALKING PLAYER
 				if(isWalking) {
 					if(moveDirection == "up" || moveDirection == "down") {
-						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+                        try {
+                            g.drawImage(new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png"))).getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+							g.drawImage(new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png"))).getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+							g.drawImage(new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation4+".png"))).getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
 					}else {
-						g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation1+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-					}
+                        try {
+                            g.drawImage(new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/creatures/player/walking/"+moveDirection+textureVariation1+".png"))).getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
 			//IDLE PLAYER	
 				}else {
-					g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/idle/"+moveDirection+".png").getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
-				}
+                    try {
+                        g.drawImage(new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/creatures/player/idle/"+moveDirection+".png"))).getImage(), (int)xScreenPos, (int)yScreenPos, (int)(16*scale), (int)(32*scale), null);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 			}else {
-				g.drawImage(new ImageIcon("src/main/resources/img/playground/escapethealthen/graphics/creatures/player/death/dead_player.png").getImage(), (int)(xScreenPos-(8*scale)), (int)yScreenPos, (int)(32*scale), (int)(32*scale), null);
-			}
+                try {
+                    g.drawImage(new ImageIcon(ImageIO.read(HUD.class.getClassLoader().getResourceAsStream("img/playground/escapethealthen/graphics/creatures/player/death/dead_player.png"))).getImage(), (int)(xScreenPos-(8*scale)), (int)yScreenPos, (int)(32*scale), (int)(32*scale), null);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 		}
 
 	//UPDATE METHODE

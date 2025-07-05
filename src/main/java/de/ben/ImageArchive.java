@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 //Klasse um Bilder, welche sonst mehrfach geladen werden müssten, zu speichern und abzurufen
@@ -11,6 +13,13 @@ import java.util.Objects;
 
 public class ImageArchive {
 
+    InputStream inputStream = new InputStream() {
+        @Override
+        public int read() throws IOException {
+            return 0;
+        }
+    };
+    
     //Icons
     private static BufferedImage chipsImg, bigBlindImg, smallBlindImg, iconImg, cardsImg;
     private static Image scaledChipsImg, scaledBigBlindImg, scaledSmallBlindImg, scaledIconImg, scaledCardsImg;
@@ -46,107 +55,107 @@ public class ImageArchive {
     public ImageArchive(){
         try{
             //Icons
-            iconImg = ImageIO.read(new File("src/main/resources/img/icon.png"));
-            chipsImg = ImageIO.read(new File("src/main/resources/img/chips.png"));
-            bigBlindImg = ImageIO.read(new File("src/main/resources/img/bigBlind.png"));
-            smallBlindImg = ImageIO.read(new File("src/main/resources/img/smallBlind.png"));
-            cardsImg = ImageIO.read(new File("src/main/resources/img/cards_icon.png"));
+            iconImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/icon.png"));
+            chipsImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/chips.png"));
+            bigBlindImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/bigblind.png"));
+            smallBlindImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/smallblind.png"));
+            cardsImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards_icon.png"));
             //Menu Assets
-            poker1Logo = ImageIO.read(new File("src/main/resources/img/menu/poker1.png"));
-            poker2Logo = ImageIO.read(new File("src/main/resources/img/menu/poker2.png"));
-            blackjackLogo = ImageIO.read(new File("src/main/resources/img/menu/blackjack.png"));
-            althenpongLogo = ImageIO.read(new File("src/main/resources/img/menu/althenpong.png"));
-            flappyschmandtLogo = ImageIO.read(new File("src/main/resources/img/menu/flappyschmandt.png"));
-            althenatorLogo = ImageIO.read(new File("src/main/resources/img/menu/althenator.png"));
-            escapeTheAlthenLogo = ImageIO.read(new File("src/main/resources/img/menu/escapethealthen.png"));
-            gtaLogo = ImageIO.read(new File("src/main/resources/img/menu/gta.png"));
+            poker1Logo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/poker1.png"));
+            poker2Logo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/poker2.png"));
+            blackjackLogo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/blackjack.png"));
+            althenpongLogo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/althenpong.png"));
+            flappyschmandtLogo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/flappyschmandt.png"));
+            althenatorLogo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/althenator.png"));
+            escapeTheAlthenLogo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/escapethealthen.png"));
+            gtaLogo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/menu/gta.png"));
             //Playerslots
-            playerslot = ImageIO.read(new File("src/main/resources/img/playerslots/playerslot.png"));
-            emptyPlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/empty_playerslot.png"));
-            activePlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/active_playerslot.png"));
-            winningPlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/winning_playerslot.png"));
-            inactivePlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/inactive_playerslot.png"));
-            zeroPlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/zero_playerslot.png"));
-            youPlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/you_playerslot.png"));
-            youActivePlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/you_active_playerslot.png"));
-            youWinningPlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/you_winning_playerslot.png"));
-            youInactivePlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/you_inactive_playerslot.png"));
-            youZeroPlayerslot = ImageIO.read(new File("src/main/resources/img/playerslots/you_zero_playerslot.png"));
+            playerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/playerslot.png"));
+            emptyPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/empty_playerslot.png"));
+            activePlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/active_playerslot.png"));
+            winningPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/winning_playerslot.png"));
+            inactivePlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/inactive_playerslot.png"));
+            zeroPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/zero_playerslot.png"));
+            youPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/you_playerslot.png"));
+            youActivePlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/you_active_playerslot.png"));
+            youWinningPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/you_winning_playerslot.png"));
+            youInactivePlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/you_inactive_playerslot.png"));
+            youZeroPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/playerslots/you_zero_playerslot.png"));
             //Lobby-Playerslots
-            lobbyPlayerslot = ImageIO.read(new File("src/main/resources/img/lobby/playerslot.png"));
-            lobbyHostPlayerslot = ImageIO.read(new File("src/main/resources/img/lobby/host_playerslot.png"));
-            lobbyEmptyPlayerslot = ImageIO.read(new File("src/main/resources/img/lobby/empty_playerslot.png"));
-            lobbyYouHostPlayerslot = ImageIO.read(new File("src/main/resources/img/lobby/you_host_playerslot.png"));
-            lobbyYouPlayerslot = ImageIO.read(new File("src/main/resources/img/lobby/you_playerslot.png"));
+            lobbyPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/lobby/playerslot.png"));
+            lobbyHostPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/lobby/host_playerslot.png"));
+            lobbyEmptyPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/lobby/empty_playerslot.png"));
+            lobbyYouHostPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/lobby/you_host_playerslot.png"));
+            lobbyYouPlayerslot = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/lobby/you_playerslot.png"));
             //Misc
-            originalBackgroundImg = ImageIO.read(new File("src/main/resources/img/background.jpg"));
-            darkBackgroundImg = ImageIO.read(new File("src/main/resources/img/background-dark.jpg"));
-            darkblueBackgroundImg = ImageIO.read(new File("src/main/resources/img/background-darkblue.jpg"));
-            lightBackgroundImg = ImageIO.read(new File("src/main/resources/img/background-light.jpg"));
-            scarletBackgroundImg = ImageIO.read(new File("src/main/resources/img/background-scarlet.jpg"));
-            darkPotImg = ImageIO.read(new File("src/main/resources/img/pot-dark.png"));
-            tableImg = ImageIO.read(new File("src/main/resources/img/table.png"));
-            potImg = ImageIO.read(new File("src/main/resources/img/pot.png"));
+            originalBackgroundImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/background.jpg"));
+            darkBackgroundImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/background-dark.jpg"));
+            darkblueBackgroundImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/background-darkblue.jpg"));
+            lightBackgroundImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/background-light.jpg"));
+            scarletBackgroundImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/background-scarlet.jpg"));
+            darkPotImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/pot-dark.png"));
+            tableImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/table.png"));
+            potImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/pot.png"));
             //Cards
                 //Backside
-                cardBackImg = ImageIO.read(new File("src/main/resources/img/cards/BACKSIDE-original.png"));
-                scarletCardBackImg = ImageIO.read(new File("src/main/resources/img/cards/BACKSIDE-scarlet.png"));
+                cardBackImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/BACKSIDE-original.png"));
+                scarletCardBackImg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/BACKSIDE-scarlet.png"));
                 //Clubs
-                clubs2 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 2.png"));
-                clubs3 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 3.png"));
-                clubs4 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 4.png"));
-                clubs5 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 5.png"));
-                clubs6 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 6.png"));
-                clubs7 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 7.png"));
-                clubs8 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 8.png"));
-                clubs9 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 9.png"));
-                clubs10 = ImageIO.read(new File("src/main/resources/img/cards/CLUBS 10.png"));
-                clubsJ = ImageIO.read(new File("src/main/resources/img/cards/CLUBS J.png"));
-                clubsQ = ImageIO.read(new File("src/main/resources/img/cards/CLUBS Q.png"));
-                clubsK = ImageIO.read(new File("src/main/resources/img/cards/CLUBS K.png"));
-                clubsA = ImageIO.read(new File("src/main/resources/img/cards/CLUBS A.png"));
+                clubs2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 2.png"));
+                clubs3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 3.png"));
+                clubs4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 4.png"));
+                clubs5 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 5.png"));
+                clubs6 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 6.png"));
+                clubs7 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 7.png"));
+                clubs8 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 8.png"));
+                clubs9 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 9.png"));
+                clubs10 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS 10.png"));
+                clubsJ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS J.png"));
+                clubsQ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS Q.png"));
+                clubsK = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS K.png"));
+                clubsA = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/CLUBS A.png"));
                 //Diamonds
-                diamonds2 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 2.png"));
-                diamonds3 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 3.png"));
-                diamonds4 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 4.png"));
-                diamonds5 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 5.png"));
-                diamonds6 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 6.png"));
-                diamonds7 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 7.png"));
-                diamonds8 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 8.png"));
-                diamonds9 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 9.png"));
-                diamonds10 = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS 10.png"));
-                diamondsJ = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS J.png"));
-                diamondsQ = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS Q.png"));
-                diamondsK = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS K.png"));
-                diamondsA = ImageIO.read(new File("src/main/resources/img/cards/DIAMONDS A.png"));
+                diamonds2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 2.png"));
+                diamonds3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 3.png"));
+                diamonds4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 4.png"));
+                diamonds5 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 5.png"));
+                diamonds6 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 6.png"));
+                diamonds7 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 7.png"));
+                diamonds8 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 8.png"));
+                diamonds9 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 9.png"));
+                diamonds10 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS 10.png"));
+                diamondsJ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS J.png"));
+                diamondsQ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS Q.png"));
+                diamondsK = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS K.png"));
+                diamondsA = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/DIAMONDS A.png"));
                 //Hearts
-                hearts2 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 2.png"));
-                hearts3 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 3.png"));
-                hearts4 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 4.png"));
-                hearts5 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 5.png"));
-                hearts6 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 6.png"));
-                hearts7 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 7.png"));
-                hearts8 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 8.png"));
-                hearts9 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 9.png"));
-                hearts10 = ImageIO.read(new File("src/main/resources/img/cards/HEARTS 10.png"));
-                heartsJ = ImageIO.read(new File("src/main/resources/img/cards/HEARTS J.png"));
-                heartsQ = ImageIO.read(new File("src/main/resources/img/cards/HEARTS Q.png"));
-                heartsK = ImageIO.read(new File("src/main/resources/img/cards/HEARTS K.png"));
-                heartsA = ImageIO.read(new File("src/main/resources/img/cards/HEARTS A.png"));
+                hearts2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 2.png"));
+                hearts3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 3.png"));
+                hearts4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 4.png"));
+                hearts5 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 5.png"));
+                hearts6 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 6.png"));
+                hearts7 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 7.png"));
+                hearts8 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 8.png"));
+                hearts9 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 9.png"));
+                hearts10 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS 10.png"));
+                heartsJ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS J.png"));
+                heartsQ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS Q.png"));
+                heartsK = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS K.png"));
+                heartsA = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/HEARTS A.png"));
                 //Spades
-                spades2 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 2.png"));
-                spades3 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 3.png"));
-                spades4 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 4.png"));
-                spades5 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 5.png"));
-                spades6 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 6.png"));
-                spades7 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 7.png"));
-                spades8 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 8.png"));
-                spades9 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 9.png"));
-                spades10 = ImageIO.read(new File("src/main/resources/img/cards/SPADES 10.png"));
-                spadesJ = ImageIO.read(new File("src/main/resources/img/cards/SPADES J.png"));
-                spadesQ = ImageIO.read(new File("src/main/resources/img/cards/SPADES Q.png"));
-                spadesK = ImageIO.read(new File("src/main/resources/img/cards/SPADES K.png"));
-                spadesA = ImageIO.read(new File("src/main/resources/img/cards/SPADES A.png"));
+                spades2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 2.png"));
+                spades3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 3.png"));
+                spades4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 4.png"));
+                spades5 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 5.png"));
+                spades6 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 6.png"));
+                spades7 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 7.png"));
+                spades8 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 8.png"));
+                spades9 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 9.png"));
+                spades10 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES 10.png"));
+                spadesJ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES J.png"));
+                spadesQ = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES Q.png"));
+                spadesK = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES K.png"));
+                spadesA = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/cards/SPADES A.png"));
 
         }catch(Exception e){
             e.printStackTrace();

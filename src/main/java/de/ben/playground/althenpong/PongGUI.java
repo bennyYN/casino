@@ -19,7 +19,7 @@ public class PongGUI extends JFrame implements KeyListener {
 
     CollisionFX cfx = new CollisionFX();
     boolean passedLastCollisionCheck = true, didInvert = false;
-    Image logo = new ImageIcon("src/main/resources/img/playground/althenpong/logo.png").getImage();
+    Image logo = new ImageIcon(getClass().getClassLoader().getResource("img/playground/althenpong/logo.png")).getImage();
     Player player1 = new Player(40);
     Player player2 = new Player(1730);
     JPanel gamePanel;
@@ -39,7 +39,7 @@ public class PongGUI extends JFrame implements KeyListener {
         setLayout(new BorderLayout());
 
         // Set window icon
-        Image icon = new ImageIcon("src/main/resources/img/playground/althenpong/althen_icon.png").getImage();
+        Image icon = new ImageIcon(getClass().getClassLoader().getResource("img/playground/althenpong/althen_icon.png")).getImage();
         setIconImage(icon);
 
         // Infopanel
