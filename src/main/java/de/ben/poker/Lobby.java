@@ -259,7 +259,7 @@ public class Lobby extends JFrame {
 
         exitButton.addActionListener(e -> {
             if (isLeader) {
-                MainGUI.playSound("click");
+                //TODO: MIGRATE -> MainGUI.playSound("click");
                 SwingUtilities.invokeLater(() -> {
 
                     int startChips = Integer.parseInt(startChipsField.getText());
@@ -271,7 +271,7 @@ public class Lobby extends JFrame {
                     this.setVisible(false);
                 });
             } else {
-                MainGUI.playSound("invalid");
+                //TODO: MIGRATE -> MainGUI.playSound("invalid");
                 mainGUI.setVisible(true);
                 this.dispose();
             }

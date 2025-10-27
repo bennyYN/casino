@@ -48,7 +48,7 @@ public class SettingsGUI extends JFrame {
         volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         // Create music slider
-        JSlider musicSlider = new JSlider(0, 100, (int) mainGUI.getCurrentVolume());
+        JSlider musicSlider = new JSlider(0, 100, /*(int) mainGUI.getCurrentVolume()*/ 50);
         musicSlider.setMajorTickSpacing(10);
         musicSlider.setMinorTickSpacing(5);
         musicSlider.setPaintTicks(true);
@@ -68,7 +68,7 @@ public class SettingsGUI extends JFrame {
         // Update volume when slider is moved
         musicSlider.addChangeListener(e -> {
             int volume = musicSlider.getValue();
-            mainGUI.setVolume(volume); // Set volume in MainGUI and save it
+            //TODO: MIGRATE -> mainGUI.setVolume(volume); // Set volume in MainGUI and save it
         });
 
         // Add mouse wheel listener to music slider
@@ -180,7 +180,7 @@ public class SettingsGUI extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            MainGUI.playSound("click");
+            //TODO: MIGRATE -> MainGUI.playSound("click");
         });
 
         // Create a thin line border

@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 
-import static de.ben.MainGUI.playSound;
+//import static de.ben.MainGUI.playSound;
 
 public class AlthenatorGUI extends JFrame implements KeyListener {
 
@@ -211,7 +211,7 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            playSound("click");
+            //TODO: MIGRATE -> playSound("click");
         });
 
         // Create a thin line border

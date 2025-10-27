@@ -223,12 +223,12 @@ public class PlayerSelection extends JFrame {
         panel.add(exitButton, gbc);
 
         confirmButton.addActionListener(e -> {
-            MainGUI.playSound("click");
+            //TODO: MIGRATE -> MainGUI.playSound("click");
             enterPlayerNames(numPlayers);
         });
 
         exitButton.addActionListener(e -> {
-            MainGUI.playSound("click");
+            //TODO: MIGRATE -> MainGUI.playSound("click");
             for(int i = 0; i < 8; i++){
                 if(i >= numPlayers){
                     playerNames.set(i, "");

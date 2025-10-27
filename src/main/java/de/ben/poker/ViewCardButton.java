@@ -35,10 +35,10 @@ public class ViewCardButton extends JButton {
             public void actionPerformed(ActionEvent e) {
 
                 if(soundVariationCounter == 1){
-                    MainGUI.playSound("view1");
+                    //TODO: MIGRATE -> MainGUI.playSound("view1");
                     soundVariationCounter = 2;
                 }else{
-                    MainGUI.playSound("view2");
+                    //TODO: MIGRATE -> MainGUI.playSound("view2");
                     soundVariationCounter = 1;
                 }
 

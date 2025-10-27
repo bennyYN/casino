@@ -402,16 +402,16 @@ public class PokerGUI extends JFrame implements KeyListener {
             if(game != null){
                 if(mainGUI.playerIndex != -1){
                     if(game.players.get(mainGUI.playerIndex).handVisible){
-                        MainGUI.playSound("toggle1");
+                        //TODO: MIGRATE -> MainGUI.playSound("toggle1");
                     }else{
-                        MainGUI.playSound("toggle2");
+                        //TODO: MIGRATE -> MainGUI.playSound("toggle2");
                     }
                     game.players.get(mainGUI.playerIndex).handVisible = !game.players.get(mainGUI.playerIndex).handVisible;
                 }else{
                     if(game.currentPlayer.handVisible){
-                        MainGUI.playSound("toggle1");
+                        //TODO: MIGRATE -> MainGUI.playSound("toggle1");
                     }else{
-                        MainGUI.playSound("toggle2");
+                        //TODO: MIGRATE -> MainGUI.playSound("toggle2");
                     }
                     game.currentPlayer.handVisible = !game.currentPlayer.handVisible;
                 }
@@ -661,7 +661,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            MainGUI.playSound("click");
+            //TODO: MIGRATE -> MainGUI.playSound("click");
         });
 
         // Create a thin line border
@@ -746,9 +746,9 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Wenn die Escape-Taste gedrückt wird, wird das Menü geöffnet/geschlossen
         if(e.getKeyCode() == 27){
             if(isMenuOpen){
-                MainGUI.playSound("close_menu");
+                //TODO: MIGRATE -> MainGUI.playSound("close_menu");
             }else{
-                MainGUI.playSound("open_menu");
+                //TODO: MIGRATE -> MainGUI.playSound("open_menu");
             }
             isMenuOpen = !isMenuOpen;
         }
@@ -891,7 +891,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
     public void doRaise(){
         if(!raiseField.isVisible()){
-            MainGUI.playSound("click");
+            //TODO: MIGRATE -> MainGUI.playSound("click");
         }
         raiseField.setVisible(true);
         raiseLabel.setVisible(true);

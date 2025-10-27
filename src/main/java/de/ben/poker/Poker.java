@@ -243,10 +243,10 @@ public class Poker extends Thread {
                     gui.setAction("idle");
                     if (validAction) {
                         // Setze den action String auf "idle" zurück und bewege zum nächsten Spieler
-                        MainGUI.playSound("valid");
+                        //TODO: MIGRATE -> MainGUI.playSound("valid");
                         i++;
                     } else {
-                        MainGUI.playSound("invalid");
+                        //TODO: MIGRATE -> MainGUI.playSound("invalid");
                     }
                 } else {
                     i++;
@@ -523,7 +523,7 @@ public class Poker extends Thread {
             }
 
             // Winner reveal
-            MainGUI.playSound("win");
+            //TODO: MIGRATE -> MainGUI.playSound("win");
             Player winner = poker.gewinner();
             if (winner == null) {
                 System.out.println("Unentschieden! Der Pot wird geteilt.");
@@ -562,7 +562,7 @@ public class Poker extends Thread {
                 System.out.println("Spiel Ende. Ein Spieler hat keine Chips mehr.");
                 //gui.fadingLabel.setText("Spiel Ende. Ein Spieler hat keine Chips mehr.", false);
                 isGameOver = true;
-                MainGUI.playSound("KSHMR_Hans_Zimmer_Horn_05__Cm_");
+                //TODO: MIGRATE -> MainGUI.playSound("KSHMR_Hans_Zimmer_Horn_05__Cm_");
             }
         }
     }

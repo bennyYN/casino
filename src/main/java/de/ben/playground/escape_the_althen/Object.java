@@ -194,7 +194,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				iBox = new CollisionBox((int)((xTilePosition*16*scale)-((int)playerPos[0])), (int)(((yTilePosition)*16*scale)-((int)playerPos[1])), 38, 8, scale, -3, 44);
 				if(type.equals("door22") && playerInEventBox()) {
 					world.p.levelCompleted = true;
-					MainGUI.playSound("level_completed");
+					//TODO: MIGRATE -> MainGUI.playSound("level_completed");
 				}
 
 			}else {
@@ -207,7 +207,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				if(isPlayerInRange() && player.hitEvent && mouseOver && world.p.inv.getSelectedItemType().equals("hammer")) {
 					changeType("pot2");
 					player.hitEvent = false;
-					MainGUI.playSound("pot_breaking");
+					//TODO: MIGRATE -> MainGUI.playSound("pot_breaking");
 				}
 				break;
 			case "pot2": 
@@ -256,7 +256,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				case "bronze_chest1":
 				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("bronze_key")  && mouseOver) {
 					player.interactionEvent = false;
-					MainGUI.playSound("toggle2");
+					//TODO: MIGRATE -> MainGUI.playSound("toggle2");
 					changeType("bronze_chest2");
 					world.p.inv.removeSelectedItem();
 					Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
@@ -265,7 +265,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				case "iron_chest1":
 					if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("iron_key")  && mouseOver) {
 						player.interactionEvent = false;
-						MainGUI.playSound("toggle2");
+						//TODO: MIGRATE -> MainGUI.playSound("toggle2");
 						changeType("iron_chest2");
 						world.p.inv.removeSelectedItem();
 						Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
@@ -274,7 +274,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				case "golden_chest1":
 					if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("golden_key")  && mouseOver) {
 						player.interactionEvent = false;
-						MainGUI.playSound("toggle2");
+						//TODO: MIGRATE -> MainGUI.playSound("toggle2");
 						changeType("golden_chest2");
 						world.p.inv.removeSelectedItem();
 						Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
@@ -283,7 +283,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				case "diamond_chest1":
 					if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("diamond_key")  && mouseOver) {
 						player.interactionEvent = false;
-						MainGUI.playSound("toggle2");
+						//TODO: MIGRATE -> MainGUI.playSound("toggle2");
 						changeType("diamond_chest2");
 						world.p.inv.removeSelectedItem();
 						Item droppedItem = new Item(world, xTilePosition, yTilePosition, lootItemType);
@@ -381,7 +381,7 @@ public class Object extends Placeable implements MouseMotionListener {
 				if(isPlayerInRange() && player.interactionEvent && world.p.inv.getSelectedItemType().equals("golden_key")  && mouseOver) {
 					//player.interactionEvent = false;
 					changeType("door2");
-					MainGUI.playSound("door_opening");
+					//TODO: MIGRATE -> MainGUI.playSound("door_opening");
 					world.p.inv.removeSelectedItem();
 				}
 				break;

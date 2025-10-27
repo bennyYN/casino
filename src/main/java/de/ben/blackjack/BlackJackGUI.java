@@ -793,9 +793,9 @@ public class BlackJackGUI extends JFrame implements KeyListener {
         switch(e.getKeyCode()){
             case 27:
                 if(isMenuOpen){
-                    MainGUI.playSound("close_menu");
+                    //TODO: MIGRATE -> MainGUI.playSound("close_menu");
                 }else{
-                   MainGUI.playSound("open_menu");
+                    //TODO: MIGRATE -> MainGUI.playSound("open_menu");
                 }
                 isMenuOpen = !isMenuOpen;
                 break;
@@ -951,7 +951,7 @@ public class BlackJackGUI extends JFrame implements KeyListener {
                             g.drawImage(ImageArchive.getImage("card:back:"+mainGUI.getSelectedTheme()), (((1200 - (bj.dealerHand.cards.size() * 40)) / 2) - 40 + i * 40)+flipframe, 175 - i * 15, 104-(2*flipframe), 145, null);
                             if(flipframe == 6){
                                 if(!playedFlipSound){
-                                    MainGUI.playSound("flip");
+                                    //TODO: MIGRATE ->  MainGUI.playSound("flip");
                                     playedFlipSound = true;
                                 }
                             }

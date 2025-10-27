@@ -148,7 +148,7 @@ public class MultiplayerGUI extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            MainGUI.playSound("click");
+            //TODO: MIGRATE -> MainGUI.playSound("click");
         });
 
         // Create a thin line border

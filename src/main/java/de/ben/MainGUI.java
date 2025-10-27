@@ -1,21 +1,21 @@
 package de.ben;
 
-import de.ben.blackjack.*;
+import de.ben.blackjack.GameSettings;
 import de.ben.playground.althenator.AlthenatorGUI;
 import de.ben.playground.althenpong.PongGUI;
 import de.ben.playground.escape_the_althen.MenuFrame;
-import de.ben.poker.*;
+import de.ben.poker.MultiplayerGUI;
+import de.ben.poker.PlayerSelection;
 import de.ben.poker.SettingsGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.net.URL;
-import javax.swing.border.Border;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class MainGUI extends JFrame implements ActionListener, MouseWheelListener, KeyListener {
@@ -23,12 +23,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     // Attribute
     JButton startButton, settingsButton, infoButton;
     JPanel panel;
-    private Clip backgroundMusic;
-    private FloatControl volumeControl;
-    private final String VOLUME_FILE = "volume.txt"; // Datei zum Speichern der Lautstärke
-    private final String THEME_FILE = "theme.txt"; // Datei zum Speichern des Themes
-    private final String GAME_SOUNDS_FILE = "gamesounds.txt"; // Datei zum Speichern der Soundeinstellungen
-    private boolean startingGame = false;
+    private final boolean startingGame = false;
     private String selectedTheme;
     private static float gameSoundsVolume = 50; // Default game sounds volume
     private String MultiplayerName;
@@ -39,7 +34,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     public int playerIndex = -1;
     private int selectedGameIndex = 0;
     private boolean isAnimating = false;
-    private ArrayList<String> games = new ArrayList<String>();
+    private final ArrayList<String> games = new ArrayList<>();
     private int z = 0;
     private int animationFrame = 0, direction = 0, startAnimationFrame = 1;
     private final int ANIMATION_SPEED = 10, ANIMATION_DELAY = 1;
@@ -58,7 +53,6 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         games.add("flappyschmandt");
         games.add("althenator");
         games.add("escapethealthen");
-        //games.add("gta");
 
         // Erstellen des JLayeredPane
         JLayeredPane layeredPane = new JLayeredPane();
@@ -66,8 +60,6 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
         // Laden des gespeicherten Themes und der Lautstärken
         loadSelectedTheme();
-        loadVolume();
-        loadGameSoundsVolume();
 
         this.setTitle("Game Library");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,14 +74,14 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         setIconImage(scaledIcon);
 
         // Musik initialisieren und Lautstärke laden
-        initMusicPlayer();
+        //initMusicPlayer();
 
         // Versuche, den Hintergrund als Bild zu setzen
         panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(ImageArchive.getImage("background:"+selectedTheme), 0, 0, null);
+                g.drawImage(ImageArchive.getImage("background:" + selectedTheme), 0, 0, null);
 
                 //Button Farbe regelmäßig updaten um ausgewähltem Theme zu matchen
                 updateButtonColor(startButton, false);
@@ -105,19 +97,19 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
                 //Progressbar using circles to represent a game
                 g.setColor(new Color(255, 255, 255, 100));
-                z=0;
-                for(int i = 0; i < games.size(); i++){
-                    if(i == selectedGameIndex){
+                z = 0;
+                for (int i = 0; i < games.size(); i++) {
+                    if (i == selectedGameIndex) {
                         g.setColor(new Color(255, 255, 255, 255));
-                    }else{
+                    } else {
                         g.setColor(new Color(255, 255, 255, 100));
                     }
-                    g.fillOval(360+z, 492, 8, 8);
-                    z+=12;
+                    g.fillOval(360 + z, 492, 8, 8);
+                    z += 12;
                 }
 
                 //Game Infos
-                if(showGameInfo){
+                if (showGameInfo) {
                     //OBERER Bevel für tooltips
                     g.setColor(new Color(0, 0, 0, 100));
                     g.fillRoundRect(100, 25, 600, 100, 10, 10);
@@ -126,19 +118,19 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                     g.setFont(new Font("Arial", Font.BOLD, 25));
                     FontMetrics fm = g.getFontMetrics();
                     int x = (500 - fm.stringWidth(getGameTitle())) / 2 + 150;
-                    int y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)-25;
+                    int y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25) - 25;
                     g.drawString(getGameTitle(), x, y);
                     g.setFont(new Font("Arial", Font.PLAIN, 16));
                     fm = g.getFontMetrics();
                     x = (500 - fm.stringWidth(getGameDescription())) / 2 + 150;
-                    y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25)+17;
+                    y = (((100 - fm.getHeight()) / 2) + fm.getAscent() + 25) + 17;
                     g.drawString(getGameDescription(), x, y);
                 }
 
                 //Rotation Animation
-                if(isAnimating){
-                    if(animationFrame < 100){
-                        if(direction == 1) {
+                if (isAnimating) {
+                    if (animationFrame < 100) {
+                        if (direction == 1) {
 
                             //RIGHT ROTATION ANIMATION
 
@@ -146,28 +138,28 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
                             //middle game to right
                             g.setColor(new Color(255, 255, 255, (interpolate(178, 0))));
-                            g.fillRect(interpolate(273, 549), interpolate(158, 184), interpolate(254, (int)(252*0.8)), interpolate(304, (int)(302*0.8)));
+                            g.fillRect(interpolate(273, 549), interpolate(158, 184), interpolate(254, (int) (252 * 0.8)), interpolate(304, (int) (302 * 0.8)));
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(1, 0.5f)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance(interpolate(250, (int)(250*0.8)), interpolate(300, (int)(300*0.8)), Image.SCALE_SMOOTH), interpolate(275, 550), interpolate(160, 185), null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance(interpolate(250, (int) (250 * 0.8)), interpolate(300, (int) (300 * 0.8)), Image.SCALE_SMOOTH), interpolate(275, 550), interpolate(160, 185), null);
 
                             //right to selection fade out to right
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, -0.5f)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(getGame2ToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(550, 775), 185, null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGame2ToRight())).getScaledInstance((int) (250 * 0.8), (int) (300 * 0.8), Image.SCALE_SMOOTH), interpolate(550, 775), 185, null);
 
                             //left to selection morph to selection
                             g.setColor(new Color(255, 255, 255, interpolate(0, 178)));
-                            g.fillRect(interpolate(49, 273), interpolate(184, 158), interpolate((int)(252*0.8), 254), interpolate((int)(302*0.8), 304)); //TODO MORPH ANIMATION
+                            g.fillRect(interpolate(49, 273), interpolate(184, 158), interpolate((int) (252 * 0.8), 254), interpolate((int) (302 * 0.8), 304)); //TODO MORPH ANIMATION
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, 1)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)).getScaledInstance(interpolate((int)(250*0.8), 250), interpolate((int)(300*0.8), 300), Image.SCALE_SMOOTH), interpolate(50, 275), interpolate(185, 160), null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)).getScaledInstance(interpolate((int) (250 * 0.8), 250), interpolate((int) (300 * 0.8), 300), Image.SCALE_SMOOTH), interpolate(50, 275), interpolate(185, 160), null);
 
                             //fade in left selection from the left
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(-0.5f, 0.5f)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(-175, 50), 185, null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int) (250 * 0.8), (int) (300 * 0.8), Image.SCALE_SMOOTH), interpolate(-175, 50), 185, null);
 
                             g2d.dispose();
 
                             animationFrame = animationFrame + ANIMATION_SPEED;
-                        }else{
+                        } else {
 
                             //LEFT ROTATION ANIMATION
 
@@ -175,34 +167,34 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
                             //middle game to left
                             g.setColor(new Color(255, 255, 255, (interpolate(178, 0))));
-                            g.fillRect(interpolate(273, 49), interpolate(158, 184), interpolate(254, (int)(252*0.8)), interpolate(304, (int)(302*0.8)));
+                            g.fillRect(interpolate(273, 49), interpolate(158, 184), interpolate(254, (int) (252 * 0.8)), interpolate(304, (int) (302 * 0.8)));
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(1, 0.5f)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance(interpolate(250, (int)(250*0.8)), interpolate(300, (int)(300*0.8)), Image.SCALE_SMOOTH), interpolate(275, 50), interpolate(160, 185), null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance(interpolate(250, (int) (250 * 0.8)), interpolate(300, (int) (300 * 0.8)), Image.SCALE_SMOOTH), interpolate(275, 50), interpolate(160, 185), null);
 
                             //left to selection fade out to left
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, -0.5f)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(getGame2ToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(50, -175), 185, null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGame2ToLeft())).getScaledInstance((int) (250 * 0.8), (int) (300 * 0.8), Image.SCALE_SMOOTH), interpolate(50, -175), 185, null);
 
                             //right to selection morph to selection
                             g.setColor(new Color(255, 255, 255, interpolate(0, 178)));
-                            g.fillRect(interpolate(549, 273), interpolate(184, 158), interpolate((int)(252*0.8), 254), interpolate((int)(302*0.8), 304)); //TODO MORPH ANIMATION
+                            g.fillRect(interpolate(549, 273), interpolate(184, 158), interpolate((int) (252 * 0.8), 254), interpolate((int) (302 * 0.8), 304)); //TODO MORPH ANIMATION
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(0.5f, 1)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)).getScaledInstance(interpolate((int)(250*0.8), 250), interpolate((int)(300*0.8), 300), Image.SCALE_SMOOTH), interpolate(550, 275), interpolate(185, 160), null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)).getScaledInstance(interpolate((int) (250 * 0.8), 250), interpolate((int) (300 * 0.8), 300), Image.SCALE_SMOOTH), interpolate(550, 275), interpolate(185, 160), null);
 
                             //fade in right selection from the right
                             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, interpolate(-0.5f, 0.5f)));
-                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), interpolate(775, 550), 185, null);
+                            g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int) (250 * 0.8), (int) (300 * 0.8), Image.SCALE_SMOOTH), interpolate(775, 550), 185, null);
 
                             g2d.dispose();
 
                             animationFrame = animationFrame + ANIMATION_SPEED;
                         }
-                    }else{
+                    } else {
                         animationFrame = 0;
                         isAnimating = false;
                     }
                 }
-                if(!isAnimating){
+                if (!isAnimating) {
 
                     animationFrame = 0;
                     //Display logo of selected game including white shadow to highlight
@@ -213,8 +205,8 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                     //Display logo of game with 50% transparency to the left and right of selected game
                     Graphics2D g2d = (Graphics2D) g.create();
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-                    g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 50, 185, null);
-                    g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int)(250*0.8), (int)(300*0.8), Image.SCALE_SMOOTH), 550, 185, null);
+                    g2d.drawImage(ImageArchive.getImage(games.get(getGameToLeft())).getScaledInstance((int) (250 * 0.8), (int) (300 * 0.8), Image.SCALE_SMOOTH), 50, 185, null);
+                    g2d.drawImage(ImageArchive.getImage(games.get(getGameToRight())).getScaledInstance((int) (250 * 0.8), (int) (300 * 0.8), Image.SCALE_SMOOTH), 550, 185, null);
 
                     g2d.dispose();
                 }
@@ -232,14 +224,14 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if(startingGame){
-                    //GSA - Game Start Animation
+                if (startingGame) {
+                    //Game Start Animation
                     //Display logo of selected game including white shadow to highlight
                     g.setColor(new Color(255, 255, 255, 178));
                     startAnimationFrame *= 2;
                     g.fillRect(273, 158, 254, 304);
-                    g.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)), 275-startAnimationFrame, 160-startAnimationFrame, 250+(startAnimationFrame*2), 300+(startAnimationFrame*2),  null);
-                }else{
+                    g.drawImage(ImageArchive.getImage(games.get(selectedGameIndex)), 275 - startAnimationFrame, 160 - startAnimationFrame, 250 + (startAnimationFrame * 2), 300 + (startAnimationFrame * 2), null);
+                } else {
                     startAnimationFrame = 1;
                 }
                 repaint();
@@ -280,7 +272,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
 // Add action listener for click event
         settingsButton.addActionListener(e -> {
-            playSound("click");
+            //playSound("click");
             new SettingsGUI(this, true); // Open SettingsGUI and pass MainGUI for volume adjustment
             this.setVisible(false); // Hide MainGUI instead of closing it
         });
@@ -313,7 +305,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         // Inside the MainGUI constructor, after initializing the panel
         JButton leftInvisibleButton = new JButton();
         leftInvisibleButton.setFocusable(false);
-        leftInvisibleButton.setBounds(50, 185, (int)(250*0.8), (int)(300*0.8)); // Position and size the button
+        leftInvisibleButton.setBounds(50, 185, (int) (250 * 0.8), (int) (300 * 0.8)); // Position and size the button
         leftInvisibleButton.setContentAreaFilled(false);
         leftInvisibleButton.setBorderPainted(false);
         leftInvisibleButton.setFocusPainted(false);
@@ -323,7 +315,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
         JButton rightInvisibleButton = new JButton();
         rightInvisibleButton.setFocusable(false);
-        rightInvisibleButton.setBounds(550, 185, (int)(250*0.8), (int)(300*0.8)); // Position and size the button
+        rightInvisibleButton.setBounds(550, 185, (int) (250 * 0.8), (int) (300 * 0.8)); // Position and size the button
         rightInvisibleButton.setContentAreaFilled(false);
         rightInvisibleButton.setBorderPainted(false);
         rightInvisibleButton.setFocusPainted(false);
@@ -355,7 +347,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         infoButton.addActionListener(e -> {
             showGameInfo = !showGameInfo;
             infoButton.setIcon(showGameInfo ? infoDefaultIcon : infoDefaultIconFalse);
-            playSound("click");
+            //playSound("click");
         });
 
 // Add mouse listener for hover and click events
@@ -414,7 +406,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
 // Add action listener for click event
         rightArrowButton.addActionListener(e -> {
-            playSound("click");
+            //playSound("click");
             rotateGame(-1);
             panel.repaint();
         });
@@ -462,7 +454,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
 // Add action listener for click event
         leftArrowButton.addActionListener(e -> {
-            playSound("click");
+            //playSound("click");
             rotateGame(1);
             panel.repaint();
         });
@@ -499,7 +491,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                 int centerY = (panel.getHeight() - 50) / 2; // Adjust for the new button height
                 leftArrowButton.setLocation(5, centerY); // Adjust for the new button width
                 rightArrowButton.setLocation(panel.getWidth() - 35, centerY); // Adjust for the new button width
-                infoButton.setLocation(settingsButton.getX() + 60, settingsButton.getY()+5);
+                infoButton.setLocation(settingsButton.getX() + 60, settingsButton.getY() + 5);
             }
         });
 
@@ -514,7 +506,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     }
 
     private String getGameDescription() {
-        switch(games.get(selectedGameIndex)){
+        switch (games.get(selectedGameIndex)) {
             case "blackjack":
                 return "Spiele Blackjack gegen einen Bot-Dealer.";
             case "poker1":
@@ -536,15 +528,15 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         }
     }
 
-    private int interpolate(int preValue, int postValue){
+    private int interpolate(int preValue, int postValue) {
         return preValue + (postValue - preValue) * animationFrame / 100;
     }
 
-    private float interpolate(float preValue, float postValue){
+    private float interpolate(float preValue, float postValue) {
         return Math.max(0, preValue + (postValue - preValue) * animationFrame / 100);
     }
 
-    private void rotateGame(int direction){
+    private void rotateGame(int direction) {
         animationFrame = 50;
         isAnimating = false;
         if (direction == -1) {
@@ -567,44 +559,44 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
     }
 
-    private int getGameToLeft(){
-        if(selectedGameIndex == 0){
-            return games.size()-1;
-        }else{
-            return selectedGameIndex-1;
+    private int getGameToLeft() {
+        if (selectedGameIndex == 0) {
+            return games.size() - 1;
+        } else {
+            return selectedGameIndex - 1;
         }
     }
 
-    private int getGameToRight(){
-        if(selectedGameIndex == games.size()-1){
+    private int getGameToRight() {
+        if (selectedGameIndex == games.size() - 1) {
             return 0;
-        }else{
-            return selectedGameIndex+1;
+        } else {
+            return selectedGameIndex + 1;
         }
     }
 
-    private int getGame2ToLeft(){
-        if(selectedGameIndex == 0){
-            return games.size()-2;
-        }else if(selectedGameIndex == 1){
-            return games.size()-1;
-        }else{
-            return selectedGameIndex-2;
+    private int getGame2ToLeft() {
+        if (selectedGameIndex == 0) {
+            return games.size() - 2;
+        } else if (selectedGameIndex == 1) {
+            return games.size() - 1;
+        } else {
+            return selectedGameIndex - 2;
         }
     }
 
-    private int getGame2ToRight(){
-        if(selectedGameIndex == games.size()-1){
+    private int getGame2ToRight() {
+        if (selectedGameIndex == games.size() - 1) {
             return 1;
-        }else if(selectedGameIndex == games.size()-2){
+        } else if (selectedGameIndex == games.size() - 2) {
             return 0;
-        }else{
-            return selectedGameIndex+2;
+        } else {
+            return selectedGameIndex + 2;
         }
     }
 
-    private String getGameTitle(){
-        switch(games.get(selectedGameIndex)){
+    private String getGameTitle() {
+        switch (games.get(selectedGameIndex)) {
             case "blackjack":
                 return "Blackjack";
             case "poker1":
@@ -626,9 +618,9 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         }
     }
 
-    public void updateButtonColor(JButton button, boolean isTransparent){
-        if(isTransparent){
-            switch (selectedTheme){
+    public void updateButtonColor(JButton button, boolean isTransparent) {
+        if (isTransparent) {
+            switch (selectedTheme) {
                 case "Original":
                     button.setBackground(transparentOriginalTheme);
                     break;
@@ -642,8 +634,8 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                     button.setBackground(transparentScarletTheme);
                     break;
             }
-        }else{
-            switch (selectedTheme){
+        } else {
+            switch (selectedTheme) {
                 case "Original":
                     button.setBackground(originalTheme);
                     break;
@@ -669,7 +661,8 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            playSound("click");
+            //TODO: MIGRATE -> playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
         });
 
         // Create a thin line border
@@ -689,93 +682,6 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         });
     }
 
-    // Methode zum Initialisieren und Starten der Hintergrundmusik
-    private void initMusicPlayer() {
-        try {
-            // Lade die Musikdatei
-            URL url = getClass().getResource("/background.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(url);
-
-            // Überprüfe das Audioformat und konvertiere es bei Bedarf
-            AudioFormat baseFormat = audioStream.getFormat();
-            AudioFormat decodedFormat = new AudioFormat(
-                    AudioFormat.Encoding.PCM_SIGNED,
-                    baseFormat.getSampleRate(),
-                    16,
-                    baseFormat.getChannels(),
-                    baseFormat.getChannels() * 2,
-                    baseFormat.getSampleRate(),
-                    false
-            );
-            AudioInputStream decodedAudioStream = AudioSystem.getAudioInputStream(decodedFormat, audioStream);
-
-            backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(decodedAudioStream);
-
-            // Lautstärkeregelung initialisieren
-            volumeControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
-
-            // Setze die Lautstärke auf den gespeicherten Wert (oder Standardwert)
-            loadVolume(); // Lade und setze die Lautstärke vor dem Starten der Musik
-
-            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY); // Musik in einer Endlosschleife abspielen
-            backgroundMusic.start(); // Musik abspielen
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Methode zur Anpassung der Lautstärke
-    public void setVolume(float volume) {
-        if (volumeControl != null) {
-            float min = volumeControl.getMinimum();
-            float max = volumeControl.getMaximum();
-            float gain = min + (max - min) * (volume / 100.0f); // Umwandlung des Volumens in den Bereich [min, max]
-            volumeControl.setValue(gain);
-            saveVolume(volume); // Speichere die Lautstärke
-        }
-    }
-
-    // Methode zum Abrufen der aktuellen Lautstärke
-    public float getCurrentVolume() {
-        if (volumeControl != null) {
-            float min = volumeControl.getMinimum();
-            float max = volumeControl.getMaximum();
-            float currentGain = volumeControl.getValue();
-            return (currentGain - min) / (max - min) * 100; // Umrechnung auf den Bereich 0-100
-        }
-        return 50; // Standardwert, falls etwas schiefgeht
-    }
-
-    // Methode zum Speichern der Lautstärke in einer Textdatei
-    // Java
-    // Java
-    private void saveVolume(float volume) {
-        String externalPath = System.getProperty("user.home") + File.separator + "volume.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(externalPath))) {
-            writer.write(String.valueOf(volume));
-            System.out.println("Volume saved: " + volume);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveGameSoundsVolume(float volume) {
-        try {
-            URL resourceUrl = getClass().getClassLoader().getResource("config/gamesounds.txt");
-            if (resourceUrl == null) {
-                throw new FileNotFoundException("Resource file not found: config/gamesounds.txt");
-            }
-            File file = new File(resourceUrl.toURI());
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                writer.write(String.valueOf(volume));
-                System.out.println("Game Sounds volume saved: " + volume);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void saveSelectedTheme(String theme) {
         this.selectedTheme = theme;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(getClass().getClassLoader().getResource("config/theme.txt").getFile()))) {
@@ -786,77 +692,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
         }
     }
 
-    // Methode zum Laden der Lautstärke aus einer Textdatei
-    private void loadVolume() {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/volume.txt");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String volumeStr = reader.readLine();
-            if (volumeStr != null) {
-                float volume = Float.parseFloat(volumeStr);
-                setVolume(volume); // Set the loaded volume
-            } else {
-                setVolume(50); // Default volume
-            }
-        } catch (Exception e) {
-            System.out.println("Volume file not found or invalid. Using default volume.");
-            setVolume(50); // Default volume in case of error
-        }
-    }
-
-    // Methode zum Laden der Game Sounds Lautstärke aus einer Textdatei
-    private void loadGameSoundsVolume() {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/gamesounds.txt");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String volumeStr = reader.readLine();
-            if (volumeStr != null) {
-                gameSoundsVolume = Float.parseFloat(volumeStr);
-            } else {
-                gameSoundsVolume = 50; // Default game sounds volume
-            }
-        } catch (Exception e) {
-            System.out.println("Game sounds file not found or invalid. Using default volume.");
-            gameSoundsVolume = 50; // Default volume in case of error
-        }
-    }
-
-    // Methode zum Abspielen eines Sounds mit der gespeicherten Lautstärke
-
-    public static void playSound(String sound){
-        triggerSound("sounds/"+sound+".wav");
-    }
-
-    private static void triggerSound(String soundFilePath) {
-        try (InputStream soundStream = MainGUI.class.getClassLoader().getResourceAsStream(soundFilePath)) {
-            if (soundStream == null) {
-                throw new IllegalArgumentException("Sound file not found: " + soundFilePath);
-            }
-            File tempFile = File.createTempFile("tempSound", ".wav");
-            tempFile.deleteOnExit();
-            try (FileOutputStream out = new FileOutputStream(tempFile)) {
-                soundStream.transferTo(out);
-            }
-            AudioInputStream originalAudioStream = AudioSystem.getAudioInputStream(tempFile);
-
-            // Convert the audio format to PCM_SIGNED if necessary
-            AudioFormat originalFormat = originalAudioStream.getFormat();
-            AudioFormat targetFormat = new AudioFormat(
-                    AudioFormat.Encoding.PCM_SIGNED,
-                    originalFormat.getSampleRate(),
-                    16, // 16-bit sample size
-                    originalFormat.getChannels(),
-                    originalFormat.getChannels() * 2, // Frame size
-                    originalFormat.getSampleRate(),
-                    false // Big-endian
-            );
-
-            AudioInputStream convertedAudioStream = AudioSystem.getAudioInputStream(targetFormat, originalAudioStream);
-
-            Clip clip = AudioSystem.getClip();
-            clip.open(convertedAudioStream);
-            clip.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void playsound(String sound) {
     }
 
     public String getMultiplayerName() {
@@ -870,7 +706,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
             startAnimationFrame = 2;
             //new thread with overridden run method
             new Thread(() -> {
-                switch(games.get(selectedGameIndex)){
+                switch (games.get(selectedGameIndex)) {
                     case "blackjack":
                         // Verstecke das MainGUI-Fenster und zeige den Ladescreen
                         new GameSettings(this);
@@ -883,12 +719,12 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
                         break;
                     case "poker2":
                         boolean isRunning = true;
-                        while(isRunning){
+                        while (isRunning) {
                             MultiplayerName = JOptionPane.showInputDialog(this, "Bitte geben Sie Ihren Namen ein:", "Name eingeben (1-12 Zeichen)", JOptionPane.PLAIN_MESSAGE);
-                            if(MultiplayerName == null){
+                            if (MultiplayerName == null) {
                                 isRunning = false;
                                 break;
-                            }else if(!MultiplayerName.isEmpty() && !MultiplayerName.contains(",") && MultiplayerName.length()<=12){
+                            } else if (!MultiplayerName.isEmpty() && !MultiplayerName.contains(",") && MultiplayerName.length() <= 12) {
                                 new MultiplayerGUI(this);
                                 this.setVisible(false);
                                 isRunning = false;
@@ -923,7 +759,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     }
 
     public static void main(String[] args) {
-        new MainGUI(); // Starte die MainGUI
+        new MainGUI();
     }
 
     private void loadSelectedTheme() {
@@ -942,6 +778,8 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
     }
 
     public void updateSelectedTheme() {
+        // Datei zum Speichern des Themes
+        String THEME_FILE = "theme.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(THEME_FILE))) {
             String theme = reader.readLine();
             if (theme != null) {
@@ -969,18 +807,17 @@ public class MainGUI extends JFrame implements ActionListener, MouseWheelListene
 
     public void setGameSoundsVolume(float volume) {
         gameSoundsVolume = volume;
-        saveGameSoundsVolume(volume); // Save game sounds volume
+        //TODO: MIGRATE -> saveGameSoundsVolume(volume); // Save game sounds volume
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         int notches = e.getWheelRotation();
-        if(notches < 0){
+        if (notches < 0) {
             rotateGame(-1);
-        }else{
+        } else {
             rotateGame(1);
         }
-
     }
 
     @Override

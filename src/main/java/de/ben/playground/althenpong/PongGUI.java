@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.ben.MainGUI.playSound;
+//TODO: MIGRATE -> import static de.ben.MainGUI.playSound;
 
 public class PongGUI extends JFrame implements KeyListener {
 
@@ -219,7 +219,7 @@ public class PongGUI extends JFrame implements KeyListener {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            playSound("click");
+            //TODO: MIGRATE -> playSound("click");
         });
 
         // Create a thin line border

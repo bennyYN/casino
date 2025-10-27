@@ -85,7 +85,7 @@ public class ButtonFactory {
         if(playingSounds){
             // Add an ActionListener
             button.addActionListener(e -> {
-                MainGUI.playSound("click");
+                //TODO: MIGRATE -> MainGUI.playSound("click");
             });
         }
 

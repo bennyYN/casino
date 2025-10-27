@@ -33,10 +33,10 @@ public class CardAnimation extends Thread {
             if (currentPosition.distanceTo(targetPosition) <= thresholdDistance) {
                 if(soundAlternator){
                     // Play sound
-                    MainGUI.playSound("toggle1");
+                    //TODO: MIGRATE -> MainGUI.playSound("toggle1");
                 }else{
                     // Play sound
-                    MainGUI.playSound("toggle2");
+                    //TODO: MIGRATE -> MainGUI.playSound("toggle2");
                 }
                 soundAlternator = !soundAlternator;
             }

@@ -99,7 +99,7 @@ public class GameSettings extends JFrame {
         panel.add(exitButton, gbc);
 
         exitButton.addActionListener(e -> {
-            MainGUI.playSound("click");
+            //TODO: MIGRATE -> MainGUI.playSound("click");
             new BlackJackGUI(startChips, mainGUI).setVisible(true);
             this.dispose();
         });
