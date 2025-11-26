@@ -84,12 +84,12 @@ public enum Sound {
     /**
      * Sound played when toggling a switch.
      */
-    TOGGLE_1("sounds/toggle1.wav", SoundChannel.INGAME),
+    TOGGLE_1("sounds/toggle_1.wav", SoundChannel.INGAME),
 
     /**
      * Alternate sound played when toggling a switch.
      */
-    TOGGLE_2("sounds/toggle2.wav", SoundChannel.INGAME);
+    TOGGLE_2("sounds/toggle_2.wav", SoundChannel.INGAME);
 
     /**
      * The file path of the .wav file.

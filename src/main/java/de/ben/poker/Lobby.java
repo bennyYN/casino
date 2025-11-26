@@ -2,6 +2,8 @@ package de.ben.poker;
 
 import de.ben.ImageArchive;
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -259,7 +261,7 @@ public class Lobby extends JFrame {
 
         exitButton.addActionListener(e -> {
             if (isLeader) {
-                //TODO: MIGRATE -> MainGUI.playSound("click");
+                SoundManager.playSound(Sound.BUTTON_CLICK);
                 SwingUtilities.invokeLater(() -> {
 
                     int startChips = Integer.parseInt(startChipsField.getText());
@@ -271,7 +273,7 @@ public class Lobby extends JFrame {
                     this.setVisible(false);
                 });
             } else {
-                //TODO: MIGRATE -> MainGUI.playSound("invalid");
+                SoundManager.playSound(Sound.INVALID_ACTION);
                 mainGUI.setVisible(true);
                 this.dispose();
             }

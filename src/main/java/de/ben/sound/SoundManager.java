@@ -6,6 +6,10 @@ import javax.sound.sampled.*;
 import java.io.*;
 import java.net.URL;
 
+/**
+ *
+ * @author Maurice Steimer
+ */
 public class SoundManager {
 
     private FloatControl volumeControl;

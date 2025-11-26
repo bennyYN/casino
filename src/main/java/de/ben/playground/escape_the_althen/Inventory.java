@@ -1,6 +1,8 @@
 package de.ben.playground.escape_the_althen;
 
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -96,13 +98,13 @@ public class Inventory {
 			}
 		}
 		items.set(emptySlotIndex, pickedUpItemType);
-		//TODO: MIGRATE -> MainGUI.playSound("view2");
+		SoundManager.playSound(Sound.VIEW_CARD_2);
 	}
 	
 	public void throwItem(GamePanel p) {
 		if(!items.get(selected).equals("void")) {
 			Item thrownItem = new Item(p.world, (int)((player.position[0]/16/player.scale)+12), (int)((player.position[1]/16/player.scale)+9), items.get(selected));
-			//TODO: MIGRATE -> MainGUI.playSound("view1");
+			SoundManager.playSound(Sound.VIEW_CARD_1);
 			items.set(selected, "void");
 		}
 	}

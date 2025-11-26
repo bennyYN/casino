@@ -1,6 +1,8 @@
 package de.ben.poker;
 
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import java.util.*;
 
@@ -243,10 +245,10 @@ public class Poker extends Thread {
                     gui.setAction("idle");
                     if (validAction) {
                         // Setze den action String auf "idle" zurück und bewege zum nächsten Spieler
-                        //TODO: MIGRATE -> MainGUI.playSound("valid");
+                        SoundManager.playSound(Sound.VALID_ACTION);
                         i++;
                     } else {
-                        //TODO: MIGRATE -> MainGUI.playSound("invalid");
+                        SoundManager.playSound(Sound.INVALID_ACTION);
                     }
                 } else {
                     i++;
@@ -523,7 +525,7 @@ public class Poker extends Thread {
             }
 
             // Winner reveal
-            //TODO: MIGRATE -> MainGUI.playSound("win");
+            SoundManager.playSound(Sound.WIN_GAME);
             Player winner = poker.gewinner();
             if (winner == null) {
                 System.out.println("Unentschieden! Der Pot wird geteilt.");
@@ -562,7 +564,7 @@ public class Poker extends Thread {
                 System.out.println("Spiel Ende. Ein Spieler hat keine Chips mehr.");
                 //gui.fadingLabel.setText("Spiel Ende. Ein Spieler hat keine Chips mehr.", false);
                 isGameOver = true;
-                //TODO: MIGRATE -> MainGUI.playSound("KSHMR_Hans_Zimmer_Horn_05__Cm_");
+                SoundManager.playSound(Sound.ZIMMER_HORN);
             }
         }
     }

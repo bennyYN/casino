@@ -1,6 +1,8 @@
 package de.ben.blackjack;
 
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
@@ -87,7 +89,7 @@ public class ButtonFactory {
         if(playingSounds){
             // Add an ActionListener
             button.addActionListener(e -> {
-                //TODO: MIGRATE -> MainGUI.playSound("click");
+                SoundManager.playSound(Sound.BUTTON_CLICK);
             });
         }
 

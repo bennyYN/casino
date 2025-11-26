@@ -2,6 +2,8 @@ package de.ben.poker;
 
 import de.ben.ImageArchive;
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -223,12 +225,12 @@ public class PlayerSelection extends JFrame {
         panel.add(exitButton, gbc);
 
         confirmButton.addActionListener(e -> {
-            //TODO: MIGRATE -> MainGUI.playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
             enterPlayerNames(numPlayers);
         });
 
         exitButton.addActionListener(e -> {
-            //TODO: MIGRATE -> MainGUI.playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
             for(int i = 0; i < 8; i++){
                 if(i >= numPlayers){
                     playerNames.set(i, "");

@@ -2,6 +2,8 @@ package de.ben.blackjack;
 
 import de.ben.ImageArchive;
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -99,7 +101,7 @@ public class GameSettings extends JFrame {
         panel.add(exitButton, gbc);
 
         exitButton.addActionListener(e -> {
-            //TODO: MIGRATE -> MainGUI.playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
             new BlackJackGUI(startChips, mainGUI).setVisible(true);
             this.dispose();
         });

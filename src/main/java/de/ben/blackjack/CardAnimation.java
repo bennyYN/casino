@@ -1,6 +1,8 @@
 package de.ben.blackjack;
 
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 public class CardAnimation extends Thread {
 
@@ -33,10 +35,10 @@ public class CardAnimation extends Thread {
             if (currentPosition.distanceTo(targetPosition) <= thresholdDistance) {
                 if(soundAlternator){
                     // Play sound
-                    //TODO: MIGRATE -> MainGUI.playSound("toggle1");
+                    SoundManager.playSound(Sound.TOGGLE_1);
                 }else{
                     // Play sound
-                    //TODO: MIGRATE -> MainGUI.playSound("toggle2");
+                    SoundManager.playSound(Sound.TOGGLE_2);
                 }
                 soundAlternator = !soundAlternator;
             }

@@ -2,6 +2,8 @@ package de.ben.poker;
 
 import de.ben.ImageArchive;
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -148,7 +150,7 @@ public class MultiplayerGUI extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            //TODO: MIGRATE -> MainGUI.playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
         });
 
         // Create a thin line border

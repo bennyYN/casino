@@ -1,6 +1,8 @@
 package de.ben.playground.althenator;
 
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -211,7 +213,7 @@ public class AlthenatorGUI extends JFrame implements KeyListener {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            //TODO: MIGRATE -> playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
         });
 
         // Create a thin line border

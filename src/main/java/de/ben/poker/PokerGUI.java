@@ -2,6 +2,8 @@ package de.ben.poker;
 
 import de.ben.ImageArchive;
 import de.ben.MainGUI;
+import de.ben.sound.Sound;
+import de.ben.sound.SoundManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -402,16 +404,16 @@ public class PokerGUI extends JFrame implements KeyListener {
             if(game != null){
                 if(mainGUI.playerIndex != -1){
                     if(game.players.get(mainGUI.playerIndex).handVisible){
-                        //TODO: MIGRATE -> MainGUI.playSound("toggle1");
+                        SoundManager.playSound(Sound.TOGGLE_1);
                     }else{
-                        //TODO: MIGRATE -> MainGUI.playSound("toggle2");
+                        SoundManager.playSound(Sound.TOGGLE_2);
                     }
                     game.players.get(mainGUI.playerIndex).handVisible = !game.players.get(mainGUI.playerIndex).handVisible;
                 }else{
                     if(game.currentPlayer.handVisible){
-                        //TODO: MIGRATE -> MainGUI.playSound("toggle1");
+                        SoundManager.playSound(Sound.TOGGLE_1);
                     }else{
-                        //TODO: MIGRATE -> MainGUI.playSound("toggle2");
+                        SoundManager.playSound(Sound.TOGGLE_2);
                     }
                     game.currentPlayer.handVisible = !game.currentPlayer.handVisible;
                 }
@@ -661,7 +663,7 @@ public class PokerGUI extends JFrame implements KeyListener {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            //TODO: MIGRATE -> MainGUI.playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
         });
 
         // Create a thin line border
@@ -746,9 +748,9 @@ public class PokerGUI extends JFrame implements KeyListener {
         //Wenn die Escape-Taste gedrückt wird, wird das Menü geöffnet/geschlossen
         if(e.getKeyCode() == 27){
             if(isMenuOpen){
-                //TODO: MIGRATE -> MainGUI.playSound("close_menu");
+                SoundManager.playSound(Sound.CLOSE_MENU);
             }else{
-                //TODO: MIGRATE -> MainGUI.playSound("open_menu");
+                SoundManager.playSound(Sound.OPEN_MENU);
             }
             isMenuOpen = !isMenuOpen;
         }
@@ -864,13 +866,12 @@ public class PokerGUI extends JFrame implements KeyListener {
     public void doFold(){
         hideRaiseField(); //Textfeld zum Erhöhen verstecken
         action = "fold"; //Die Aktion des Spielers auf Fold setzen
-        //nextPlayer(); Zum nächsten Spieler wechseln TODO -> GUCKEN OB DAS NÖTIG IST
     }
 
     public void doCheck(){
         hideRaiseField(); //Textfeld zum Erhöhen verstecken
         action = "check"; //Die Aktion des Spielers auf Check setzen
-        //nextPlayer(); Zum nächsten Spieler wechseln TODO -> GUCKEN OB DAS NÖTIG IST
+
     }
 
     public void doCall(){
@@ -891,7 +892,7 @@ public class PokerGUI extends JFrame implements KeyListener {
 
     public void doRaise(){
         if(!raiseField.isVisible()){
-            //TODO: MIGRATE -> MainGUI.playSound("click");
+            SoundManager.playSound(Sound.BUTTON_CLICK);
         }
         raiseField.setVisible(true);
         raiseLabel.setVisible(true);
